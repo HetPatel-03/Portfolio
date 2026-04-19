@@ -1,6 +1,6 @@
 const stats = [
   {
-    number: '3+',
+    number: '3+ Years',
     label: 'BUILDING & SHIPPING REAL PRODUCTS',
     variant: 'coral' as const,
   },
