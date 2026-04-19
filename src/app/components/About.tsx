@@ -58,7 +58,7 @@ export function About() {
                 fontWeight: 800,
                 color: 'var(--text-primary)',
                 letterSpacing: '-1px',
-                fontSize: 'clamp(28px, 3.5vw, 42px)',
+                fontSize: 'clamp(20px, 2.5vw, 32px)',
               }}
             >
               Software Engineer. Problem Solver. Product Minded.
@@ -69,7 +69,7 @@ export function About() {
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 700,
-                color: 'var(--text-primary)',
+                color: '#D0D0E0',
               }}
             >
               Full Stack Engineer who builds products people actually use.
@@ -85,7 +85,7 @@ export function About() {
                   key={index}
                   className="flex gap-3 text-[15px] leading-relaxed"
                   style={{
-                    color: 'var(--text-muted)',
+                    color: '#A8A8B8',
                     fontFamily: 'var(--font-body)',
                     lineHeight: 1.8,
                   }}
