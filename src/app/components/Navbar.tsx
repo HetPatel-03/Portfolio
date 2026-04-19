@@ -56,7 +56,7 @@ export function Navbar() {
         scrolled ? 'shadow-[0_8px_32px_rgba(0,0,0,0.4)]' : ''
       }`}
       style={{
-        background: 'rgba(28, 27, 31, 0.85)',
+        background: 'rgba(12, 12, 16, 0.85)',
         backdropFilter: 'blur(20px)',
         border: '1px solid rgba(240, 237, 232, 0.08)',
         borderRadius: '50px',

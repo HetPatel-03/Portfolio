@@ -263,7 +263,7 @@ export function Hero() {
                 className="absolute w-11 h-11 rounded-full flex items-center justify-center"
                 style={{
                   ...tech.position,
-                  background: 'rgba(28, 27, 31, 0.9)',
+                  background: 'rgba(12, 12, 16, 0.9)',
                   border: '1px solid rgba(240, 237, 232, 0.1)',
                   boxShadow: `0 0 20px ${tech.color}40`
                 }}

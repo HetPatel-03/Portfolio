@@ -189,7 +189,7 @@ export function Universe() {
       })
       .attr('font-family', 'var(--font-heading)')
       .attr('font-weight', (d: any) => d.type === 'center' ? 800 : 700)
-      .attr('fill', (d: any) => d.type === 'center' ? '#1C1B1F' : d.type === 'category' ? '#1C1B1F' : '#F0EDE8')
+      .attr('fill', (d: any) => d.type === 'center' ? '#0C0C10' : d.type === 'category' ? '#0C0C10' : '#F0EDE8')
       .attr('pointer-events', 'none')
       .text((d: any) => d.label);
 

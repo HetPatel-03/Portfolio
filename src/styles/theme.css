@@ -1,6 +1,7 @@
 :root {
   /* Warm Coral Color Palette */
-  --bg-primary: #1C1B1F;
+  --background: #0C0C10;
+  --bg-primary: #0C0C10;
   --bg-surface: #2C2B30;
   --bg-elevated: #3A393E;
   --coral: #F58F7C;
@@ -12,7 +13,7 @@
   
   /* For Tailwind border utilities */
   --color-border: #4F4F51;
-  --color-background: #1C1B1F;
+  --color-background: #0C0C10;
   
   /* Typography */
   --font-heading: 'Clash Display', sans-serif;
@@ -27,7 +28,7 @@
 
   body {
     font-family: var(--font-body);
-    background: var(--bg-primary);
+    background-color: #0C0C10;
     color: var(--text-primary);
     overflow-x: hidden;
   }
