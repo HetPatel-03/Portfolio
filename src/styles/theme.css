@@ -15,7 +15,7 @@
   --color-background: #1C1B1F;
   
   /* Typography */
-  --font-heading: 'Syne', sans-serif;
+  --font-heading: 'Clash Display', sans-serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
@@ -36,9 +36,25 @@
     scroll-behavior: smooth;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
-  }
+}
+
+h1, h2, h3, h4,
+.hero-name,
+.hero-role-animated,
+.section-heading,
+.proj-name,
+.exp-company,
+.stat-num,
+nav .nav-brand {
+  font-family: 'Clash Display', sans-serif;
+}
+
+h1, h2 {
+  letter-spacing: -2px;
+}
+
+.hero-name {
+  letter-spacing: -3px;
 }
 
 /* Custom scrollbar */
