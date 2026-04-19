@@ -71,7 +71,8 @@ export function Hero() {
                 fontWeight: 800,
                 color: 'rgba(240, 237, 232, 0.02)',
                 lineHeight: 1,
-                zIndex: -1
+                zIndex: -1,
+                filter: 'blur(2px)',
               }}
             >
               {'</>'}
@@ -279,25 +280,11 @@ export function Hero() {
 
           {/* Right Side - Hero image */}
           <div className="relative h-[600px] w-full">
-            <div
-              className="hero-image-container"
-              style={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'flex-end',
-                justifyContent: 'center',
-                height: '100%',
-              }}
-            >
+            <div className="hero-image-container">
               <img
                 src={meHero}
                 alt="Het Patel"
                 style={{
-                  height: '90%',
-                  maxHeight: '600px',
-                  width: 'auto',
-                  objectFit: 'contain',
-                  objectPosition: 'bottom',
                   filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.15))',
                   animation: 'heroFloat 3s ease-in-out infinite',
                 }}

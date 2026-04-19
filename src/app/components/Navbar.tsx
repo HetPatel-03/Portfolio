@@ -51,22 +51,25 @@ export function Navbar() {
   ];
 
   return (
-    <nav 
-      className={`fixed top-5 left-1/2 -translate-x-1/2 z-[100] max-w-[calc(100vw-2rem)] transition-all duration-300 ${
-        scrolled ? 'shadow-[0_8px_32px_rgba(0,0,0,0.4)]' : ''
-      }`}
-      style={{
-        background: 'rgba(255, 255, 255, 0.05)',
-        backdropFilter: 'blur(20px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        borderTop: '1px solid rgba(255, 255, 255, 0.15)',
-        borderRadius: '50px',
-        boxShadow:
-          '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-      }}
+    <nav
+      className="fixed top-5 left-1/2 z-[100] max-w-[calc(100vw-2rem)] w-max -translate-x-1/2 transition-all duration-300"
     >
-      <div className="flex items-center gap-8 px-6 py-3">
+      <div
+        className={`flex items-center gap-8 px-6 py-3 ${
+          scrolled ? 'shadow-[0_8px_32px_rgba(0,0,0,0.4)]' : ''
+        }`}
+        style={{
+          borderRadius: '50px',
+          overflow: 'hidden',
+          background: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+          boxShadow:
+            '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+        }}
+      >
         {/* Logo */}
         <button 
           onClick={() => scrollToSection('hero')}
