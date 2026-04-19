@@ -44,7 +44,7 @@ export function About() {
                 fontSize: 'clamp(28px, 3.5vw, 42px)',
               }}
             >
-              Engineer. Builder. Top Performer.
+              Engineer. Problem Solver. Product Minded.
             </h2>
 
             <p

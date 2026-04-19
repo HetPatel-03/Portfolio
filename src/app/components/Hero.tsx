@@ -4,7 +4,7 @@ import meHero from '../../assets/Me_Hero.png';
 
 export function Hero() {
   const [cycleIndex, setCycleIndex] = useState(0);
-  const cycleWords = ['Builder.', 'Engineer.', 'Problem Solver.', 'Maker.'];
+  const cycleWords = ['Engineer.', 'Problem Solver.', 'Product Minded.', 'Full Stack Dev.'];
 
   useEffect(() => {
     const interval = setInterval(() => {
