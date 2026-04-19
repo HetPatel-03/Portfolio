@@ -100,8 +100,8 @@ export function Projects() {
                 </div>
               </div>
 
-              {/* Card Body */}
-              <div className="p-6">
+              {/* Card Body — liquid glass (gradient block above unchanged) */}
+              <div className="project-card__body p-6">
                 {/* Top Row */}
                 <div className="flex justify-between items-center mb-3">
                   <span 
@@ -150,10 +150,14 @@ export function Projects() {
 
                 {/* Description */}
                 <p 
-                  className="text-[13px] leading-relaxed mb-6 line-clamp-3"
+                  className="mb-6 text-[13px] leading-relaxed"
                   style={{
                     color: 'var(--text-muted)',
-                    fontFamily: 'var(--font-body)'
+                    fontFamily: 'var(--font-body)',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
                   }}
                 >
                   {project.description}
