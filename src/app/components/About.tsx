@@ -79,7 +79,7 @@ export function About() {
               {[
                 "Throughout my software development journey, I've shown a strong commitment to innovation and creative problem-solving — from building live platforms to integrating real APIs used by real users.",
                 'My analytical approach helps me break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
-                "Beyond code — I'm a nationally ranked sales professional. Top 150 in Canada and Top 3 in the GTA at Rogers and Staples, which means I understand business, customers, and commercial impact, not just technical execution.",
+                'I build full-stack applications end-to-end — designing REST APIs, structuring database schemas, and deploying to cloud infrastructure. Every project I ship is live, documented, and built with real users in mind.',
               ].map((text, index) => (
                 <p
                   key={index}
