@@ -105,26 +105,26 @@ export function Hero() {
               Het Patel.
             </h1>
 
-            {/* Cycling text */}
-            <div className="relative mb-6 min-h-[200px] w-full max-w-full overflow-hidden">
+            {/* Cycling text — single line; font scales with viewport width */}
+            <div className="relative mb-6 h-[52px] w-full overflow-hidden sm:h-[56px] md:h-[60px]">
               {cycleWords.map((word, index) => (
                 <motion.span
                   key={word}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ 
                     opacity: index === cycleIndex ? 1 : 0,
-                    y: index === cycleIndex ? 0 : 20
+                    y: index === cycleIndex ? 0 : 10
                   }}
                   transition={{ duration: 0.5 }}
-                  className="absolute left-0 top-0 w-full max-w-full"
+                  className="absolute inset-0 flex w-full items-center overflow-hidden"
                   style={{
-                    fontSize: '72px',
+                    fontSize: 'clamp(18px, 2.65vw + 0.4rem, 40px)',
                     fontFamily: 'var(--font-heading)',
                     fontWeight: 800,
                     color: 'var(--coral)',
-                    letterSpacing: '-2px',
-                    lineHeight: 1.05,
-                    whiteSpace: 'normal',
+                    letterSpacing: '-0.03em',
+                    lineHeight: 1,
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   {word}
