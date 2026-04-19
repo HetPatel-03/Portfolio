@@ -100,3 +100,39 @@ h1, h2 {
   object-fit: contain;
   object-position: bottom;
 }
+
+.about-stat-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 2px solid rgba(242, 102, 74, 0.4);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.about-stat-card:hover {
+  border: 1px solid rgba(242, 102, 74, 0.25);
+  border-top: 2px solid rgba(242, 102, 74, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.about-stat-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: #f2664a;
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.about-stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(240, 237, 232, 0.5);
+  font-family: var(--font-body);
+  line-height: 1.3;
+}
