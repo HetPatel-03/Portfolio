@@ -56,10 +56,14 @@ export function Navbar() {
         scrolled ? 'shadow-[0_8px_32px_rgba(0,0,0,0.4)]' : ''
       }`}
       style={{
-        background: 'rgba(12, 12, 16, 0.85)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(240, 237, 232, 0.08)',
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderTop: '1px solid rgba(255, 255, 255, 0.15)',
         borderRadius: '50px',
+        boxShadow:
+          '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
       }}
     >
       <div className="flex items-center gap-8 px-6 py-3">
