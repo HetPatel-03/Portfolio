@@ -1,4 +1,3 @@
-import { Github, Linkedin, Twitter } from 'lucide-react';
 import { WarmGlassCard } from './WarmGlassCard';
 
 export function About() {
@@ -106,29 +105,6 @@ export function About() {
               >
                 View Resume
               </button>
-            </div>
-
-            {/* Social Icons */}
-            <div className="flex gap-3">
-              {[
-                { icon: Github, href: 'https://github.com/hetpatel' },
-                { icon: Linkedin, href: 'https://linkedin.com/in/hetpatel' },
-                { icon: Twitter, href: 'https://twitter.com/hetpatel' }
-              ].map(({ icon: Icon, href }) => (
-                <a
-                  key={href}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 hover:border-[var(--coral)]"
-                  style={{
-                    background: 'rgba(44, 43, 48, 0.7)',
-                    border: '1px solid rgba(240, 237, 232, 0.08)'
-                  }}
-                >
-                  <Icon size={18} style={{ color: 'var(--text-primary)' }} />
-                </a>
-              ))}
             </div>
           </div>
 

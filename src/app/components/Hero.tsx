@@ -293,42 +293,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-
-      {/* Stats Row */}
-      <div 
-        className="absolute bottom-0 left-0 right-0 py-8 border-t"
-        style={{ borderColor: 'rgba(240, 237, 232, 0.08)' }}
-      >
-        <div className="max-w-7xl mx-auto px-8 grid grid-cols-3 gap-8">
-          {[
-            { number: '3+', label: 'Shipped Products' },
-            { number: 'Top 150', label: 'Nationally at Rogers' },
-            { number: "Dean's List", label: '2023 & 2024' }
-          ].map((stat, index) => (
-            <div key={index} className="text-center">
-              <div 
-                className="text-[28px] mb-1"
-                style={{ 
-                  fontFamily: 'var(--font-heading)', 
-                  fontWeight: 800,
-                  color: 'var(--coral)' 
-                }}
-              >
-                {stat.number}
-              </div>
-              <div 
-                className="text-[11px] uppercase tracking-wider"
-                style={{ 
-                  color: 'var(--text-muted)',
-                  fontFamily: 'var(--font-body)'
-                }}
-              >
-                {stat.label}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </section>
   );
 }
