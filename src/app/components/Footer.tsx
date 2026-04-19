@@ -3,7 +3,7 @@ import { Github, Linkedin, Twitter } from 'lucide-react';
 export function Footer() {
   const navLinks = [
     { label: 'About', id: 'about' },
-    { label: 'Work', id: 'work' },
+    { label: 'Projects', id: 'projects' },
     { label: 'Experience', id: 'experience' },
     { label: 'Education', id: 'education' },
     { label: 'Stack', id: 'stack' },

@@ -159,7 +159,7 @@ export function Hero() {
                 Contact Me →
               </button>
               <button
-                onClick={() => scrollToSection('work')}
+                onClick={() => scrollToSection('projects')}
                 className="px-6 py-3 rounded-full transition-all duration-200 hover:border-[var(--coral)]"
                 style={{
                   background: 'transparent',

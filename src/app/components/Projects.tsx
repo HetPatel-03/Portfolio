@@ -3,34 +3,37 @@ export function Projects() {
     {
       id: 'PROJ / 01',
       name: 'StudenzBit',
-      description: 'Global student connection platform with interactive world map visualization, real-time chat, and location-based discovery.',
+      description:
+        'A resource hub for international students moving to Canada. Built with React, D3.js interactive world map, affiliate monetization, and deployed on Vercel. Targeting Gen Z students with a pastel-first design system.',
       tags: ['React', 'Node.js', 'D3.js', 'PostgreSQL'],
-      gradient: 'linear-gradient(135deg, #F58F7C 0%, #F2C4CE 100%)',
+      gradient: 'linear-gradient(135deg, #F2664A 0%, #F9A8D4 100%)',
       status: 'live',
-      views: '214'
+      views: '214',
     },
     {
       id: 'PROJ / 02',
       name: 'RecurList',
-      description: 'Smart recurring task manager with intelligent scheduling engine, automated reminders, and productivity analytics.',
+      description:
+        'A smart grocery and habits app with a recurring rules engine. Built with React frontend, Node.js backend, PostgreSQL database, and Supabase. Designed to make recurring tasks feel effortless.',
       tags: ['TypeScript', 'Express', 'Supabase'],
-      gradient: 'linear-gradient(135deg, #F2C4CE 0%, #A8C5A0 100%)',
+      gradient: 'linear-gradient(135deg, #6366F1 0%, #2DD4BF 100%)',
       status: 'live',
-      views: '187'
+      views: '187',
     },
     {
       id: 'PROJ / 03',
       name: 'Task Manager',
-      description: 'Collaborative kanban board with drag-and-drop interface, team workflows, and real-time synchronization.',
+      description:
+        'A Kanban-style task management app with drag-and-drop interface, real-time sync, and keyboard-first editing. Built with React, Tailwind CSS, and Firebase.',
       tags: ['React', 'Tailwind', 'Firebase'],
-      gradient: 'linear-gradient(135deg, #F58F7C 0%, #4F4F51 100%)',
+      gradient: 'linear-gradient(135deg, #C8F135 0%, #60A5FA 100%)',
       status: 'live',
-      views: '156'
-    }
+      views: '156',
+    },
   ];
 
   return (
-    <section id="work" className="py-32 px-8">
+    <section id="projects" className="py-32 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-start mb-12">
           <div>
@@ -38,7 +41,7 @@ export function Projects() {
               className="text-xs mb-4"
               style={{ fontFamily: 'var(--font-mono)', color: 'var(--coral)' }}
             >
-              // 03 · work
+              // 03 · projects
             </p>
             <h2 
               className="text-[52px]"
@@ -62,17 +65,7 @@ export function Projects() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {projects.map((project) => (
-            <div
-              key={project.id}
-              className="rounded-[20px] overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_0_40px_rgba(245,143,124,0.25)] cursor-pointer group"
-              style={{
-                background: 'rgba(44, 43, 48, 0.7)',
-                backdropFilter: 'blur(20px) saturate(160%)',
-                border: '1px solid rgba(240, 237, 232, 0.08)',
-                borderTop: '2px solid rgba(245, 143, 124, 0.2)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
-              }}
-            >
+            <div key={project.id} className="project-card group">
               {/* Visual Area */}
               <div 
                 className="h-[180px] relative overflow-hidden"
@@ -172,7 +165,7 @@ export function Projects() {
                     className="text-sm group-hover:translate-x-1 transition-transform duration-200"
                     style={{ color: 'var(--coral)', fontFamily: 'var(--font-body)' }}
                   >
-                    view case →
+                    inspect →
                   </span>
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--sage-green)' }} />

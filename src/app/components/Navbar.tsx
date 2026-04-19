@@ -9,7 +9,7 @@ export function Navbar() {
       setScrolled(window.scrollY > 20);
       
       // Detect active section
-      const sections = ['hero', 'about', 'universe', 'work', 'experience', 'education', 'stack', 'location', 'connect'];
+      const sections = ['hero', 'about', 'universe', 'projects', 'experience', 'education', 'stack', 'location', 'connect'];
       for (const section of sections) {
         const element = document.getElementById(section);
         if (element) {
@@ -42,7 +42,7 @@ export function Navbar() {
 
   const navLinks = [
     { label: 'About', id: 'about' },
-    { label: 'Work', id: 'work' },
+    { label: 'Projects', id: 'projects' },
     { label: 'Experience', id: 'experience' },
     { label: 'Education', id: 'education' },
     { label: 'Stack', id: 'stack' },
