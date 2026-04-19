@@ -1,0 +1,264 @@
+Design a complete personal portfolio website from scratch for Het Patel, a Full Stack Software Engineer based in Brampton, Ontario, Canada. Domain: hetppatel.dev
+This is NOT a typical dark navy gradient developer portfolio. The design should feel warm, premium, editorial and human — like a high-end design agency meets a top-performing engineer. Think Linear.app meets Notion meets a boutique creative studio.
+
+GLOBAL DESIGN SYSTEM:
+Color Palette — warm dark with coral pastels:
+
+Background primary: #1C1B1F (warm charcoal, NOT cold navy black)
+Background surface/cards: #2C2B30 (slightly lighter warm dark)
+Background elevated: #3A393E (for hover states and nested cards)
+Primary accent: #F58F7C (coral salmon — used for CTAs, highlights, active states)
+Secondary accent: #F2C4CE (blush pink — used for secondary badges, soft highlights)
+Text primary: #F0EDE8 (warm off-white, NOT pure white)
+Text muted: #9E9C9A (warm gray for body text and labels)
+Border color: #4F4F51 (subtle warm gray borders)
+Success/live: #A8C5A0 (soft sage green for live badges)
+Graph nodes: coral, blush, warm gray family
+
+Typography:
+
+Headings: Syne 800 — geometric, editorial, bold
+Body: DM Sans 300/400 — clean, readable, warm
+Monospace accents: JetBrains Mono — for code snippets, section tags, comments
+
+Card style — frosted warm glass:
+
+background: rgba(44, 43, 48, 0.7)
+backdrop-filter: blur(20px) saturate(160%)
+border: 1px solid rgba(240, 237, 232, 0.08)
+border-top: 1px solid rgba(245, 143, 124, 0.2) — coral top edge
+border-radius: 20px
+box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(245,143,124,0.08)
+hover: border-color rgba(245,143,124,0.3), translateY(-4px), warm coral outer glow
+
+Background texture:
+
+Base: #1C1B1F warm charcoal
+Subtle SVG noise grain overlay at 3% opacity for depth
+ONE large radial gradient: rgba(245,143,124,0.06) centered behind hero character — very subtle warm spotlight
+NO circuit board patterns, NO dot grids, NO teal gradients, NO navy blue
+
+Spacing: extremely generous — sections breathe, 120px top padding, content never feels cramped
+
+NAVIGATION:
+Floating pill navbar, centered, fixed top 20px:
+
+Left: "hetppatel.dev" logo in Syne 800 coral color + small "v26" version badge in warm glass pill
+Center links: About · Work · Experience · Education · Stack · Location · Connect — in DM Sans, muted color, active state gets coral underline dot
+Right: "Contact →" button — coral fill #F58F7C, dark text, pill shape 50px radius
+Background: rgba(28,27,31,0.85) backdrop blur 20px, border 1px solid rgba(240,237,232,0.08)
+On scroll: slight shadow appears under navbar
+
+
+SECTION 1 — HERO (full viewport height)
+Left side (55%):
+
+Small availability badge top left: sage green dot + "Available for opportunities · Summer 2026" — warm glass pill
+"Hi, I'm" — 22px DM Sans 400, color rgba(240,237,232,0.4), NOT bold, feels like a whisper
+"Het Patel." — 96px Syne 800, warm off-white #F0EDE8, letter-spacing -3px, line-height 0.95, dominates the space
+Animated cycling text — fixed height container 100px so page NEVER shifts when text changes: cycles through "Builder." → "Engineer." → "Problem Solver." → "Maker." — each word in coral #F58F7C, 72px Syne 800, fades in/out with opacity + translateY transition, NOT a full sentence
+Large muted watermark behind name: "< />" in 280px Syne 800, color rgba(240,237,232,0.02), absolute positioned, pointer-events none
+Description — 1 line only, 16px DM Sans 400 muted: "I build end-to-end products. Engineer. Product thinker. Top performer."
+Two CTA buttons, generous spacing below description:
+Button 1: "Contact Me →" — coral fill #F58F7C, dark text #1C1B1F, pill 50px radius, 48px height
+Button 2: "Explore My Work" — transparent, border 1px solid rgba(240,237,232,0.15), warm off-white text, same pill shape
+Social icons row below buttons: GitHub · LinkedIn · X — each 38px square warm glass card, icon only, hover shows coral border glow
+
+Right side (45%):
+
+Memoji/character image — full upper body, bottom-aligned to section, bleeds to right edge slightly, no circle crop, no border, just floating naturally
+Behind character: single large radial glow rgba(245,143,124,0.08) — warm coral spotlight, very subtle
+5 tech icons floating independently around character — NOT in rigid orbit rings, each has its own slow float animation with different duration (4s, 5s, 6s, 4.5s, 5.5s) so they feel organic:
+React (top left of character) — #61DAFB glow
+Node.js (bottom left) — #68A063 glow
+Python (top right) — #3776AB glow
+TypeScript (mid right) — #3178C6 glow
+Git (bottom right) — #F05032 glow
+Each icon: 44px circle, background rgba(28,27,31,0.9), border 1px rgba(240,237,232,0.1), brand color box-shadow glow, official colourful SVG logo inside
+
+Stats row — bottom of hero, full width, subtle divider line above:
+3 stats side by side with vertical dividers between them:
+"3+" / "Shipped Products" · "Top 150" / "Nationally at Rogers" · "Dean's List" / "2023 & 2024"
+Stat number: 28px Syne 800 coral · Label: 11px DM Sans uppercase muted
+
+SECTION 2 — ABOUT ME
+Section tag: monospace JetBrains Mono — "// 01 · about" in coral, 12px
+Heading: "Engineer. Builder. Top Performer." — 52px Syne 800 warm off-white
+Two column layout:
+Left (60%):
+
+Bold one-liner 20px Syne 700: "Full Stack Engineer who builds products people actually use."
+Three bullet points with coral → arrow prefix, 15px DM Sans muted, generous line-height 1.8:
+"Throughout my software development journey, I've shown a strong commitment to innovation and creative problem-solving — from building live platforms to integrating real APIs used by real users."
+"My analytical approach helps me break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal."
+"Beyond code — I'm a nationally ranked sales professional. Top 150 in Canada and Top 3 in the GTA at Rogers and Staples, which means I understand business, customers, and commercial impact, not just technical execution."
+Two CTA buttons below: "Contact Me" coral filled · "View Resume" warm glass outline
+Three social icon links below buttons
+
+Right (40%):
+
+2x2 grid of warm glass stat cards:
+Each card: background #2C2B30, border 1px #4F4F51, coral top edge 2px, border-radius 16px, padding 20px
+Card 1: "3+" coral large / "Shipped Products" muted label
+Card 2: "Top 150" coral / "Nationally at Rogers & Staples"
+Card 3: "Top 3" coral / "GTA Sales Ranking"
+Card 4: "Dean's List" coral / "Algoma University 2023 & 2024"
+
+
+SECTION 3 — MY UNIVERSE (Interactive D3 Graph)
+Section tag: "// 02 · universe"
+Heading: "The full picture." — 52px Syne 800
+Subtext: "Click any node to explore · Drag to rearrange" — 13px JetBrains Mono muted
+Full width dark panel — background #2C2B30, border-radius 24px, padding 48px, height 580px
+Contains a D3.js force-directed graph — interactive, physics-based, nodes settle organically on load
+Node hierarchy and styling:
+
+Center node: "Het Patel" — 30px radius, coral fill #F58F7C, white Syne 800 label, subtle pulse animation
+4 category nodes: "Engineer" · "Sales" · "Education" · "Projects" — 20px radius, blush fill #F2C4CE, dark text, connected to center
+16 detail nodes: smaller 12px radius, warm gray #4F4F51 fill, off-white text, connected to their parent category
+4 trait nodes: "Trilingual" · "Brampton ON" · "Top Performer" · "Available 2026" — 10px radius, dashed coral border, transparent fill, floating freely
+
+Graph connection lines: rgba(245,143,124,0.15) thin 1px lines — coral at very low opacity
+On load animation: nodes burst outward from center then physics pulls them into natural positions — like an explosion settling into orbit. 1.5s animation.
+Hover interaction: node scales 1.3x, connected lines highlight to full coral opacity, cursor becomes pointer
+Click interaction: floating warm glass tooltip card appears near clicked node showing name + one-liner description + optional "view →" link. Card closes on outside click or ESC.
+Tooltip card style: background rgba(44,43,48,0.95), backdrop blur 20px, border 1px solid rgba(245,143,124,0.25), coral top edge glow, border-radius 14px, padding 14px 18px, Syne 700 title + DM Sans muted description
+Bottom of section: small instruction hint "drag · click · explore" in JetBrains Mono 11px muted, fades out after 3 seconds
+
+SECTION 4 — PROJECTS
+Section tag: "// 03 · work"
+Heading: "Things I've shipped from scratch." — 52px Syne 800
+Right-aligned comment: "// 3 of 3" JetBrains Mono muted
+Three cards in a row, equal width, warm glass card style:
+Each card top: 180px visual area with abstract SVG illustration:
+Card 1 (StudenzBit): warm coral-to-blush gradient, abstract world map line SVG at low opacity
+Card 2 (RecurList): warm blush-to-sage gradient, abstract checklist SVG
+Card 3 (Task Manager): coral-to-warm-gray gradient, abstract kanban SVG
+Card body:
+
+Top row: "PROJ / 01" JetBrains Mono muted left · "● 214" muted right
+Tech tag pills: warm glass outline, muted text, 20px radius
+Project name: 22px Syne 800 warm off-white
+Description: 13px DM Sans muted, 3 lines max
+Footer: "view case →" coral left · "● live" sage green dot right
+
+Hover: card lifts 6px, coral top border brightens, warm outer glow
+
+SECTION 5 — EXPERIENCE
+Section tag: "// 04 · experience"
+Heading: "Where I've made an impact." — 52px Syne 800
+Vertical timeline — left side glowing line, coral top fading to blush to transparent:
+Each entry is a floating warm glass card, 85% width, offset from timeline line
+Left accent: 3px coral gradient strip on left edge of each card
+Node on timeline: 16px hollow circle, coral border, dark fill, pulse ring animation
+Four cards in order:
+Card 1 — Walmart Canada (June 2023 – Dec 2023):
+Role badge: "Electronics Sales Associate" warm glass pill
+Bullets: Top performer for Mastercard and Protection Plans · Consultative electronics selling across 50+ SKUs · Guided customers through complex tech decisions
+Tags: Consultative Sales · Electronics · Retail Operations
+Card 2 — Staples Canada ULC (Dec 2023 – May 2024):
+Role badge: "Wireless Sales Consultant" blush glass pill
+Highlight badge floating top right: "🏆 Top 150 Canada · Top 3 GTA" coral gradient
+Bullets: Ranked Top 150 nationally and Top 3 GTA for wireless · Supervisor on Duty managing daily operations · Trained new hire associates on wireless portfolio and CRM · Managed activations across Rogers Bell Telus
+Tags: Wireless Sales · Team Leadership · Training · CRM
+Card 3 — Freelance (May 2024 – Sept 2024):
+Role badge: "Software Developer" sage green glass pill
+Bullets: Built full-stack Laundry Management System — React, Node.js, PostgreSQL, real-time booking and payment tracking · Delivered 3+ client websites using React and Tailwind, deployed on Vercel · Built React Native mobile apps for small business clients · Managed full project lifecycle solo — discovery to deployment
+Tags: React · Node.js · PostgreSQL · React Native · Vercel · Full Stack
+Card 4 — Rogers Communications (Sept 2024 – Present) — FEATURED, slightly larger, stronger coral glow:
+Role badge: "Sales Associate / Manager on Duty" coral glass pill
+Green pulsing dot + "Current" label on date
+Highlight badge: "🏆 Top Seller · Rogers Mastercard"
+Bullets: Acting Store Manager on rotation — staff management, inventory, daily targets for team of 8+ · Promoted Rogers Fido Chatr — top placement in wireless activations · Ranked Top Seller for Rogers Mastercard regionally · Designed Excel performance tracking dashboard — automated KPI reporting and trend visualization · Bridged commercial instincts with technical mindset
+Tags: Team Leadership · Rogers · Fido · Chatr · Excel Automation · KPI Tracking
+
+SECTION 6 — EDUCATION
+Section tag: "// 05 · education"
+Two warm glass cards side by side:
+Card 1 — Algoma University:
+University logo placeholder circle · "Algoma University" Syne 800 · "Bachelor of Computer Science" · "Sept 2021 – Dec 2025" · Dean's List badges in sage green · GPA 3.1/4.0
+Card 2 — Certifications:
+Three items stacked: Harvard CS50x · Harvard CS50W · Microsoft 365 — each with logo + name + issuer in warm glass list items
+
+SECTION 7 — TECH STACK
+Section tag: "// 06 · stack"
+Heading: "Tools I reach for." — 52px Syne 800
+Subtext right-aligned: "// proof over self-rating" JetBrains Mono muted
+NOT progress bars. Instead a curated toolkit grid — 4 columns, 2 rows = 8 cards:
+Each card: warm glass style, tech logo top left, tech name Syne 700, ONE specific use case below in 13px DM Sans muted italic
+Cards:
+React — "Built StudenzBit's frontend and interactive D3 world map"
+Node.js + Express — "Powered RecurList's recurring rules engine"
+TypeScript — "Type-safe development across all recent projects"
+PostgreSQL / Supabase — "Database layer for 3 production projects"
+Python — "Scripting, automation and backend API development"
+Tailwind CSS — "Styled every frontend project with mobile-first approach"
+Git / GitHub — "Version control across all personal and freelance work"
+Vercel / Docker — "Deployed and containerized production applications"
+Each card hover: lifts, coral border glow, logo gets brand color glow
+
+MARQUEE DIVIDER (between major sections):
+Full width infinite scroll ticker, auto-scrolling left, pauses on hover:
+Content: "React · Node.js · TypeScript · PostgreSQL · Full Stack · Problem Solver · Top Performer · Builder · Supabase · Vercel · Git · Python · Java · REST APIs · AWS ·"
+Style: 13px JetBrains Mono, muted #9E9C9A, coral · separators
+Background: #2C2B30, top and bottom 1px border rgba(240,237,232,0.06)
+Acts as visual section break
+
+SECTION 8 — GTA MAP
+Section tag: "// 07 · location"
+Heading: "Based in the Greater Toronto Area." — 52px Syne 800
+Subtext: "Brampton, ON · Open to remote & relocation"
+Full width warm glass panel containing a stylized SVG map — NOT Google Maps:
+Dark warm background #2C2B30 inside panel
+Major GTA highways (401, 410, 427, 400) as thin coral lines at 15% opacity
+City labels: Toronto · Mississauga · Brampton · Vaughan · Markham — 11px JetBrains Mono muted
+Brampton pin: coral circle with pulsing ring animation radiating outward every 2s
+Subtle topographic contour lines at 3% opacity warm gray
+Two floating warm glass info cards overlaid on map:
+Card 1: "📍 Brampton, ON" / "Available on-site across GTA"
+Card 2: "✈ Open to Relocation" / "Remote-first preferred"
+
+SECTION 9 — GET IN TOUCH
+Section tag: "// 08 · connect"
+Heading: "Have something worth building?" — 52px Syne 800
+Right comment: "// replies within 24h" JetBrains Mono muted
+Two column layout:
+Left — warm glass contact form:
+Name + Email side by side row
+Subject full width
+Message textarea 120px height
+All inputs: background rgba(44,43,48,0.6), border 1px #4F4F51, focus border coral #F58F7C glow, border-radius 12px, DM Sans 14px warm off-white text
+Submit button: full width coral fill, dark text, pill shape, "Send message ✈"
+Footer note: "// form is not wired to a backend — portfolio demo" JetBrains Mono 11px muted
+Right — "Or say hi directly":
+5 warm glass list items stacked:
+Email: hetppatel.cs@gmail.com
+LinkedIn: /in/hetpatel
+GitHub: @hetpatel
+X: @hetpatel
+Location: Brampton, ON · open to relocation
+Each: coral icon square + label + value, hover shows coral border
+
+FOOTER:
+Minimal, centered: "Built by Het Patel · hetppatel.dev · 2026"
+Top border: 1px rgba(240,237,232,0.06)
+Left: repeated nav links small muted
+Right: GitHub LinkedIn X icons
+
+SCROLL AND INTERACTION NOTES:
+
+All sections reveal on scroll with fade + translateY(30px) → 0, staggered 0.1s per element
+Nav active section highlighted with coral dot indicator
+Character floats with sine wave animation 6px up/down, 3s loop
+Tech icons float independently, different speeds, organic feel
+D3 graph nodes draggable, physics-based settling on load
+Skill cards highlight on hover with use-case callout
+Map pin pulses every 2s
+Marquee pauses on hover
+Experience cards slide in from left on scroll
+Smooth scroll throughout, no janky jumps
+Mobile responsive: single column, orbit icons stack below character, graph scales down to 300px height
+
+
+OVERALL FEELING:
+When a recruiter lands on this site they should think: "This person is not like every other CS grad. They think about design, users, and business. They ship real things. They're confident but not aggressive. I want to talk to them." The coral palette is warm and human. The graph is intellectually interesting. The experience section shows real-world impact. The whole thing says: engineer who thinks like a product person.

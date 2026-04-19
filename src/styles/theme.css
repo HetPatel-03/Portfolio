@@ -1,0 +1,60 @@
+:root {
+  /* Warm Coral Color Palette */
+  --bg-primary: #1C1B1F;
+  --bg-surface: #2C2B30;
+  --bg-elevated: #3A393E;
+  --coral: #F58F7C;
+  --blush: #F2C4CE;
+  --text-primary: #F0EDE8;
+  --text-muted: #9E9C9A;
+  --border-color: #4F4F51;
+  --sage-green: #A8C5A0;
+  
+  /* For Tailwind border utilities */
+  --color-border: #4F4F51;
+  --color-background: #1C1B1F;
+  
+  /* Typography */
+  --font-heading: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--border-color);
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--coral);
+}
