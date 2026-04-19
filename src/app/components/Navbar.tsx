@@ -52,7 +52,7 @@ export function Navbar() {
 
   return (
     <nav 
-      className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+      className={`fixed top-5 left-1/2 -translate-x-1/2 z-[100] max-w-[calc(100vw-2rem)] transition-all duration-300 ${
         scrolled ? 'shadow-[0_8px_32px_rgba(0,0,0,0.4)]' : ''
       }`}
       style={{
