@@ -4,7 +4,7 @@ import meHero from '../../assets/Me_Hero.png';
 
 export function Hero() {
   const [cycleIndex, setCycleIndex] = useState(0);
-  const cycleWords = ['Engineer.', 'Problem Solver.', 'Product Minded.', 'Full Stack Dev.'];
+  const cycleWords = ['Software Engineer.', 'Problem Solver.', 'Product Minded.', 'Full Stack Dev.'];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -106,7 +106,7 @@ export function Hero() {
             </h1>
 
             {/* Cycling text */}
-            <div className="h-[100px] flex items-start mb-6 relative overflow-hidden">
+            <div className="relative mb-6 min-h-[200px] w-full max-w-full overflow-hidden">
               {cycleWords.map((word, index) => (
                 <motion.span
                   key={word}
@@ -116,13 +116,15 @@ export function Hero() {
                     y: index === cycleIndex ? 0 : 20
                   }}
                   transition={{ duration: 0.5 }}
-                  className="absolute"
+                  className="absolute left-0 top-0 w-full max-w-full"
                   style={{
                     fontSize: '72px',
                     fontFamily: 'var(--font-heading)',
                     fontWeight: 800,
                     color: 'var(--coral)',
-                    letterSpacing: '-2px'
+                    letterSpacing: '-2px',
+                    lineHeight: 1.05,
+                    whiteSpace: 'normal',
                   }}
                 >
                   {word}
