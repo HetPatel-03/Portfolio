@@ -1,10 +1,27 @@
+const stats = [
+  {
+    number: '3+',
+    label: 'BUILDING & SHIPPING REAL PRODUCTS',
+    variant: 'coral' as const,
+  },
+  {
+    number: 'Top 150',
+    label: 'WIRELESS SALES · STAPLES CANADA',
+    variant: 'blue' as const,
+  },
+  {
+    number: 'Full Stack',
+    label: 'FRONTEND · BACKEND · DATABASE · DEVOPS',
+    variant: 'lime' as const,
+  },
+  {
+    number: 'Harvard',
+    label: 'CERTIFIED · CS50X & CS50W',
+    variant: 'violet' as const,
+  },
+];
+
 export function About() {
-  const stats = [
-    { number: '3+', label: 'Shipped Products' },
-    { number: 'Top 150', label: 'Nationally' },
-    { number: 'Top 3', label: 'GTA' },
-    { number: "Dean's List", label: 'Algoma University 2023 & 2024' },
-  ];
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -219,7 +236,10 @@ export function About() {
             {/* Stat cards 2×2 */}
             <div className="grid grid-cols-2 gap-4">
               {stats.map((stat, index) => (
-                <div key={index} className="about-stat-card">
+                <div
+                  key={index}
+                  className={`about-stat-card about-stat-card--${stat.variant}`}
+                >
                   <div className="about-stat-number">{stat.number}</div>
                   <div className="about-stat-label">{stat.label}</div>
                 </div>

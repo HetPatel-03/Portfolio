@@ -102,33 +102,94 @@ h1, h2 {
 }
 
 .about-stat-card {
-  background: rgba(255, 255, 255, 0.04);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 20px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.04);
+  background-blend-mode: overlay;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-top: 2px solid rgba(242, 102, 74, 0.4);
-  border-radius: 16px;
-  padding: 20px;
   transition: all 0.3s ease;
 }
 
+.about-stat-card::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -35%;
+  width: 130%;
+  height: 95%;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse 70% 65% at 50% 0%,
+    rgba(var(--stat-accent-rgb), 0.28),
+    transparent 68%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.about-stat-card--coral {
+  --stat-accent-rgb: 242, 102, 74;
+  background-color: rgba(242, 102, 74, 0.04);
+  border-top: 2px solid rgba(242, 102, 74, 0.6);
+}
+
+.about-stat-card--blue {
+  --stat-accent-rgb: 96, 165, 250;
+  background-color: rgba(96, 165, 250, 0.04);
+  border-top: 2px solid rgba(96, 165, 250, 0.6);
+}
+
+.about-stat-card--lime {
+  --stat-accent-rgb: 200, 241, 53;
+  background-color: rgba(200, 241, 53, 0.04);
+  border-top: 2px solid rgba(200, 241, 53, 0.6);
+}
+
+.about-stat-card--violet {
+  --stat-accent-rgb: 167, 139, 250;
+  background-color: rgba(167, 139, 250, 0.04);
+  border-top: 2px solid rgba(167, 139, 250, 0.6);
+}
+
 .about-stat-card:hover {
-  border: 1px solid rgba(242, 102, 74, 0.25);
-  border-top: 2px solid rgba(242, 102, 74, 0.4);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .about-stat-number {
+  position: relative;
+  z-index: 1;
   font-size: 28px;
   font-weight: 800;
-  color: #f2664a;
   font-family: var(--font-heading);
   line-height: 1.2;
   margin-bottom: 8px;
 }
 
+.about-stat-card--coral .about-stat-number {
+  color: #f2664a;
+}
+
+.about-stat-card--blue .about-stat-number {
+  color: #60a5fa;
+}
+
+.about-stat-card--lime .about-stat-number {
+  color: #c8f135;
+}
+
+.about-stat-card--violet .about-stat-number {
+  color: #a78bfa;
+}
+
 .about-stat-label {
+  position: relative;
+  z-index: 1;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 1px;
