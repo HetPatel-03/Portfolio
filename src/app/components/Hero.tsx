@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Github, Linkedin, Twitter } from 'lucide-react';
 import { motion } from 'motion/react';
+import meHero from '../../assets/Me_Hero.png';
 
 export function Hero() {
   const [cycleIndex, setCycleIndex] = useState(0);
@@ -12,14 +13,6 @@ export function Hero() {
     }, 2500);
     return () => clearInterval(interval);
   }, []);
-
-  const techIcons = [
-    { name: 'React', color: '#61DAFB', position: { top: '15%', left: '10%' }, duration: 4 },
-    { name: 'Node.js', color: '#68A063', position: { bottom: '25%', left: '5%' }, duration: 5 },
-    { name: 'Python', color: '#3776AB', position: { top: '10%', right: '15%' }, duration: 6 },
-    { name: 'TypeScript', color: '#3178C6', position: { top: '40%', right: '10%' }, duration: 4.5 },
-    { name: 'Git', color: '#F05032', position: { bottom: '20%', right: '8%' }, duration: 5.5 },
-  ];
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -203,87 +196,32 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right Side - Character & Tech Icons */}
-          <div className="relative h-[600px] flex items-end justify-center">
-            {/* Developer visual card */}
-            <motion.div
-              className="w-full h-full flex items-center justify-center"
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          {/* Right Side - Hero image */}
+          <div className="relative h-[600px] w-full">
+            <div
+              className="hero-image-container"
+              style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'center',
+                height: '100%',
+              }}
             >
-              <div
-                className="w-[340px] rounded-[24px] overflow-hidden"
+              <img
+                src={meHero}
+                alt="Het Patel"
                 style={{
-                  background: 'rgba(44, 43, 48, 0.8)',
-                  border: '1px solid rgba(240, 237, 232, 0.1)',
-                  borderTop: '2px solid rgba(245, 143, 124, 0.4)',
-                  boxShadow: '0 40px 80px rgba(0,0,0,0.5), 0 0 60px rgba(245,143,124,0.08)',
-                  backdropFilter: 'blur(20px)'
+                  height: '90%',
+                  maxHeight: '600px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  objectPosition: 'bottom',
+                  filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.15))',
+                  animation: 'heroFloat 3s ease-in-out infinite',
                 }}
-              >
-                {/* Terminal header */}
-                <div
-                  className="flex items-center gap-2 px-4 py-3"
-                  style={{ borderBottom: '1px solid rgba(240,237,232,0.06)' }}
-                >
-                  <div className="w-3 h-3 rounded-full" style={{ background: '#FF5F57' }} />
-                  <div className="w-3 h-3 rounded-full" style={{ background: '#FFBD2E' }} />
-                  <div className="w-3 h-3 rounded-full" style={{ background: '#28CA41' }} />
-                  <span className="ml-2 text-[11px]" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                    het@portfolio ~ %
-                  </span>
-                </div>
-                {/* Terminal body */}
-                <div className="p-6 space-y-3">
-                  {[
-                    { label: 'name', value: '"Het Patel"', color: '#F2C4CE' },
-                    { label: 'role', value: '"Full Stack Engineer"', color: '#F58F7C' },
-                    { label: 'location', value: '"Brampton, ON 🍁"', color: '#A8C5A0' },
-                    { label: 'stack', value: '["React","Node","TypeScript"]', color: '#61DAFB' },
-                    { label: 'status', value: '"Available 2026 ✅"', color: '#A8C5A0' },
-                  ].map((line, i) => (
-                    <div key={i} className="flex gap-2 text-[13px]" style={{ fontFamily: 'var(--font-mono)' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>const</span>
-                      <span style={{ color: '#F58F7C' }}>{line.label}</span>
-                      <span style={{ color: 'var(--text-muted)' }}>=</span>
-                      <span style={{ color: line.color }}>{line.value}</span>
-                    </div>
-                  ))}
-                  <div className="flex gap-2 text-[13px] mt-2" style={{ fontFamily: 'var(--font-mono)' }}>
-                    <span style={{ color: 'var(--coral)', opacity: 0.6 }}>▋</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Floating Tech Icons */}
-            {techIcons.map((tech, index) => (
-              <motion.div
-                key={tech.name}
-                className="absolute w-11 h-11 rounded-full flex items-center justify-center"
-                style={{
-                  ...tech.position,
-                  background: 'rgba(12, 12, 16, 0.9)',
-                  border: '1px solid rgba(240, 237, 232, 0.1)',
-                  boxShadow: `0 0 20px ${tech.color}40`
-                }}
-                animate={{ y: [0, -15, 0] }}
-                transition={{
-                  duration: tech.duration,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: index * 0.3
-                }}
-              >
-                <span style={{ color: tech.color, fontSize: '20px' }}>
-                  {tech.name === 'React' && '⚛'}
-                  {tech.name === 'Node.js' && '⬢'}
-                  {tech.name === 'Python' && '🐍'}
-                  {tech.name === 'TypeScript' && 'TS'}
-                  {tech.name === 'Git' && '⎇'}
-                </span>
-              </motion.div>
-            ))}
+              />
+            </div>
           </div>
         </div>
       </div>
