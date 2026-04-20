@@ -421,3 +421,51 @@ h1, h2 {
     0 24px 64px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
+
+/* Tech stack — horizontal track */
+.stack-skills-watermark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(80px, 18vw, 220px);
+  color: rgba(255, 255, 255, 0.025);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.stack-track-wrap {
+  position: relative;
+}
+
+.stack-scroll-row {
+  cursor: grab;
+}
+
+.stack-scroll-row:active {
+  cursor: grabbing;
+}
+
+.stack-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.stack-fade--left {
+  left: 0;
+  background: linear-gradient(to right, rgba(12, 12, 16, 1), rgba(12, 12, 16, 0));
+}
+
+.stack-fade--right {
+  right: 0;
+  background: linear-gradient(to left, rgba(12, 12, 16, 1), rgba(12, 12, 16, 0));
+}
