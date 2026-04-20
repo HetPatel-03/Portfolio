@@ -1,3 +1,5 @@
+import { getTechTagPillStyle } from '../lib/techTagPill';
+
 export function Experience() {
   const experiences = [
     {
@@ -222,16 +224,7 @@ export function Experience() {
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2">
                     {exp.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2.5 py-1 text-xs rounded"
-                        style={{
-                          background: 'rgba(79, 79, 81, 0.3)',
-                          color: 'var(--text-muted)',
-                          fontFamily: 'var(--font-body)',
-                          fontSize: '11px'
-                        }}
-                      >
+                      <span key={tag} style={getTechTagPillStyle(tag)}>
                         {tag}
                       </span>
                     ))}

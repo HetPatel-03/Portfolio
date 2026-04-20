@@ -1,3 +1,5 @@
+import { getTechTagPillStyle, splitStackTechName } from '../lib/techTagPill';
+
 export function TechStack() {
   const technologies = [
     {
@@ -113,17 +115,14 @@ export function TechStack() {
                 </span>
               </div>
 
-              {/* Name */}
-              <h3 
-                className="text-lg mb-3"
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 700,
-                  color: 'var(--text-primary)'
-                }}
-              >
-                {tech.name}
-              </h3>
+              {/* Name — tinted glass pills per technology token */}
+              <div className="mb-3 flex flex-wrap gap-2">
+                {splitStackTechName(tech.name).map((part) => (
+                  <span key={part} style={getTechTagPillStyle(part)}>
+                    {part}
+                  </span>
+                ))}
+              </div>
 
               {/* Use Case */}
               <p 

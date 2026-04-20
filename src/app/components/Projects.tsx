@@ -1,3 +1,5 @@
+import { getTechTagPillStyle } from '../lib/techTagPill';
+
 export function Projects() {
   const projects = [
     {
@@ -121,16 +123,7 @@ export function Projects() {
                 {/* Tech Tags */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 text-xs rounded-full"
-                      style={{
-                        background: 'rgba(44, 43, 48, 0.7)',
-                        border: '1px solid rgba(240, 237, 232, 0.15)',
-                        color: 'var(--text-muted)',
-                        fontFamily: 'var(--font-body)'
-                      }}
-                    >
+                    <span key={tag} style={getTechTagPillStyle(tag)}>
                       {tag}
                     </span>
                   ))}
