@@ -39,9 +39,9 @@ interface SceneNode {
   mesh: THREE.Mesh;
 }
 
-const CAT_RADIUS = 140;
-const SUB_RADIUS = 55;
-const LEAF_RADIUS = 25;
+const CAT_RADIUS = 100;
+const SUB_RADIUS = 38;
+const LEAF_RADIUS = 18;
 
 function fibonacciSpherePoints(count: number, radius: number): THREE.Vector3[] {
   if (count <= 1) return [new THREE.Vector3(0, 0, radius)];
@@ -56,15 +56,6 @@ function fibonacciSpherePoints(count: number, radius: number): THREE.Vector3[] {
     points.push(new THREE.Vector3(x * radius, y * radius, z * radius));
   }
   return points;
-}
-
-function hexWithOpacity(hex: string, opacity: number): string {
-  const normalized = hex.replace('#', '');
-  const bigint = parseInt(normalized, 16);
-  const r = (bigint >> 16) & 255;
-  const g = (bigint >> 8) & 255;
-  const b = bigint & 255;
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
 
 export function Universe() {
@@ -150,7 +141,7 @@ export function Universe() {
     scene.background = new THREE.Color(0x0c0c10);
 
     const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 2000);
-    camera.position.set(0, 0, 350);
+    camera.position.set(0, 0, 280);
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -160,8 +151,8 @@ export function Universe() {
     controls.dampingFactor = 0.08;
     controls.enableZoom = true;
     controls.enablePan = true;
-    controls.minDistance = 60;
-    controls.maxDistance = 500;
+    controls.minDistance = 50;
+    controls.maxDistance = 380;
 
     const ambient = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambient);
@@ -271,23 +262,39 @@ export function Universe() {
     const disposableGeometries: THREE.BufferGeometry[] = [];
     const disposableMaterials: THREE.Material[] = [];
     const disposableTextures: THREE.Texture[] = [];
+    const lineObjects: THREE.Line[] = [];
 
     const textureLoader = new THREE.TextureLoader();
-    const centerTexture = textureLoader.load('/Me_Memoji_Laptop.png');
-    disposableTextures.push(centerTexture);
 
     simNodes.forEach((node) => {
       const geometry = new THREE.SphereGeometry(node.size, 32, 32);
       disposableGeometries.push(geometry);
 
-      const material = new THREE.MeshStandardMaterial({
-        color: node.type === 'center' ? 0xffffff : node.color,
-        map: node.type === 'center' ? centerTexture : undefined,
-        roughness: 0.3,
-        metalness: 0.4,
-        transparent: node.type === 'sub' || node.type === 'leaf',
-        opacity: node.type === 'category' || node.type === 'center' ? 1 : 0,
-      });
+      let material: THREE.MeshStandardMaterial;
+      if (node.type === 'center') {
+        material = new THREE.MeshStandardMaterial({
+          color: 0xffffff,
+          map: undefined,
+          roughness: 0.1,
+          metalness: 0,
+          transparent: false,
+        });
+        textureLoader.load('/Me_Memoji_Laptop.png', (tex) => {
+          tex.colorSpace = THREE.SRGBColorSpace;
+          disposableTextures.push(tex);
+          material.map = tex;
+          material.needsUpdate = true;
+          renderer.render(scene, camera);
+        });
+      } else {
+        material = new THREE.MeshStandardMaterial({
+          color: node.color,
+          roughness: 0.3,
+          metalness: 0.4,
+          transparent: node.type === 'sub' || node.type === 'leaf',
+          opacity: node.type === 'category' ? 1 : 0,
+        });
+      }
       disposableMaterials.push(material);
 
       const mesh = new THREE.Mesh(geometry, material);
@@ -317,10 +324,18 @@ export function Universe() {
       const targetNode = simById.get(targetId);
       if (!sourceNode || !targetNode) return;
 
-      let opacity = 0.12;
-      if (targetNode.type === 'category') opacity = 0.4;
-      if (targetNode.type === 'sub') opacity = 0.2;
-      if (targetNode.type === 'leaf') opacity = 0.12;
+      let opacity = 0.15;
+      let lineColor: THREE.Color;
+      if (targetNode.type === 'category') {
+        opacity = 0.5;
+        lineColor = new THREE.Color(targetNode.color);
+      } else if (targetNode.type === 'sub') {
+        opacity = 0.3;
+        lineColor = new THREE.Color(sourceNode.color);
+      } else {
+        opacity = 0.15;
+        lineColor = new THREE.Color(sourceNode.color);
+      }
 
       const lineGeometry = new THREE.BufferGeometry().setFromPoints([
         new THREE.Vector3(sourceNode.x, sourceNode.y, sourceNode.z),
@@ -329,12 +344,16 @@ export function Universe() {
       disposableGeometries.push(lineGeometry);
 
       const lineMaterial = new THREE.LineBasicMaterial({
-        color: sourceNode.color,
+        color: lineColor,
         transparent: true,
         opacity,
+        depthWrite: false,
+        vertexColors: false,
       });
       disposableMaterials.push(lineMaterial);
-      graphGroup.add(new THREE.Line(lineGeometry, lineMaterial));
+      const line = new THREE.Line(lineGeometry, lineMaterial);
+      scene.add(line);
+      lineObjects.push(line);
     });
 
     const raycaster = new THREE.Raycaster();
@@ -516,6 +535,7 @@ export function Universe() {
       renderer.domElement.removeEventListener('mousemove', updateMouse);
       simulation.stop();
 
+      lineObjects.forEach((l) => scene.remove(l));
       disposableGeometries.forEach((g) => g.dispose());
       disposableMaterials.forEach((m) => m.dispose());
       disposableTextures.forEach((t) => t.dispose());
