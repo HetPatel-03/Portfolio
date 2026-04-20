@@ -39,7 +39,7 @@ interface SceneNode {
   mesh: THREE.Mesh;
 }
 
-const CAT_RADIUS = 100;
+const CAT_RADIUS = 80;
 const SUB_RADIUS = 38;
 const LEAF_RADIUS = 18;
 
@@ -68,7 +68,7 @@ export function Universe() {
 
   const nodes = useMemo<Node[]>(() => {
     const base: Node[] = [
-      { id: 'het', label: 'Het Patel', type: 'center', color: '#F2664A', size: 28 },
+      { id: 'het', label: 'Het Patel', type: 'center', color: '#F2664A', size: 42 },
       { id: 'education', label: 'Education', type: 'category', parent: 'het', color: '#C8F135', size: 16 },
       { id: 'experience', label: 'Experience', type: 'category', parent: 'het', color: '#60A5FA', size: 16 },
       { id: 'startups', label: 'Startups', type: 'category', parent: 'het', color: '#FBBF24', size: 16 },
@@ -141,7 +141,7 @@ export function Universe() {
     scene.background = new THREE.Color(0x0c0c10);
 
     const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 2000);
-    camera.position.set(0, 0, 280);
+    camera.position.set(0, 0, 240);
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -281,6 +281,10 @@ export function Universe() {
         });
         textureLoader.load('/Me_Memoji_Laptop.png', (tex) => {
           tex.colorSpace = THREE.SRGBColorSpace;
+          tex.center.set(0.5, 0.5);
+          tex.repeat.set(1, 1);
+          tex.wrapS = THREE.ClampToEdgeWrapping;
+          tex.wrapT = THREE.ClampToEdgeWrapping;
           disposableTextures.push(tex);
           material.map = tex;
           material.needsUpdate = true;
@@ -318,37 +322,26 @@ export function Universe() {
     graphGroup.add(centerGlow);
 
     simLinks.forEach((link) => {
-      const sourceId = link.source as string;
-      const targetId = link.target as string;
-      const sourceNode = simById.get(sourceId);
-      const targetNode = simById.get(targetId);
-      if (!sourceNode || !targetNode) return;
+      const parentId = link.source as string;
+      const childId = link.target as string;
+      const parentNode = simById.get(parentId);
+      const childNode = simById.get(childId);
+      if (!parentNode || !childNode) return;
 
-      let opacity = 0.15;
-      let lineColor: THREE.Color;
-      if (targetNode.type === 'category') {
-        opacity = 0.5;
-        lineColor = new THREE.Color(targetNode.color);
-      } else if (targetNode.type === 'sub') {
-        opacity = 0.3;
-        lineColor = new THREE.Color(sourceNode.color);
-      } else {
-        opacity = 0.15;
-        lineColor = new THREE.Color(sourceNode.color);
-      }
-
-      const lineGeometry = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(sourceNode.x, sourceNode.y, sourceNode.z),
-        new THREE.Vector3(targetNode.x, targetNode.y, targetNode.z),
-      ]);
+      const pParent = new THREE.Vector3(parentNode.x, parentNode.y, parentNode.z);
+      const pChild = new THREE.Vector3(childNode.x, childNode.y, childNode.z);
+      const curve = new THREE.CatmullRomCurve3([pParent, pChild]);
+      const curvePoints = curve.getPoints(1);
+      const lineGeometry = new THREE.BufferGeometry().setFromPoints(curvePoints);
       disposableGeometries.push(lineGeometry);
 
+      const parentColorHex = new THREE.Color(parentNode.color).getHex();
       const lineMaterial = new THREE.LineBasicMaterial({
-        color: lineColor,
+        color: parentColorHex,
         transparent: true,
-        opacity,
+        opacity: 0.4,
         depthWrite: false,
-        vertexColors: false,
+        depthTest: false,
       });
       disposableMaterials.push(lineMaterial);
       const line = new THREE.Line(lineGeometry, lineMaterial);
