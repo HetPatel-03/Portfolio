@@ -304,83 +304,102 @@ export function Contact() {
           </div>
         </div>
 
-        <div
-          className="w-full mt-[60px] rounded-[20px] overflow-hidden relative"
-          style={{ height: '420px', background: '#0C0C10' }}
-        >
-          <img
-            src="/Map.png"
-            alt="GTA Map"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              objectPosition: 'center bottom',
-              opacity: 0.85,
-              display: 'block',
-            }}
-          />
-
+        <div className="w-full mt-[60px] flex flex-col md:flex-row items-stretch gap-6">
           <div
-            className="absolute top-0 left-0 right-0 pointer-events-none"
-            style={{ height: '120px', background: 'linear-gradient(to bottom, #0C0C10, transparent)' }}
-          />
-          <div
-            className="absolute bottom-0 left-0 right-0 pointer-events-none"
-            style={{ height: '120px', background: 'linear-gradient(to top, #0C0C10, transparent)' }}
-          />
-          <div
-            className="absolute top-0 left-0 bottom-0 pointer-events-none"
-            style={{ width: '120px', background: 'linear-gradient(to right, #0C0C10, transparent)' }}
-          />
-          <div
-            className="absolute top-0 right-0 bottom-0 pointer-events-none"
-            style={{ width: '120px', background: 'linear-gradient(to left, #0C0C10, transparent)' }}
-          />
-
-          <div className="absolute" style={{ left: '22%', top: '45%', transform: 'translate(-50%, -50%)' }}>
-            <div
+            style={{ flex: '0 0 60%', height: '480px', borderRadius: '20px', overflow: 'hidden', position: 'relative' }}
+            className="w-full md:w-auto h-[280px] md:h-[480px]"
+          >
+            <img
+              src="/Map.png"
+              alt="GTA Map"
               style={{
-                width: '20px',
-                height: '20px',
-                borderRadius: '50%',
-                background: 'rgba(242,102,74,0.25)',
-                border: '1.5px solid #F2664A',
-                position: 'relative',
-                animation: 'connectPinPulse 2s infinite',
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center bottom',
+                opacity: 0.85,
+                display: 'block',
               }}
-            >
+            />
+            <div
+              style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '120px', background: 'linear-gradient(to bottom, #0C0C10, transparent)', pointerEvents: 'none' }}
+            />
+            <div
+              style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '120px', background: 'linear-gradient(to top, #0C0C10, transparent)', pointerEvents: 'none' }}
+            />
+            <div
+              style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '100px', background: 'linear-gradient(to right, #0C0C10, transparent)', pointerEvents: 'none' }}
+            />
+            <div
+              style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: '100px', background: 'linear-gradient(to left, #0C0C10, transparent)', pointerEvents: 'none' }}
+            />
+
+            <div className="absolute" style={{ left: '22%', top: '45%', transform: 'translate(-50%, -50%)' }}>
               <div
                 style={{
-                  width: '8px',
-                  height: '8px',
-                  background: '#F2664A',
+                  width: '20px',
+                  height: '20px',
                   borderRadius: '50%',
+                  background: 'rgba(242,102,74,0.25)',
+                  border: '1.5px solid #F2664A',
+                  position: 'relative',
+                  animation: 'connectPinPulse 2s infinite',
+                }}
+              >
+                <div
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    background: '#F2664A',
+                    borderRadius: '50%',
+                    position: 'absolute',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
                   position: 'absolute',
                   left: '50%',
-                  top: '50%',
-                  transform: 'translate(-50%, -50%)',
+                  top: '-60px',
+                  transform: 'translateX(-50%)',
+                  background: 'rgba(12,12,16,0.85)',
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(242,102,74,0.3)',
+                  borderRadius: '8px',
+                  padding: '6px 12px',
+                  whiteSpace: 'nowrap',
                 }}
-              />
+              >
+                <div style={{ color: '#F0EDE8', fontSize: '12px', fontFamily: 'DM Sans' }}>Toronto, ON · GTA</div>
+                <div style={{ color: '#A8A8B8', fontSize: '11px', fontFamily: 'DM Sans' }}>Open to On-site &amp; Remote</div>
+              </div>
             </div>
+          </div>
 
+          <div
+            style={{ flex: '0 0 calc(40% - 24px)', height: '480px', borderRadius: '20px', overflow: 'hidden', position: 'relative' }}
+            className="w-full md:w-auto h-[360px] md:h-[480px]"
+          >
+            <img
+              src="/Image2.png"
+              alt="Het Patel - Toronto Waterfront"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
+            />
             <div
-              style={{
-                position: 'absolute',
-                left: '50%',
-                top: '-60px',
-                transform: 'translateX(-50%)',
-                background: 'rgba(12,12,16,0.85)',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
-                border: '1px solid rgba(242,102,74,0.3)',
-                borderRadius: '8px',
-                padding: '6px 12px',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              <div style={{ color: '#F0EDE8', fontSize: '12px', fontFamily: 'DM Sans' }}>Toronto, ON · GTA</div>
-              <div style={{ color: '#A8A8B8', fontSize: '11px', fontFamily: 'DM Sans' }}>Open to On-site &amp; Remote</div>
+              style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '180px', background: 'linear-gradient(to top, rgba(12,12,16,0.92) 0%, transparent 100%)', pointerEvents: 'none' }}
+            />
+            <div style={{ position: 'absolute', bottom: '24px', left: '24px', right: '24px' }}>
+              <div style={{ fontFamily: "'Clash Display', sans-serif", fontWeight: 800, fontSize: '20px', color: '#F0EDE8', marginBottom: '6px' }}>Het Patel</div>
+              <div style={{ fontFamily: 'DM Sans', fontSize: '13px', color: '#A8A8B8', marginBottom: '10px' }}>Toronto, ON · GTA</div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(200,241,53,0.12)', border: '1px solid rgba(200,241,53,0.3)', borderRadius: '999px', padding: '4px 12px' }}>
+                <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#C8F135' }} />
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: '11px', color: '#C8F135' }}>Open to work · 2025</span>
+              </div>
             </div>
           </div>
         </div>
