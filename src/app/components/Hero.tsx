@@ -33,6 +33,8 @@ export function Hero() {
         alignItems: 'center',
         position: 'relative',
         paddingTop: '80px',
+        paddingLeft: 'clamp(40px, 8vw, 120px)',
+        paddingRight: 'clamp(40px, 8vw, 120px)',
       }}
     >
       {/* Noise texture overlay */}
@@ -45,15 +47,15 @@ export function Hero() {
         </svg>
       </div>
 
-      <div className="max-w-7xl mx-auto px-8 w-full">
+      <div className="w-full">
         <div
           className="flex flex-col md:flex-row gap-12 md:gap-16"
-          style={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}
+          style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', alignItems: 'center', justifyContent: 'space-between' }}
         >
           {/* Left Side */}
           <div
-            className="relative z-10 w-full md:w-1/2 text-center md:text-left"
-            style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+            className="relative z-10 w-full text-center md:text-left"
+            style={{ flex: '0 0 55%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
           >
             {/* Availability badge */}
             <div 
@@ -291,8 +293,8 @@ export function Hero() {
 
           {/* Right Side - Hero image */}
           <div
-            className="relative w-full md:w-1/2 h-[420px] md:h-[600px]"
-            style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'stretch' }}
+            className="relative w-full h-[420px] md:h-[600px]"
+            style={{ flex: '0 0 45%', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'stretch' }}
           >
             <div
               style={{
