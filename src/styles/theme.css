@@ -271,3 +271,100 @@ h1, h2 {
   padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
+
+/* Education section */
+.education-liquid-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 2px solid rgba(200, 241, 53, 0.4);
+  border-radius: 20px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.education-clickable {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.education-liquid-card.education-clickable:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.14);
+  border-top-color: rgba(200, 241, 53, 0.55);
+}
+
+.education-deans-pill {
+  background: rgba(200, 241, 53, 0.1);
+  border: 1px solid rgba(200, 241, 53, 0.25);
+  color: #c8f135;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+.education-cert-item {
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+.education-cert-item--cs50x {
+  background: rgba(200, 241, 53, 0.06);
+  border: 1px solid rgba(200, 241, 53, 0.15);
+}
+
+.education-cert-item--cs50web {
+  background: rgba(96, 165, 250, 0.06);
+  border: 1px solid rgba(96, 165, 250, 0.15);
+}
+
+.education-cert-item--m365 {
+  background: rgba(242, 102, 74, 0.06);
+  border: 1px solid rgba(242, 102, 74, 0.15);
+}
+
+.education-cert-item.education-clickable:hover {
+  transform: translateY(-3px);
+}
+
+.education-cert-item--cs50x.education-clickable:hover {
+  border-color: rgba(200, 241, 53, 0.28);
+}
+
+.education-cert-item--cs50web.education-clickable:hover {
+  border-color: rgba(96, 165, 250, 0.28);
+}
+
+.education-cert-item--m365.education-clickable:hover {
+  border-color: rgba(242, 102, 74, 0.28);
+}
+
+.education-cert-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.education-cert-modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 20px;
+  padding: 1.5rem 1.5rem 1.75rem;
+  background: rgba(20, 20, 24, 0.85);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
