@@ -26,7 +26,14 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="section-bg-hero min-h-screen flex items-center justify-center relative overflow-hidden py-[120px]"
+      className="section-bg-hero relative overflow-hidden"
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        paddingTop: '80px',
+      }}
     >
       {/* Noise texture overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
@@ -39,9 +46,15 @@ export function Hero() {
       </div>
 
       <div className="max-w-7xl mx-auto px-8 w-full">
-        <div className="flex flex-col md:flex-row md:items-center gap-12 md:gap-16">
+        <div
+          className="flex flex-col md:flex-row gap-12 md:gap-16"
+          style={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}
+        >
           {/* Left Side */}
-          <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-center pb-[60px] text-center md:text-left">
+          <div
+            className="relative z-10 w-full md:w-1/2 text-center md:text-left"
+            style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+          >
             {/* Availability badge */}
             <div 
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
@@ -277,12 +290,28 @@ export function Hero() {
           </div>
 
           {/* Right Side - Hero image */}
-          <div className="relative w-full md:w-1/2 h-[420px] md:h-[600px] self-end">
-            <div className="hero-image-container">
+          <div
+            className="relative w-full md:w-1/2 h-[420px] md:h-[600px]"
+            style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'stretch' }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'flex-end',
+                width: '100%',
+                height: '100%',
+              }}
+            >
               <img
                 src={meHero}
                 alt="Het Patel"
                 style={{
+                  height: '90%',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  objectPosition: 'bottom',
+                  maxHeight: '700px',
                   filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.15))',
                   animation: 'heroFloat 3s ease-in-out infinite',
                 }}
