@@ -466,16 +466,16 @@ h1, h2 {
   display: flex;
   width: fit-content;
   gap: 48px;
-  animation: stack-logo-ticker 25s linear infinite;
+  animation: tickerRight 25s linear infinite;
 }
 
-@keyframes stack-logo-ticker {
+@keyframes tickerRight {
   from {
-    transform: translateX(0);
+    transform: translateX(-50%);
   }
 
   to {
-    transform: translateX(-50%);
+    transform: translateX(0);
   }
 }
 

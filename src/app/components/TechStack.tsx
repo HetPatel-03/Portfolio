@@ -319,18 +319,21 @@ export function TechStack() {
                     style={{
                       width: 280,
                       flexShrink: 0,
-                      background: 'rgba(255,255,255,0)',
+                      background: 'rgba(255,255,255,0.03)',
                       border: '1px solid rgba(255,255,255,0.08)',
                       borderRadius: 16,
+                      backdropFilter: 'blur(8px) saturate(120%)',
+                      WebkitBackdropFilter: 'blur(8px) saturate(120%)',
+                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
                       padding: 24,
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = rgbaHex(tech.color, 0.35);
-                      e.currentTarget.style.boxShadow = `0 0 24px ${rgbaHex(tech.color, 0.08)}`;
+                      e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.08), 0 0 24px ${rgbaHex(tech.color, 0.08)}`;
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.06)';
                     }}
                   >
                     <div
