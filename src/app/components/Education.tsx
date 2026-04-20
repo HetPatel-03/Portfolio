@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
 
 type CertId = 'cs50x' | 'cs50web' | 'm365';
 
@@ -42,6 +42,37 @@ const deanListPillByYear = {
     color: '#E5D4A8',
   },
 } as const;
+
+/** Glass pill — Algoma flip hint (front) and ↩ flip back (back) */
+const flipGlassPillStyle = {
+  display: 'inline-flex' as const,
+  alignItems: 'center' as const,
+  gap: '8px',
+  background: 'rgba(255,255,255,0.06)',
+  border: '1px solid rgba(255,255,255,0.12)',
+  backdropFilter: 'blur(10px)',
+  WebkitBackdropFilter: 'blur(10px)',
+  borderRadius: '999px',
+  padding: '6px 16px',
+  color: '#A8A8B8',
+  fontSize: '12px',
+  fontFamily: 'JetBrains Mono, var(--font-mono)',
+  cursor: 'pointer',
+  transition: 'all 0.2s ease',
+  transform: 'translateY(0)',
+};
+
+function flipGlassPillMouseEnter(e: MouseEvent<HTMLElement>) {
+  e.currentTarget.style.transform = 'translateY(-2px)';
+  e.currentTarget.style.border = '1px solid rgba(255,255,255,0.1)';
+  e.currentTarget.style.color = '#F0EDE8';
+}
+
+function flipGlassPillMouseLeave(e: MouseEvent<HTMLElement>) {
+  e.currentTarget.style.transform = 'translateY(0)';
+  e.currentTarget.style.border = '1px solid rgba(255,255,255,0.12)';
+  e.currentTarget.style.color = '#A8A8B8';
+}
 
 const courses = [
   { name: 'Data Structures', bg: 'rgba(97,218,251,0.10)', border: 'rgba(97,218,251,0.25)', color: '#61DAFB' },
@@ -227,15 +258,14 @@ export function Education() {
                   </span>
                 </div>
 
-                <p
-                  className="mt-6 text-xs"
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    color: 'rgba(158, 156, 154, 0.75)',
-                  }}
+                <span
+                  className="mt-6"
+                  style={flipGlassPillStyle}
+                  onMouseEnter={flipGlassPillMouseEnter}
+                  onMouseLeave={flipGlassPillMouseLeave}
                 >
-                  // click to flip
-                </p>
+                  // Click to flip
+                </span>
               </div>
 
               <div ref={backRef} className="flip-back">
@@ -311,34 +341,13 @@ export function Education() {
                     setFlipped(false);
                   }}
                   style={{
-                    marginTop: 'auto',
+                    ...flipGlassPillStyle,
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    background: 'rgba(255,255,255,0.06)',
-                    border: '1px solid rgba(255,255,255,0.12)',
-                    backdropFilter: 'blur(10px)',
-                    WebkitBackdropFilter: 'blur(10px)',
-                    borderRadius: '999px',
-                    padding: '6px 16px',
-                    color: '#A8A8B8',
-                    fontSize: '12px',
-                    fontFamily: 'JetBrains Mono, var(--font-mono)',
-                    cursor: 'pointer',
+                    marginTop: 'auto',
                     alignSelf: 'flex-start',
-                    transition: 'all 0.2s ease',
-                    transform: 'translateY(0)',
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.border = '1px solid rgba(255,255,255,0.1)';
-                    e.currentTarget.style.color = '#F0EDE8';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.border = '1px solid rgba(255,255,255,0.12)';
-                    e.currentTarget.style.color = '#A8A8B8';
-                  }}
+                  onMouseEnter={flipGlassPillMouseEnter}
+                  onMouseLeave={flipGlassPillMouseLeave}
                 >
                   ↩ flip back
                 </button>
