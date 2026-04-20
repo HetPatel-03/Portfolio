@@ -306,7 +306,7 @@ export function Contact() {
 
         <div
           className="w-full mt-[60px] rounded-[20px] overflow-hidden relative"
-          style={{ height: '420px' }}
+          style={{ height: '420px', background: '#0C0C10' }}
         >
           <img
             src="/Map.png"
@@ -314,9 +314,9 @@ export function Contact() {
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center',
-              opacity: 0.75,
+              objectFit: 'contain',
+              objectPosition: 'center bottom',
+              opacity: 0.85,
               display: 'block',
             }}
           />
@@ -379,8 +379,8 @@ export function Contact() {
                 whiteSpace: 'nowrap',
               }}
             >
-              <div style={{ color: '#F0EDE8', fontSize: '12px', fontFamily: 'DM Sans' }}>Brampton, ON</div>
-              <div style={{ color: '#A8A8B8', fontSize: '11px', fontFamily: 'DM Sans' }}>Available · GTA</div>
+              <div style={{ color: '#F0EDE8', fontSize: '12px', fontFamily: 'DM Sans' }}>Toronto, ON · GTA</div>
+              <div style={{ color: '#A8A8B8', fontSize: '11px', fontFamily: 'DM Sans' }}>Open to On-site &amp; Remote</div>
             </div>
           </div>
         </div>
