@@ -1,316 +1,613 @@
-import { useEffect, useRef, useState } from 'react';
-import * as d3 from 'd3';
+import { useEffect, useMemo, useRef } from 'react';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { gsap } from 'gsap';
+import { forceCollide, forceLink, forceManyBody, forceSimulation, type SimulationNodeDatum } from 'd3-force';
 
-interface GraphNode {
+type NodeType = 'center' | 'category' | 'sub' | 'leaf';
+
+interface Node {
   id: string;
   label: string;
-  type: 'center' | 'category' | 'detail' | 'trait';
-  category?: string;
+  type: NodeType;
+  parent?: string;
+  color: string;
+  size: number;
   description?: string;
-  link?: string;
 }
 
-interface GraphLink {
-  source: string;
-  target: string;
+interface SimNode extends SimulationNodeDatum {
+  id: string;
+  type: NodeType;
+  parent?: string;
+  color: string;
+  size: number;
+  label: string;
+  x: number;
+  y: number;
+  z: number;
+  vx: number;
+  vy: number;
+  vz: number;
+  targetX: number;
+  targetY: number;
+  targetZ: number;
+}
+
+interface SceneNode {
+  data: Node;
+  mesh: THREE.Mesh;
+}
+
+const CAT_RADIUS = 140;
+const SUB_RADIUS = 55;
+const LEAF_RADIUS = 25;
+
+function fibonacciSpherePoints(count: number, radius: number): THREE.Vector3[] {
+  if (count <= 1) return [new THREE.Vector3(0, 0, radius)];
+  const points: THREE.Vector3[] = [];
+  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+  for (let i = 0; i < count; i += 1) {
+    const y = 1 - (i / (count - 1)) * 2;
+    const r = Math.sqrt(1 - y * y);
+    const theta = goldenAngle * i;
+    const x = Math.cos(theta) * r;
+    const z = Math.sin(theta) * r;
+    points.push(new THREE.Vector3(x * radius, y * radius, z * radius));
+  }
+  return points;
+}
+
+function hexWithOpacity(hex: string, opacity: number): string {
+  const normalized = hex.replace('#', '');
+  const bigint = parseInt(normalized, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
 
 export function Universe() {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const [showHint, setShowHint] = useState(true);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const labelsLayerRef = useRef<HTMLDivElement>(null);
+  const hintRef = useRef<HTMLDivElement>(null);
+  const labelRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const rafRef = useRef<number>(0);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowHint(false), 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!svgRef.current) return;
-
-    const nodes: GraphNode[] = [
-      { id: 'center', label: 'Het Patel', type: 'center', description: 'Full Stack Software Engineer' },
-      
-      { id: 'engineer', label: 'Engineer', type: 'category', description: 'Building products from scratch' },
-      { id: 'sales', label: 'Sales', type: 'category', description: 'Top performer nationally' },
-      { id: 'education', label: 'Education', type: 'category', description: 'Computer Science background' },
-      { id: 'projects', label: 'Projects', type: 'category', description: 'Shipped products' },
-      
-      { id: 'react', label: 'React', type: 'detail', category: 'engineer', description: 'Frontend framework of choice' },
-      { id: 'node', label: 'Node.js', type: 'detail', category: 'engineer', description: 'Backend development' },
-      { id: 'typescript', label: 'TypeScript', type: 'detail', category: 'engineer', description: 'Type-safe development' },
-      { id: 'postgres', label: 'PostgreSQL', type: 'detail', category: 'engineer', description: 'Database management' },
-      
-      { id: 'rogers', label: 'Rogers', type: 'detail', category: 'sales', description: 'Top seller, Manager on Duty' },
-      { id: 'staples', label: 'Staples', type: 'detail', category: 'sales', description: 'Top 150 Canada, Top 3 GTA' },
-      { id: 'walmart', label: 'Walmart', type: 'detail', category: 'sales', description: 'Electronics sales associate' },
-      { id: 'freelance', label: 'Freelance', type: 'detail', category: 'sales', description: 'Software developer' },
-      
-      { id: 'algoma', label: 'Algoma U', type: 'detail', category: 'education', description: 'Bachelor of CS, Dean\'s List' },
-      { id: 'cs50', label: 'Harvard CS50', type: 'detail', category: 'education', description: 'Computer Science certification' },
-      { id: 'cs50w', label: 'CS50 Web', type: 'detail', category: 'education', description: 'Web development certification' },
-      { id: 'microsoft', label: 'Microsoft 365', type: 'detail', category: 'education', description: 'Platform certification' },
-      
-      { id: 'studenzbit', label: 'StudenzBit', type: 'detail', category: 'projects', description: 'World map platform', link: 'view →' },
-      { id: 'recurlist', label: 'RecurList', type: 'detail', category: 'projects', description: 'Recurring task manager', link: 'view →' },
-      { id: 'taskmanager', label: 'Task Manager', type: 'detail', category: 'projects', description: 'Kanban board app', link: 'view →' },
-      
-      { id: 'trilingual', label: 'Trilingual', type: 'trait', description: 'English, Hindi, Gujarati' },
-      { id: 'location', label: 'Brampton ON', type: 'trait', description: 'Greater Toronto Area' },
-      { id: 'performer', label: 'Top Performer', type: 'trait', description: 'Nationally ranked' },
-      { id: 'available', label: 'Available 2026', type: 'trait', description: 'Open to opportunities' },
+  const nodes = useMemo<Node[]>(() => {
+    const base: Node[] = [
+      { id: 'het', label: 'Het Patel', type: 'center', color: '#F2664A', size: 28 },
+      { id: 'education', label: 'Education', type: 'category', parent: 'het', color: '#C8F135', size: 16 },
+      { id: 'experience', label: 'Experience', type: 'category', parent: 'het', color: '#60A5FA', size: 16 },
+      { id: 'startups', label: 'Startups', type: 'category', parent: 'het', color: '#FBBF24', size: 16 },
+      { id: 'projects', label: 'Projects', type: 'category', parent: 'het', color: '#A78BFA', size: 16 },
+      { id: 'skills', label: 'Skills', type: 'category', parent: 'het', color: '#2DD4BF', size: 16 },
+      { id: 'achievements', label: 'Achievements', type: 'category', parent: 'het', color: '#F59E0B', size: 16 },
+      { id: 'languages', label: 'Languages', type: 'category', parent: 'het', color: '#F9A8D4', size: 16 },
+      { id: 'location', label: 'Location', type: 'category', parent: 'het', color: '#86EFAC', size: 16 },
+      { id: 'presence', label: 'Presence', type: 'category', parent: 'het', color: '#94A3B8', size: 16 },
+      { id: 'learning', label: 'Currently Learning', type: 'category', parent: 'het', color: '#FB923C', size: 16 },
     ];
 
-    const links: GraphLink[] = [
-      { source: 'center', target: 'engineer' },
-      { source: 'center', target: 'sales' },
-      { source: 'center', target: 'education' },
-      { source: 'center', target: 'projects' },
-      
-      { source: 'engineer', target: 'react' },
-      { source: 'engineer', target: 'node' },
-      { source: 'engineer', target: 'typescript' },
-      { source: 'engineer', target: 'postgres' },
-      
-      { source: 'sales', target: 'rogers' },
-      { source: 'sales', target: 'staples' },
-      { source: 'sales', target: 'walmart' },
-      { source: 'sales', target: 'freelance' },
-      
-      { source: 'education', target: 'algoma' },
-      { source: 'education', target: 'cs50' },
-      { source: 'education', target: 'cs50w' },
-      { source: 'education', target: 'microsoft' },
-      
-      { source: 'projects', target: 'studenzbit' },
-      { source: 'projects', target: 'recurlist' },
-      { source: 'projects', target: 'taskmanager' },
-    ];
+    const subGroups: Record<string, string[]> = {
+      education: ["CS Degree", 'CS50x', 'CS50W', 'Microsoft 365', "Dean's List 2023", "Dean's List 2024"],
+      experience: ['Rogers Communications', 'Freelance', 'Staples Canada', 'Walmart Canada'],
+      startups: ['StudenzBit', 'RecurList', 'Digifixr'],
+      projects: ['StudenzBit', 'RecurList', 'Laundry Mgmt', 'FIXXO'],
+      skills: ['Frontend', 'Backend', 'Database', 'DevOps'],
+      achievements: ['Top 150 Canada', 'Top 3 GTA', 'Top Seller Rogers', 'Acting Manager', "Dean's List"],
+      languages: ['English', 'Hindi', 'Gujarati'],
+      location: ['Brampton ON', 'GTA Wide', 'Remote', 'Open to Relocation'],
+      presence: ['GitHub', 'LinkedIn', 'X', 'hetppatel.dev'],
+      learning: ['AWS', 'System Design', 'NeetCode 150', 'React Native'],
+    };
 
-    const width = svgRef.current.clientWidth;
-    const height = 580;
-
-    const svg = d3.select(svgRef.current);
-    svg.selectAll('*').remove();
-
-    const g = svg.append('g');
-
-    const simulation = d3.forceSimulation(nodes as any)
-      .force('link', d3.forceLink(links as any).id((d: any) => d.id).distance(100))
-      .force('charge', d3.forceManyBody().strength(-300))
-      .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collision', d3.forceCollide().radius(40));
-
-    const link = g.append('g')
-      .selectAll('line')
-      .data(links as any)
-      .join('line')
-      .attr('stroke', 'rgba(245, 143, 124, 0.15)')
-      .attr('stroke-width', 1)
-      .attr('class', 'graph-link');
-
-    const node = g.append('g')
-      .selectAll('g')
-      .data(nodes as any)
-      .join('g')
-      .call(d3.drag<any, any>()
-        .on('start', (event: any, d: any) => {
-          if (!event.active) simulation.alphaTarget(0.3).restart();
-          d.fx = d.x;
-          d.fy = d.y;
-        })
-        .on('drag', (event: any, d: any) => {
-          d.fx = event.x;
-          d.fy = event.y;
-        })
-        .on('end', (event: any, d: any) => {
-          if (!event.active) simulation.alphaTarget(0);
-          d.fx = null;
-          d.fy = null;
-        }) as any
-      );
-
-    node.append('circle')
-      .attr('r', (d: any) => {
-        if (d.type === 'center') return 30;
-        if (d.type === 'category') return 20;
-        if (d.type === 'detail') return 12;
-        return 10;
-      })
-      .attr('fill', (d: any) => {
-        if (d.type === 'center') return '#F58F7C';
-        if (d.type === 'category') return '#F2C4CE';
-        if (d.type === 'detail') return '#4F4F51';
-        return 'transparent';
-      })
-      .attr('stroke', (d: any) => d.type === 'trait' ? '#F58F7C' : 'none')
-      .attr('stroke-width', 2)
-      .attr('stroke-dasharray', (d: any) => d.type === 'trait' ? '3,3' : '0')
-      .style('cursor', 'pointer')
-      .on('mouseenter', function(this: any) {
-        d3.select(this).transition().duration(200).attr('transform', 'scale(1.3)');
-      })
-      .on('mouseleave', function(this: any) {
-        d3.select(this).transition().duration(200).attr('transform', 'scale(1)');
-      })
-      .on('click', (event: any, d: any) => {
-        const svgRect = svgRef.current!.getBoundingClientRect();
-        setTooltipPosition({
-          x: event.clientX - svgRect.left,
-          y: event.clientY - svgRect.top
+    Object.entries(subGroups).forEach(([categoryId, labels]) => {
+      labels.forEach((label) => {
+        base.push({
+          id: `sub-${categoryId}-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+          label,
+          type: 'sub',
+          parent: categoryId,
+          color: '#A8A8B8',
+          size: 8,
         });
-        setSelectedNode(d);
       });
-
-    if (nodes.find((n: GraphNode) => n.type === 'center')) {
-      node.filter((d: any) => d.type === 'center')
-        .append('circle')
-        .attr('r', 30)
-        .attr('fill', 'none')
-        .attr('stroke', '#F58F7C')
-        .attr('stroke-width', 2)
-        .attr('opacity', 0.5)
-        .append('animate')
-        .attr('attributeName', 'r')
-        .attr('from', '30')
-        .attr('to', '40')
-        .attr('dur', '2s')
-        .attr('repeatCount', 'indefinite');
-    }
-
-    node.append('text')
-      .attr('text-anchor', 'middle')
-      .attr('dy', '0.3em')
-      .attr('font-size', (d: any) => {
-        if (d.type === 'center') return '12px';
-        if (d.type === 'category') return '10px';
-        return '8px';
-      })
-      .attr('font-family', 'var(--font-heading)')
-      .attr('font-weight', (d: any) => d.type === 'center' ? 800 : 700)
-      .attr('fill', (d: any) => d.type === 'center' ? '#0C0C10' : d.type === 'category' ? '#0C0C10' : '#F0EDE8')
-      .attr('pointer-events', 'none')
-      .text((d: any) => d.label);
-
-    simulation.on('tick', () => {
-      link
-        .attr('x1', (d: any) => d.source.x)
-        .attr('y1', (d: any) => d.source.y)
-        .attr('x2', (d: any) => d.target.x)
-        .attr('y2', (d: any) => d.target.y);
-
-      node.attr('transform', (d: any) => `translate(${d.x},${d.y})`);
     });
 
-    const handleClickOutside = (event: MouseEvent) => {
-      if (svgRef.current && !svgRef.current.contains(event.target as globalThis.Node)) {
-        setSelectedNode(null);
-      }
+    const leafGroups: Record<string, string[]> = {
+      'sub-skills-frontend': ['React', 'Next.js', 'TypeScript', 'Tailwind', 'D3.js'],
+      'sub-skills-backend': ['Node.js', 'Express', 'Python', 'REST APIs'],
+      'sub-skills-database': ['PostgreSQL', 'Supabase', 'MongoDB'],
+      'sub-skills-devops': ['Docker', 'Vercel', 'Git', 'GitHub Actions'],
     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-      simulation.stop();
-    };
+    Object.entries(leafGroups).forEach(([parent, labels]) => {
+      labels.forEach((label) => {
+        base.push({
+          id: `leaf-${parent}-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+          label,
+          type: 'leaf',
+          parent,
+          color: '#9CA3AF',
+          size: 5,
+        });
+      });
+    });
+
+    return base;
   }, []);
 
+  useEffect(() => {
+    if (!canvasRef.current || !containerRef.current || !labelsLayerRef.current) return;
+
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    const labelsLayer = labelsLayerRef.current;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0c0c10);
+
+    const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 2000);
+    camera.position.set(0, 0, 350);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.enableZoom = true;
+    controls.enablePan = true;
+    controls.minDistance = 60;
+    controls.maxDistance = 500;
+
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambient);
+    const point = new THREE.PointLight(0xffffff, 1.2, 1200);
+    point.position.set(0, 0, 0);
+    scene.add(point);
+
+    const graphGroup = new THREE.Group();
+    scene.add(graphGroup);
+
+    const categoryNodes = nodes.filter((n) => n.type === 'category');
+    const childrenByParent = new Map<string, Node[]>();
+    nodes.forEach((n) => {
+      if (!n.parent) return;
+      const list = childrenByParent.get(n.parent) ?? [];
+      list.push(n);
+      childrenByParent.set(n.parent, list);
+    });
+
+    const categoryTargets = fibonacciSpherePoints(categoryNodes.length, CAT_RADIUS);
+    const initialPositions = new Map<string, THREE.Vector3>();
+    initialPositions.set('het', new THREE.Vector3(0, 0, 0));
+    categoryNodes.forEach((node, i) => {
+      initialPositions.set(node.id, categoryTargets[i]);
+    });
+
+    categoryNodes.forEach((cat) => {
+      const subs = (childrenByParent.get(cat.id) ?? []).filter((n) => n.type === 'sub');
+      const subTargets = fibonacciSpherePoints(subs.length, SUB_RADIUS);
+      const catPos = initialPositions.get(cat.id) ?? new THREE.Vector3();
+      subs.forEach((sub, i) => {
+        initialPositions.set(sub.id, catPos.clone().add(subTargets[i]));
+      });
+    });
+
+    nodes
+      .filter((n) => n.type === 'sub' && n.parent?.includes('skills'))
+      .forEach((sub) => {
+        const leaves = (childrenByParent.get(sub.id) ?? []).filter((n) => n.type === 'leaf');
+        const leafTargets = fibonacciSpherePoints(leaves.length, LEAF_RADIUS);
+        const subPos = initialPositions.get(sub.id) ?? new THREE.Vector3();
+        leaves.forEach((leaf, i) => {
+          initialPositions.set(leaf.id, subPos.clone().add(leafTargets[i]));
+        });
+      });
+
+    const simNodes: SimNode[] = nodes.map((node) => {
+      const p = initialPositions.get(node.id) ?? new THREE.Vector3();
+      return {
+        ...node,
+        x: p.x,
+        y: p.y,
+        z: p.z,
+        vx: 0,
+        vy: 0,
+        vz: 0,
+        targetX: p.x,
+        targetY: p.y,
+        targetZ: p.z,
+      };
+    });
+
+    const simLinks = nodes
+      .filter((n) => n.parent)
+      .map((n) => ({ source: n.parent as string, target: n.id }));
+
+    const simulation = forceSimulation(simNodes)
+      .force('charge', forceManyBody<SimNode>().strength(-45))
+      .force(
+        'link',
+        forceLink<SimNode, { source: string | SimNode; target: string | SimNode }>(simLinks)
+          .id((d) => d.id)
+          .distance((d) => {
+            const target = d.target as SimNode;
+            if (target.type === 'category') return CAT_RADIUS;
+            if (target.type === 'sub') return SUB_RADIUS;
+            return LEAF_RADIUS;
+          })
+          .strength(0.25),
+      )
+      .force('collision', forceCollide<SimNode>().radius((d) => d.size + 4))
+      .force('x', (alpha) => {
+        simNodes.forEach((n) => {
+          n.vx += (n.targetX - n.x) * 0.018 * alpha;
+        });
+      })
+      .force('y', (alpha) => {
+        simNodes.forEach((n) => {
+          n.vy += (n.targetY - n.y) * 0.018 * alpha;
+        });
+      })
+      .stop();
+
+    for (let i = 0; i < 300; i += 1) {
+      simulation.tick();
+      simNodes.forEach((n) => {
+        n.vz += (n.targetZ - n.z) * 0.02;
+        n.vz *= 0.9;
+        n.z += n.vz;
+      });
+    }
+
+    const simById = new Map(simNodes.map((n) => [n.id, n]));
+    const sceneNodesById = new Map<string, SceneNode>();
+    const categoryMeshes: THREE.Mesh[] = [];
+    const allMeshes: THREE.Mesh[] = [];
+    const disposableGeometries: THREE.BufferGeometry[] = [];
+    const disposableMaterials: THREE.Material[] = [];
+    const disposableTextures: THREE.Texture[] = [];
+
+    const textureLoader = new THREE.TextureLoader();
+    const centerTexture = textureLoader.load('/Me_Memoji_Laptop.png');
+    disposableTextures.push(centerTexture);
+
+    simNodes.forEach((node) => {
+      const geometry = new THREE.SphereGeometry(node.size, 32, 32);
+      disposableGeometries.push(geometry);
+
+      const material = new THREE.MeshStandardMaterial({
+        color: node.type === 'center' ? 0xffffff : node.color,
+        map: node.type === 'center' ? centerTexture : undefined,
+        roughness: 0.3,
+        metalness: 0.4,
+        transparent: node.type === 'sub' || node.type === 'leaf',
+        opacity: node.type === 'category' || node.type === 'center' ? 1 : 0,
+      });
+      disposableMaterials.push(material);
+
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(node.x, node.y, node.z);
+      mesh.userData = { id: node.id, type: node.type };
+      mesh.visible = node.type === 'center' || node.type === 'category';
+      graphGroup.add(mesh);
+      allMeshes.push(mesh);
+      sceneNodesById.set(node.id, { data: node, mesh });
+
+      if (node.type === 'category') {
+        categoryMeshes.push(mesh);
+        const glow = new THREE.PointLight(new THREE.Color(node.color), 0.4, 120);
+        glow.position.copy(mesh.position);
+        graphGroup.add(glow);
+      }
+    });
+
+    const centerGlow = new THREE.PointLight(0xf2664a, 2, 200);
+    centerGlow.position.set(0, 0, 0);
+    graphGroup.add(centerGlow);
+
+    simLinks.forEach((link) => {
+      const sourceId = link.source as string;
+      const targetId = link.target as string;
+      const sourceNode = simById.get(sourceId);
+      const targetNode = simById.get(targetId);
+      if (!sourceNode || !targetNode) return;
+
+      let opacity = 0.12;
+      if (targetNode.type === 'category') opacity = 0.4;
+      if (targetNode.type === 'sub') opacity = 0.2;
+      if (targetNode.type === 'leaf') opacity = 0.12;
+
+      const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(sourceNode.x, sourceNode.y, sourceNode.z),
+        new THREE.Vector3(targetNode.x, targetNode.y, targetNode.z),
+      ]);
+      disposableGeometries.push(lineGeometry);
+
+      const lineMaterial = new THREE.LineBasicMaterial({
+        color: sourceNode.color,
+        transparent: true,
+        opacity,
+      });
+      disposableMaterials.push(lineMaterial);
+      graphGroup.add(new THREE.Line(lineGeometry, lineMaterial));
+    });
+
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    const scaleTargets = new Map<string, number>();
+    nodes.forEach((n) => scaleTargets.set(n.id, 1));
+    let hoveredCategoryId: string | null = null;
+    let autoRotate = true;
+    let resumeTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const updateMouse = (event: MouseEvent) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    };
+
+    const stopAutoRotate = () => {
+      autoRotate = false;
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+      resumeTimeout = setTimeout(() => {
+        autoRotate = true;
+      }, 4000);
+    };
+
+    controls.addEventListener('start', stopAutoRotate);
+
+    const handleResize = () => {
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      renderer.setSize(width, height);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    renderer.domElement.addEventListener('mousemove', updateMouse);
+
+    if (hintRef.current) {
+      gsap.to(hintRef.current, { opacity: 0, delay: 3, duration: 0.7, ease: 'power1.out' });
+    }
+
+    const tmp = new THREE.Vector3();
+    const world = new THREE.Vector3();
+
+    const animate = () => {
+      rafRef.current = requestAnimationFrame(animate);
+
+      controls.update();
+
+      if (autoRotate) scene.rotation.y += 0.0008;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersections = raycaster.intersectObjects(categoryMeshes, false);
+      hoveredCategoryId = intersections.length > 0 ? (intersections[0].object.userData.id as string) : null;
+
+      const cameraDistance = camera.position.length();
+      let nearestCategoryId: string | null = null;
+      if (cameraDistance >= 100 && cameraDistance <= 200) {
+        let minDist = Number.POSITIVE_INFINITY;
+        categoryMeshes.forEach((mesh) => {
+          mesh.getWorldPosition(world);
+          const dist = world.distanceTo(camera.position);
+          if (dist < minDist) {
+            minDist = dist;
+            nearestCategoryId = mesh.userData.id as string;
+          }
+        });
+      }
+
+      sceneNodesById.forEach(({ data, mesh }) => {
+        if (data.type === 'category') {
+          scaleTargets.set(data.id, hoveredCategoryId === data.id ? 1.2 : 1);
+        }
+
+        if (data.type === 'sub' || data.type === 'leaf') {
+          const material = mesh.material as THREE.MeshStandardMaterial;
+          let targetOpacity = 0;
+          let shouldBeVisible = false;
+
+          if (data.type === 'sub') {
+            if (cameraDistance > 350) {
+              shouldBeVisible = false;
+            } else if (cameraDistance > 200) {
+              shouldBeVisible = true;
+              targetOpacity = 0.25;
+            } else if (cameraDistance > 100) {
+              shouldBeVisible = true;
+              targetOpacity = data.parent === nearestCategoryId ? 1 : 0.3;
+            } else {
+              shouldBeVisible = true;
+              targetOpacity = data.parent === nearestCategoryId ? 1 : 0.4;
+            }
+            if (hoveredCategoryId && data.parent === hoveredCategoryId) {
+              shouldBeVisible = true;
+              targetOpacity = Math.max(targetOpacity, 0.3);
+            }
+          }
+
+          if (data.type === 'leaf') {
+            shouldBeVisible = cameraDistance < 100;
+            targetOpacity = shouldBeVisible ? 1 : 0;
+          }
+
+          mesh.visible = shouldBeVisible;
+          material.opacity += (targetOpacity - material.opacity) * 0.12;
+        }
+      });
+
+      sceneNodesById.forEach(({ data, mesh }) => {
+        const target = scaleTargets.get(data.id) ?? 1;
+        const next = THREE.MathUtils.lerp(mesh.scale.x, target, 0.15);
+        mesh.scale.set(next, next, next);
+      });
+
+      nodes.forEach((node) => {
+        const label = labelRefs.current[node.id];
+        const sceneNode = sceneNodesById.get(node.id);
+        if (!label || !sceneNode) return;
+
+        sceneNode.mesh.getWorldPosition(tmp);
+        tmp.project(camera);
+        const x = (tmp.x * 0.5 + 0.5) * container.clientWidth;
+        const y = (-tmp.y * 0.5 + 0.5) * container.clientHeight;
+        const visible = tmp.z >= -1 && tmp.z <= 1 && sceneNode.mesh.visible;
+
+        label.style.display = visible ? 'block' : 'none';
+        if (!visible) return;
+
+        label.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+
+        let blur = 4;
+        let opacity = 0.4;
+
+        if (node.type === 'category') {
+          if (cameraDistance <= 350) {
+            blur = 0;
+            opacity = 1;
+          }
+          if (cameraDistance > 350) {
+            blur = 4;
+            opacity = 0.4;
+          }
+          if (hoveredCategoryId === node.id) {
+            blur = 0;
+            opacity = 1;
+          }
+        } else if (node.type === 'sub') {
+          if (cameraDistance <= 200) {
+            blur = 0;
+            opacity = 0.85;
+          }
+          if (cameraDistance < 100) {
+            blur = 0;
+            opacity = 1;
+          }
+        } else if (node.type === 'leaf') {
+          if (cameraDistance < 100) {
+            blur = 0;
+            opacity = 0.8;
+          }
+        }
+
+        label.style.filter = `blur(${blur}px)`;
+        label.style.opacity = `${opacity}`;
+      });
+
+      renderer.render(scene, camera);
+    };
+
+    animate();
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+      controls.removeEventListener('start', stopAutoRotate);
+      controls.dispose();
+      window.removeEventListener('resize', handleResize);
+      renderer.domElement.removeEventListener('mousemove', updateMouse);
+      simulation.stop();
+
+      disposableGeometries.forEach((g) => g.dispose());
+      disposableMaterials.forEach((m) => m.dispose());
+      disposableTextures.forEach((t) => t.dispose());
+      renderer.dispose();
+    };
+  }, [nodes]);
+
   return (
-    <section id="universe" className="section-bg-universe py-32 px-8">
+    <section id="universe" className="section-bg-universe relative py-32 px-8">
       <div className="max-w-7xl mx-auto">
-        <p 
-          className="text-xs mb-4"
-          style={{ fontFamily: 'var(--font-mono)', color: 'var(--coral)' }}
-        >
+        <p className="text-xs mb-4" style={{ fontFamily: 'var(--font-mono)', color: 'var(--coral)' }}>
           // 02 · universe
         </p>
 
-        <h2 
+        <h2
           className="text-[52px] mb-2"
-          style={{ 
-            fontFamily: 'var(--font-heading)', 
+          style={{
+            fontFamily: 'var(--font-heading)',
             fontWeight: 800,
             color: 'var(--text-primary)',
-            letterSpacing: '-1px'
+            letterSpacing: '-1px',
           }}
         >
           The full picture.
         </h2>
 
-        <p 
-          className="text-[13px] mb-12"
-          style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
-        >
-          Click any node to explore · Drag to rearrange
+        <p className="text-[13px] mb-12" style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+          Click any node to explore · Drag to rearrange.
         </p>
 
-        <div 
-          className="rounded-3xl p-12 relative"
+        <div
+          ref={containerRef}
           style={{
-            background: 'var(--bg-surface)',
-            height: '580px'
+            width: '100%',
+            height: '700px',
+            borderRadius: '20px',
+            overflow: 'hidden',
+            background: '#0C0C10',
+            position: 'relative',
           }}
         >
-          <svg ref={svgRef} width="100%" height="100%" />
-
-          {selectedNode && (
-            <div
-              className="absolute rounded-2xl p-4 z-50 pointer-events-none"
-              style={{
-                left: `${tooltipPosition.x + 20}px`,
-                top: `${tooltipPosition.y - 20}px`,
-                background: 'rgba(44, 43, 48, 0.95)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(245, 143, 124, 0.25)',
-                borderTop: '2px solid var(--coral)',
-                boxShadow: '0 0 30px rgba(245, 143, 124, 0.2)',
-                maxWidth: '250px'
-              }}
-            >
-              <div 
-                className="mb-1"
-                style={{ 
-                  fontFamily: 'var(--font-heading)', 
-                  fontWeight: 700,
-                  color: 'var(--text-primary)',
-                  fontSize: '14px'
+          <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+          <div
+            ref={labelsLayerRef}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              zIndex: 2,
+            }}
+          >
+            {nodes.map((node) => (
+              <div
+                key={node.id}
+                ref={(el) => {
+                  labelRefs.current[node.id] = el;
+                }}
+                style={{
+                  position: 'absolute',
+                  transform: 'translate(-50%, -50%)',
+                  whiteSpace: 'nowrap',
+                  filter: 'blur(4px)',
+                  opacity: 0.4,
+                  color: node.type === 'category' ? node.color : '#A8A8B8',
+                  fontFamily: node.type === 'category' ? 'Clash Display, sans-serif' : 'DM Sans',
+                  fontSize: node.type === 'category' ? '13px' : '10px',
+                  fontWeight: node.type === 'category' ? 700 : 500,
+                  transition: 'opacity 0.2s ease, filter 0.2s ease',
                 }}
               >
-                {selectedNode.label}
+                {node.label}
               </div>
-              <div 
-                className="text-xs"
-                style={{ 
-                  fontFamily: 'var(--font-body)',
-                  color: 'var(--text-muted)'
-                }}
-              >
-                {selectedNode.description}
-              </div>
-              {selectedNode.link && (
-                <div 
-                  className="text-xs mt-2"
-                  style={{ color: 'var(--coral)', fontFamily: 'var(--font-body)' }}
-                >
-                  {selectedNode.link}
-                </div>
-              )}
-            </div>
-          )}
-
-          {showHint && (
-            <div
-              className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[11px] transition-opacity duration-500"
-              style={{
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--text-muted)',
-                opacity: showHint ? 1 : 0
-              }}
-            >
-              drag · click · explore
-            </div>
-          )}
+            ))}
+          </div>
+          <div
+            ref={hintRef}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              pointerEvents: 'none',
+              zIndex: 3,
+              fontFamily: 'JetBrains Mono, monospace',
+              color: '#A8A8B8',
+              fontSize: '11px',
+              opacity: 1,
+            }}
+          >
+            hover to discover · click to explore
+          </div>
         </div>
       </div>
     </section>
