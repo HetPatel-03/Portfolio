@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { gsap } from 'gsap';
@@ -38,6 +38,7 @@ interface SceneNode {
   data: Node;
   root: THREE.Object3D;
   mesh: THREE.Mesh;
+  ringMesh?: THREE.Mesh;
 }
 
 const CAT_RADIUS = 120;
@@ -56,13 +57,436 @@ function fibonacciCirclePoints(count: number, radius: number): THREE.Vector3[] {
   return points;
 }
 
+const CATEGORY_TOOLTIP: Record<string, string> = {
+  education: 'Academic background',
+  experience: 'Work history',
+  startups: "Things I'm building",
+  projects: 'Technical builds',
+  skills: 'Tech stack',
+  achievements: 'Rankings & recognition',
+  languages: 'Human languages',
+  location: 'Based in GTA',
+  presence: 'Find me online',
+  learning: 'Growth mindset',
+};
+
+type DetailKind = 'experience' | 'education' | 'project' | 'skill' | 'achievement' | 'language' | 'default';
+
+function detailKindForSub(node: Node): DetailKind {
+  const p = node.parent ?? '';
+  if (p === 'experience') return 'experience';
+  if (p === 'education') return 'education';
+  if (p === 'startups' || p === 'projects') return 'project';
+  if (p === 'skills') return 'skill';
+  if (p === 'achievements') return 'achievement';
+  if (p === 'languages') return 'language';
+  return 'default';
+}
+
+/** Curated copy for detail panel — keyed by sub node id where stable. */
+const SUB_DETAIL: Record<
+  string,
+  {
+    badge?: string;
+    dates?: string;
+    title?: string;
+    bullets?: string[];
+    tech?: string[];
+    institution?: string;
+    year?: string;
+    body?: string;
+    description?: string;
+    liveUrl?: string;
+    fluency?: string;
+    flag?: string;
+    context?: string;
+    skillLevel?: 'Production Ready' | 'Learning';
+    usedIn?: string[];
+  }
+> = {
+  'sub-experience-rogers-communications': {
+    badge: 'Sales / Retail',
+    dates: '2021 — Present',
+    title: 'Rogers Communications',
+    bullets: ['Top seller performance in regional cohorts', 'Customer solutions & device activations', 'Mentoring new hires on sales floor'],
+    tech: ['Salesforce', 'POS', 'CRM'],
+  },
+  'sub-experience-freelance': {
+    badge: 'Freelance',
+    dates: 'Ongoing',
+    title: 'Freelance',
+    bullets: ['Web builds for small businesses', 'Branding & landing pages', 'Client discovery → delivery'],
+    tech: ['React', 'Next.js', 'Figma'],
+  },
+  'sub-experience-staples-canada': {
+    badge: 'Retail Ops',
+    dates: 'Previous',
+    title: 'Staples Canada',
+    bullets: ['Floor operations & inventory', 'Tech services support', 'Peak-season throughput'],
+    tech: ['Ops', 'POS'],
+  },
+  'sub-experience-walmart-canada': {
+    badge: 'Retail',
+    dates: 'Previous',
+    title: 'Walmart Canada',
+    bullets: ['Front-line customer service', 'Stocking & zone recovery', 'Team coordination'],
+    tech: ['Ops'],
+  },
+  'sub-education-cs-degree': {
+    institution: 'University program',
+    year: 'In progress / completed per transcript',
+    body: 'Computer Science focus with software engineering coursework and collaborative projects.',
+  },
+  'sub-education-cs50x': {
+    institution: 'Harvard CS50x',
+    year: 'Certificate track',
+    body: 'Intro to CS — C, Python, algorithms, and low-level thinking.',
+  },
+  'sub-education-cs50w': {
+    institution: 'Harvard CS50W',
+    year: 'Certificate track',
+    body: 'Web programming with Django, JavaScript, and scalable design.',
+  },
+  'sub-education-microsoft-365': {
+    institution: 'Microsoft 365 Fundamentals',
+    year: 'Certification',
+    body: 'Cloud productivity fundamentals and org-wide tooling.',
+  },
+  "sub-education-dean-s-list-2023": {
+    institution: "Dean's List",
+    year: '2023',
+    body: 'Academic excellence for the 2023 academic year.',
+  },
+  "sub-education-dean-s-list-2024": {
+    institution: "Dean's List",
+    year: '2024',
+    body: 'Academic excellence for the 2024 academic year.',
+  },
+  'sub-startups-studenzbit': {
+    description: 'Student-focused platform for notes, tools, and community.',
+    tech: ['React', 'TypeScript', 'Supabase'],
+    liveUrl: 'https://studenzbit.com',
+  },
+  'sub-startups-recurlist': {
+    description: 'Recurring tasks & reminders with a lightweight workflow.',
+    tech: ['Next.js', 'PostgreSQL'],
+  },
+  'sub-startups-digifixr': {
+    description: 'Digital fixes & small-business web support.',
+    tech: ['React', 'Vercel'],
+  },
+  'sub-projects-studenzbit': {
+    description: 'Full-stack product build with auth, data, and deploy pipeline.',
+    tech: ['React', 'Supabase', 'Vercel'],
+    liveUrl: 'https://studenzbit.com',
+  },
+  'sub-projects-recurlist': {
+    description: 'Productized recurrence engine with clean UX.',
+    tech: ['Next.js', 'Tailwind'],
+  },
+  'sub-projects-laundry-mgmt': {
+    description: 'Operations tooling for laundry workflow tracking.',
+    tech: ['React', 'Node'],
+  },
+  'sub-projects-fixxo': {
+    description: 'Repair / service workflow experiment.',
+    tech: ['TypeScript'],
+  },
+  'sub-skills-frontend': {
+    skillLevel: 'Production Ready',
+    usedIn: ['StudenzBit', 'Portfolio', 'Client sites'],
+  },
+  'sub-skills-backend': {
+    skillLevel: 'Production Ready',
+    usedIn: ['APIs', 'StudenzBit'],
+  },
+  'sub-skills-database': {
+    skillLevel: 'Production Ready',
+    usedIn: ['StudenzBit', 'Side projects'],
+  },
+  'sub-skills-devops': {
+    skillLevel: 'Learning',
+    usedIn: ['CI/CD', 'Docker deploys'],
+  },
+  'sub-achievements-top-150-canada': {
+    context: 'National sales ranking — Rogers ecosystem',
+  },
+  'sub-achievements-top-3-gta': {
+    context: 'Regional performance — GTA',
+  },
+  'sub-achievements-top-seller-rogers': {
+    context: 'Top seller recognition',
+  },
+  'sub-achievements-acting-manager': {
+    context: 'Acting management coverage',
+  },
+  "sub-achievements-dean-s-list": {
+    context: 'Academic recognition',
+  },
+  'sub-languages-english': { flag: '🇬🇧', fluency: 'Fluent' },
+  'sub-languages-hindi': { flag: '🇮🇳', fluency: 'Fluent' },
+  'sub-languages-gujarati': { flag: '🇮🇳', fluency: 'Conversational' },
+};
+
+const LEAF_DETAIL: Record<
+  string,
+  { level: 'Production Ready' | 'Learning'; usedIn: string[] }
+> = {
+  'leaf-sub-skills-frontend-react': { level: 'Production Ready', usedIn: ['StudenzBit', 'Portfolio'] },
+  'leaf-sub-skills-frontend-next-js': { level: 'Production Ready', usedIn: ['Portfolio', 'StudenzBit'] },
+  'leaf-sub-skills-frontend-typescript': { level: 'Production Ready', usedIn: ['All active repos'] },
+  'leaf-sub-skills-frontend-tailwind': { level: 'Production Ready', usedIn: ['Portfolio'] },
+  'leaf-sub-skills-frontend-d3-js': { level: 'Learning', usedIn: ['Universe viz'] },
+  'leaf-sub-skills-backend-node-js': { level: 'Production Ready', usedIn: ['APIs'] },
+  'leaf-sub-skills-backend-express': { level: 'Production Ready', usedIn: ['Services'] },
+  'leaf-sub-skills-backend-python': { level: 'Learning', usedIn: ['Scripts'] },
+  'leaf-sub-skills-backend-rest-apis': { level: 'Production Ready', usedIn: ['StudenzBit'] },
+  'leaf-sub-skills-database-postgresql': { level: 'Production Ready', usedIn: ['StudenzBit'] },
+  'leaf-sub-skills-database-supabase': { level: 'Production Ready', usedIn: ['StudenzBit'] },
+  'leaf-sub-skills-database-mongodb': { level: 'Learning', usedIn: ['Experiments'] },
+  'leaf-sub-skills-devops-docker': { level: 'Learning', usedIn: ['Local dev'] },
+  'leaf-sub-skills-devops-vercel': { level: 'Production Ready', usedIn: ['Deploys'] },
+  'leaf-sub-skills-devops-git': { level: 'Production Ready', usedIn: ['All projects'] },
+  'leaf-sub-skills-devops-github-actions': { level: 'Learning', usedIn: ['CI'] },
+};
+
+const pillStyle: CSSProperties = {
+  display: 'inline-block',
+  fontSize: '10px',
+  padding: '4px 8px',
+  borderRadius: '999px',
+  background: 'rgba(255,255,255,0.08)',
+  border: '1px solid rgba(255,255,255,0.12)',
+  marginRight: 6,
+  marginTop: 6,
+  fontFamily: 'DM Sans, sans-serif',
+  color: '#A8A8B8',
+};
+
+function UniverseDetailBody({ node, byId }: { node: Node; byId: Map<string, Node> }) {
+  const parent = node.parent ? byId.get(node.parent) : undefined;
+  const category =
+    node.type === 'leaf' && parent?.type === 'sub' && parent.parent
+      ? byId.get(parent.parent)
+      : parent?.type === 'category'
+        ? parent
+        : undefined;
+  const catColor = category?.color ?? '#A8A8B8';
+  const kind = node.type === 'leaf' ? 'skill' : detailKindForSub(node);
+  const subOrLeafDetail = node.type === 'leaf' ? undefined : SUB_DETAIL[node.id];
+  const heading = { fontFamily: 'Clash Display, sans-serif', fontSize: 16, fontWeight: 700, color: '#fff', margin: '0 0 12px' };
+  const muted = { color: '#A8A8B8', fontSize: 12, fontFamily: 'DM Sans, sans-serif', lineHeight: 1.5 };
+
+  if (node.type === 'leaf') {
+    const ld = LEAF_DETAIL[node.id];
+    return (
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: '50%',
+              background: 'rgba(255,255,255,0.08)',
+              border: `1px solid ${catColor}55`,
+            }}
+          />
+          <div>
+            <p style={heading}>{node.label}</p>
+            <span
+              style={{
+                ...pillStyle,
+                background: `${catColor}22`,
+                borderColor: `${catColor}44`,
+                color: catColor,
+              }}
+            >
+              {ld?.level ?? 'Learning'}
+            </span>
+          </div>
+        </div>
+        <p style={muted}>Used in:</p>
+        <div style={{ marginTop: 4 }}>
+          {(ld?.usedIn ?? ['Portfolio']).map((t) => (
+            <span key={t} style={{ ...pillStyle, borderColor: `${catColor}33` }}>
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (kind === 'experience' && subOrLeafDetail && 'bullets' in subOrLeafDetail && subOrLeafDetail.bullets) {
+    const d = subOrLeafDetail;
+    return (
+      <div>
+        <p style={{ ...muted, marginBottom: 8 }}>
+          <span
+            style={{
+              ...pillStyle,
+              background: `${catColor}22`,
+              color: catColor,
+              borderColor: `${catColor}44`,
+            }}
+          >
+            {d.badge}
+          </span>{' '}
+          · {d.dates}
+        </p>
+        <p style={heading}>{d.title ?? node.label}</p>
+        <ul style={{ ...muted, paddingLeft: 18, margin: '0 0 12px' }}>
+          {(d.bullets ?? []).map((b) => (
+            <li key={b} style={{ marginBottom: 4 }}>
+              {b}
+            </li>
+          ))}
+        </ul>
+        <div>
+          {(d.tech ?? []).map((t) => (
+            <span key={t} style={pillStyle}>
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (kind === 'education' && subOrLeafDetail && 'institution' in subOrLeafDetail) {
+    const d = subOrLeafDetail;
+    return (
+      <div>
+        <p style={heading}>{d.institution}</p>
+        <p style={{ ...muted, marginBottom: 8 }}>{d.year}</p>
+        <p style={muted}>{d.body}</p>
+      </div>
+    );
+  }
+
+  if (kind === 'project' && subOrLeafDetail && 'description' in subOrLeafDetail) {
+    const d = subOrLeafDetail;
+    return (
+      <div>
+        <p style={heading}>{node.label}</p>
+        <p style={{ ...muted, marginBottom: 12 }}>{d.description}</p>
+        <div style={{ marginBottom: 12 }}>
+          {(d.tech ?? []).map((t) => (
+            <span key={t} style={pillStyle}>
+              {t}
+            </span>
+          ))}
+        </div>
+        {d.liveUrl ? (
+          <a
+            href={d.liveUrl}
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display: 'inline-block',
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: 11,
+              color: catColor,
+              textDecoration: 'none',
+              padding: '8px 14px',
+              borderRadius: 8,
+              border: `1px solid ${catColor}55`,
+            }}
+          >
+            ↗ live link
+          </a>
+        ) : null}
+      </div>
+    );
+  }
+
+  if (kind === 'skill' && subOrLeafDetail && 'skillLevel' in subOrLeafDetail) {
+    const d = subOrLeafDetail;
+    return (
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+          <div
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: '50%',
+              background: 'rgba(255,255,255,0.08)',
+              border: `1px solid ${catColor}44`,
+            }}
+          />
+          <div>
+            <p style={heading}>{node.label}</p>
+            <span style={{ ...pillStyle, color: catColor, borderColor: `${catColor}44` }}>{d.skillLevel}</span>
+          </div>
+        </div>
+        <p style={muted}>Used in:</p>
+        <div>
+          {(d.usedIn ?? []).map((t) => (
+            <span key={t} style={pillStyle}>
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (kind === 'achievement' && subOrLeafDetail && 'context' in subOrLeafDetail) {
+    const d = subOrLeafDetail;
+    return (
+      <div>
+        <p style={{ ...heading, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span aria-hidden>🏆</span> {node.label}
+        </p>
+        <p style={muted}>{d.context}</p>
+      </div>
+    );
+  }
+
+  if (kind === 'language' && subOrLeafDetail && 'fluency' in subOrLeafDetail) {
+    const d = subOrLeafDetail;
+    return (
+      <div>
+        <p style={heading}>
+          {d.flag} {node.label}
+        </p>
+        <p style={muted}>{d.fluency}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <p style={heading}>{node.label}</p>
+      {category ? (
+        <span style={{ ...pillStyle, color: catColor, borderColor: `${catColor}44` }}>{category.label}</span>
+      ) : null}
+      <p style={{ ...muted, marginTop: 12 }}>
+        {node.description ?? 'Tap another node on the graph to keep exploring.'}
+      </p>
+    </div>
+  );
+}
+
 export function Universe() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const labelsLayerRef = useRef<HTMLDivElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const labelRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const rafRef = useRef<number>(0);
+
+  const [focusedCategoryId, setFocusedCategoryId] = useState<string | null>(null);
+  const [detailPanel, setDetailPanel] = useState<{ node: Node; x: number; y: number } | null>(null);
+  const resetFocusHandlerRef = useRef<(() => void) | null>(null);
+  const focusCatRef = useRef<string | null>(null);
+  const setFocusRef = useRef(setFocusedCategoryId);
+  const setDetailRef = useRef(setDetailPanel);
+  setFocusRef.current = setFocusedCategoryId;
+  setDetailRef.current = setDetailPanel;
+  focusCatRef.current = focusedCategoryId;
 
   const nodes = useMemo<Node[]>(() => {
     const base: Node[] = [
@@ -127,6 +551,38 @@ export function Universe() {
 
     return base;
   }, []);
+
+  const nodeByIdForUi = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
+
+  const closeDetailPanel = useCallback(() => {
+    setDetailPanel(null);
+  }, []);
+
+  useEffect(() => {
+    if (!detailPanel || !panelRef.current) return;
+    gsap.fromTo(panelRef.current, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3 });
+  }, [detailPanel]);
+
+  useEffect(() => {
+    if (!detailPanel) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeDetailPanel();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [detailPanel, closeDetailPanel]);
+
+  useEffect(() => {
+    const c = containerRef.current;
+    if (!c || !detailPanel) return;
+    const down = (e: MouseEvent) => {
+      if (panelRef.current?.contains(e.target as globalThis.Node)) return;
+      if ((e.target as HTMLElement).closest('[data-universe-back]')) return;
+      closeDetailPanel();
+    };
+    c.addEventListener('mousedown', down);
+    return () => c.removeEventListener('mousedown', down);
+  }, [detailPanel, closeDetailPanel]);
 
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current || !labelsLayerRef.current) return;
@@ -261,6 +717,16 @@ export function Universe() {
 
     const sceneNodesById = new Map<string, SceneNode>();
     const categoryMeshes: THREE.Mesh[] = [];
+    const subMeshes: THREE.Mesh[] = [];
+    const leafMeshes: THREE.Mesh[] = [];
+    const subsByCategory = new Map<string, string[]>();
+    nodes
+      .filter((n) => n.type === 'sub' && n.parent)
+      .forEach((s) => {
+        const list = subsByCategory.get(s.parent!) ?? [];
+        list.push(s.id);
+        subsByCategory.set(s.parent!, list);
+      });
     const disposableGeometries: THREE.BufferGeometry[] = [];
     const disposableMaterials: THREE.Material[] = [];
     const disposableTextures: THREE.Texture[] = [];
@@ -271,6 +737,7 @@ export function Universe() {
     simNodes.forEach((node) => {
       let root: THREE.Object3D;
       let mesh: THREE.Mesh;
+      let ringMesh: THREE.Mesh | undefined;
 
       if (node.type === 'center') {
         const group = new THREE.Group();
@@ -305,11 +772,12 @@ export function Universe() {
           depthWrite: false,
         });
         disposableMaterials.push(ringMaterial);
-        const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
-        ringMesh.position.z = 0.02;
+        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.position.z = 0.02;
+        ringMesh = ring;
 
         group.add(mesh);
-        group.add(ringMesh);
+        group.add(ring);
         root = group;
       } else if (node.type === 'category') {
         const group = new THREE.Group();
@@ -319,7 +787,7 @@ export function Universe() {
         const material = new THREE.MeshBasicMaterial({
           color: node.color,
           side: THREE.DoubleSide,
-          transparent: false,
+          transparent: true,
           opacity: 1,
         });
         disposableMaterials.push(material);
@@ -336,11 +804,12 @@ export function Universe() {
           depthWrite: false,
         });
         disposableMaterials.push(ringMaterial);
-        const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
-        ringMesh.position.z = 0.02;
+        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.position.z = 0.02;
+        ringMesh = ring;
 
         group.add(mesh);
-        group.add(ringMesh);
+        group.add(ring);
         root = group;
         categoryMeshes.push(mesh);
       } else {
@@ -350,18 +819,24 @@ export function Universe() {
           color: node.color,
           side: THREE.DoubleSide,
           transparent: node.type === 'sub' || node.type === 'leaf',
-          opacity: node.type === 'category' ? 1 : 0,
+          opacity: 0,
         });
         disposableMaterials.push(material);
         mesh = new THREE.Mesh(geometry, material);
         root = mesh;
         mesh.userData = { id: node.id, type: node.type };
+        if (node.type === 'sub') {
+          subMeshes.push(mesh);
+          root.scale.set(0, 0, 0);
+        } else {
+          leafMeshes.push(mesh);
+        }
       }
 
       root.position.set(node.x, node.y, node.z);
       mesh.visible = node.type === 'center' || node.type === 'category';
       graphGroup.add(root);
-      sceneNodesById.set(node.id, { data: node, root, mesh });
+      sceneNodesById.set(node.id, { data: node, root, mesh, ringMesh });
     });
 
     const lineMaterial = (color: string, opacity: number) => {
@@ -424,10 +899,218 @@ export function Universe() {
     nodes.forEach((n) => scaleTargets.set(n.id, 1));
     let hoveredCategoryId: string | null = null;
 
+    const labelLerp = new Map<string, { opacity: number; blur: number; fontSize: number }>();
+    nodes.forEach((n) => {
+      labelLerp.set(n.id, {
+        opacity: n.type === 'center' || n.type === 'category' ? 1 : 0,
+        blur: 0,
+        fontSize: n.type === 'leaf' ? 8 : n.type === 'sub' ? 9 : 12,
+      });
+    });
+
+    const tmp = new THREE.Vector3();
+    const world = new THREE.Vector3();
+
+    const applyCategoryDim = (focusedId: string | null) => {
+      sceneNodesById.forEach((sn) => {
+        if (sn.data.type !== 'category') return;
+        const disc = sn.mesh.material as THREE.MeshBasicMaterial;
+        const ringMat = sn.ringMesh?.material as THREE.MeshBasicMaterial | undefined;
+        if (!focusedId) {
+          disc.opacity = 1;
+          if (ringMat) ringMat.opacity = 0.5;
+          return;
+        }
+        if (sn.data.id === focusedId) {
+          disc.opacity = 1;
+          if (ringMat) ringMat.opacity = 0.5;
+        } else {
+          disc.opacity = 0.15;
+          if (ringMat) ringMat.opacity = 0.12;
+        }
+      });
+    };
+
+    const particleBurst = (origin: THREE.Vector3, colorHex: string) => {
+      for (let i = 0; i < 8; i += 1) {
+        const geo = new THREE.CircleGeometry(2, 8);
+        const mat = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(colorHex),
+          transparent: true,
+          opacity: 1,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        });
+        const m = new THREE.Mesh(geo, mat);
+        m.position.copy(origin);
+        m.lookAt(camera.position);
+        scene.add(m);
+        const dir = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, (Math.random() - 0.5) * 0.15).normalize();
+        const dist = 36 + Math.random() * 48;
+        gsap.to(m.position, {
+          x: origin.x + dir.x * dist,
+          y: origin.y + dir.y * dist,
+          z: origin.z + dir.z * dist,
+          duration: 0.6,
+          ease: 'power2.out',
+        });
+        gsap.to(mat, {
+          opacity: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+          onComplete: () => {
+            scene.remove(m);
+            geo.dispose();
+            mat.dispose();
+          },
+        });
+      }
+    };
+
+    const clampPanelPos = (x: number, y: number, panelW: number, panelH: number) => {
+      const pad = 12;
+      const maxX = Math.max(pad, container.clientWidth - panelW - pad);
+      const maxY = Math.max(pad, container.clientHeight - panelH - pad);
+      return {
+        x: Math.min(Math.max(pad, x), maxX),
+        y: Math.min(Math.max(pad, y), maxY),
+      };
+    };
+
     const updateMouse = (event: MouseEvent) => {
       const rect = renderer.domElement.getBoundingClientRect();
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    };
+
+    const openDetailAtWorld = (n: Node, worldPos: THREE.Vector3) => {
+      tmp.copy(worldPos).project(camera);
+      let px = (tmp.x * 0.5 + 0.5) * container.clientWidth + 28;
+      let py = (-tmp.y * 0.5 + 0.5) * container.clientHeight - 28;
+      const c = clampPanelPos(px, py, 280, 320);
+      setDetailRef.current?.({ node: n, x: c.x, y: c.y });
+    };
+
+    const onCanvasClick = (event: MouseEvent) => {
+      updateMouse(event);
+      raycaster.setFromCamera(mouse, camera);
+
+      const leafHit = raycaster.intersectObjects(leafMeshes, false)[0];
+      if (leafHit) {
+        const id = leafHit.object.userData.id as string;
+        const hitNode = nodeById.get(id);
+        if (hitNode?.type === 'leaf') {
+          leafHit.object.getWorldPosition(world);
+          openDetailAtWorld(hitNode, world);
+        }
+        return;
+      }
+
+      const subHit = raycaster.intersectObjects(subMeshes, false)[0];
+      if (subHit) {
+        const id = subHit.object.userData.id as string;
+        const hitNode = nodeById.get(id);
+        if (hitNode?.type === 'sub') {
+          subHit.object.getWorldPosition(world);
+          openDetailAtWorld(hitNode, world);
+        }
+        return;
+      }
+
+      const catHit = raycaster.intersectObjects(categoryMeshes, false)[0];
+      if (!catHit) return;
+
+      setDetailRef.current(null);
+      const id = catHit.object.userData.id as string;
+      const simN = simById.get(id);
+      if (!simN) return;
+
+      focusCatRef.current = id;
+      setFocusRef.current(id);
+
+      catHit.object.getWorldPosition(world);
+      particleBurst(world.clone(), simN.color);
+
+      gsap.killTweensOf(camera.position);
+      gsap.killTweensOf(controls.target);
+      sceneNodesById.forEach(({ data, root }) => {
+        if (data.type === 'sub') gsap.killTweensOf(root.scale);
+      });
+
+      gsap.to(camera.position, {
+        x: simN.x * 0.4,
+        y: simN.y * 0.4,
+        z: 120,
+        duration: 0.8,
+        ease: 'power2.out',
+      });
+      gsap.to(controls.target, {
+        x: simN.x,
+        y: simN.y,
+        z: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        onUpdate: () => controls.update(),
+      });
+
+      applyCategoryDim(id);
+
+      const subIds = subsByCategory.get(id) ?? [];
+      nodes
+        .filter((x) => x.type === 'sub' && x.parent !== id)
+        .forEach((s) => {
+          const sn = sceneNodesById.get(s.id);
+          if (!sn) return;
+          sn.mesh.visible = false;
+          sn.root.scale.set(0, 0, 0);
+          const m = sn.mesh.material as THREE.MeshBasicMaterial;
+          m.opacity = 0;
+        });
+
+      subIds.forEach((sid, index) => {
+        const sn = sceneNodesById.get(sid);
+        if (!sn) return;
+        sn.root.visible = true;
+        sn.mesh.visible = true;
+        sn.root.scale.set(0, 0, 0);
+        const m = sn.mesh.material as THREE.MeshBasicMaterial;
+        m.opacity = 1;
+        gsap.to(sn.root.scale, {
+          x: 1,
+          y: 1,
+          z: 1,
+          duration: 0.4,
+          delay: index * 0.05,
+          ease: 'back.out(1.7)',
+        });
+      });
+    };
+
+    resetFocusHandlerRef.current = () => {
+      focusCatRef.current = null;
+      setFocusRef.current(null);
+      setDetailRef.current(null);
+      gsap.killTweensOf(camera.position);
+      gsap.killTweensOf(controls.target);
+      sceneNodesById.forEach(({ data, root }) => {
+        if (data.type === 'sub') gsap.killTweensOf(root.scale);
+      });
+      gsap.to(camera.position, {
+        x: 0,
+        y: 0,
+        z: 220,
+        duration: 0.8,
+        ease: 'power2.out',
+      });
+      gsap.to(controls.target, {
+        x: 0,
+        y: 0,
+        z: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        onUpdate: () => controls.update(),
+      });
+      applyCategoryDim(null);
     };
 
     const handleResize = () => {
@@ -441,13 +1124,11 @@ export function Universe() {
     handleResize();
     window.addEventListener('resize', handleResize);
     renderer.domElement.addEventListener('mousemove', updateMouse);
+    renderer.domElement.addEventListener('click', onCanvasClick);
 
     if (hintRef.current) {
-      gsap.to(hintRef.current, { opacity: 0, delay: 3, duration: 0.7, ease: 'power1.out' });
+      gsap.to(hintRef.current, { opacity: 0, delay: 3, duration: 1, ease: 'power1.out' });
     }
-
-    const tmp = new THREE.Vector3();
-    const world = new THREE.Vector3();
 
     const animate = () => {
       rafRef.current = requestAnimationFrame(animate);
@@ -476,6 +1157,8 @@ export function Universe() {
         });
       }
 
+      const fid = focusCatRef.current;
+
       sceneNodesById.forEach(({ data, mesh }) => {
         if (data.type === 'category') {
           scaleTargets.set(data.id, hoveredCategoryId === data.id ? 1.2 : 1);
@@ -486,7 +1169,26 @@ export function Universe() {
           let targetOpacity = 0;
           let shouldBeVisible = false;
 
-          if (data.type === 'sub') {
+          if (fid) {
+            if (data.type === 'sub') {
+              if (data.parent === fid) {
+                shouldBeVisible = true;
+                targetOpacity = 1;
+              } else {
+                shouldBeVisible = false;
+                targetOpacity = 0;
+              }
+            } else if (data.type === 'leaf') {
+              const underSkills = data.parent?.startsWith('sub-skills') ?? false;
+              if (fid === 'skills' && underSkills) {
+                shouldBeVisible = cameraDistance < 130;
+                targetOpacity = shouldBeVisible ? 1 : 0;
+              } else {
+                shouldBeVisible = false;
+                targetOpacity = 0;
+              }
+            }
+          } else if (data.type === 'sub') {
             if (cameraDistance > 350) {
               shouldBeVisible = false;
             } else if (cameraDistance > 200) {
@@ -503,9 +1205,7 @@ export function Universe() {
               shouldBeVisible = true;
               targetOpacity = Math.max(targetOpacity, 0.3);
             }
-          }
-
-          if (data.type === 'leaf') {
+          } else if (data.type === 'leaf') {
             shouldBeVisible = cameraDistance < 100;
             targetOpacity = shouldBeVisible ? 1 : 0;
           }
@@ -515,11 +1215,48 @@ export function Universe() {
         }
       });
 
-      sceneNodesById.forEach(({ data, root }) => {
-        const target = scaleTargets.get(data.id) ?? 1;
-        const next = THREE.MathUtils.lerp(root.scale.x, target, 0.15);
-        root.scale.set(next, next, next);
+      sceneNodesById.forEach(({ data, root, mesh }) => {
+        if (data.type === 'category' || data.type === 'center') {
+          const target = scaleTargets.get(data.id) ?? 1;
+          const next = THREE.MathUtils.lerp(root.scale.x, target, 0.15);
+          root.scale.set(next, next, next);
+          return;
+        }
+        if (data.type === 'sub') {
+          if (fid && data.parent === fid) return;
+          const mat = mesh.material as THREE.MeshBasicMaterial;
+          const tgt = mesh.visible && mat.opacity > 0.04 ? 1 : 0;
+          const next = THREE.MathUtils.lerp(root.scale.x, tgt, 0.18);
+          root.scale.set(next, next, next);
+          return;
+        }
+        if (data.type === 'leaf') {
+          const mat = mesh.material as THREE.MeshBasicMaterial;
+          const tgt = mesh.visible && mat.opacity > 0.04 ? 1 : 0;
+          const next = THREE.MathUtils.lerp(root.scale.x, tgt, 0.18);
+          root.scale.set(next, next, next);
+        }
       });
+
+      const tt = tooltipRef.current;
+      if (tt) {
+        if (!fid && hoveredCategoryId) {
+          const sn = sceneNodesById.get(hoveredCategoryId);
+          if (sn) {
+            sn.mesh.getWorldPosition(tmp);
+            tmp.project(camera);
+            const tx = (tmp.x * 0.5 + 0.5) * container.clientWidth;
+            const ty = (-tmp.y * 0.5 + 0.5) * container.clientHeight;
+            tt.style.display = 'block';
+            tt.textContent = CATEGORY_TOOLTIP[hoveredCategoryId] ?? '';
+            tt.style.left = `${tx}px`;
+            tt.style.top = `${ty - 32}px`;
+            tt.style.transform = 'translate(-50%, -100%)';
+          }
+        } else {
+          tt.style.display = 'none';
+        }
+      }
 
       nodes.forEach((node) => {
         const label = labelRefs.current[node.id];
@@ -530,32 +1267,63 @@ export function Universe() {
         tmp.project(camera);
         const x = (tmp.x * 0.5 + 0.5) * container.clientWidth;
         const y = (-tmp.y * 0.5 + 0.5) * container.clientHeight;
-        const visible = tmp.z >= -1 && tmp.z <= 1 && sceneNode.mesh.visible;
+        const inFront = tmp.z >= -1 && tmp.z <= 1;
+        const visMesh = node.type === 'center' || node.type === 'category' ? true : sceneNode.mesh.visible;
+        const visible = inFront && visMesh;
 
         label.style.display = visible ? 'block' : 'none';
         if (!visible) return;
 
         label.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
 
-        if (node.type === 'category' || node.type === 'center') {
-          label.style.filter = 'none';
-          label.style.opacity = '1';
-          return;
+        let tgtO = 1;
+        let tgtB = 0;
+        let tgtFs = 12;
+
+        if (node.type === 'center') {
+          tgtO = cameraDistance > 300 ? 1 : 1;
+          tgtB = 0;
+          tgtFs = 12;
+        } else if (node.type === 'category') {
+          if (fid && node.id !== fid) {
+            tgtO = 0.35;
+            tgtB = 0;
+          } else if (cameraDistance > 300) {
+            tgtO = 0.4;
+            tgtB = 3;
+          } else if (cameraDistance >= 180) {
+            tgtO = 1;
+            tgtB = 0;
+          } else {
+            tgtO = 1;
+            tgtB = 0;
+          }
+          tgtFs = 12;
+        } else if (node.type === 'sub') {
+          tgtFs = 9;
+          tgtB = 0;
+          if (fid && node.parent !== fid) {
+            tgtO = 0;
+          } else if (fid && node.parent === fid) {
+            tgtO = 0.85;
+          } else if (cameraDistance < 180) {
+            tgtO = 0.7;
+          } else {
+            tgtO = 0;
+          }
+        } else if (node.type === 'leaf') {
+          tgtFs = cameraDistance < 120 ? 8 : 9;
+          tgtB = 0;
+          tgtO = cameraDistance < 120 && sceneNode.mesh.visible ? 0.6 : 0;
         }
 
-        if (node.type === 'sub') {
-          const showSubLabel =
-            (node.parent != null && hoveredCategoryId === node.parent) || cameraDistance < 200;
-          label.style.filter = 'none';
-          label.style.opacity = showSubLabel ? '1' : '0';
-          return;
-        }
-
-        if (node.type === 'leaf') {
-          const showLeafLabel = cameraDistance < 100 && sceneNode.mesh.visible;
-          label.style.filter = 'none';
-          label.style.opacity = showLeafLabel ? '0.85' : '0';
-        }
+        const cur = labelLerp.get(node.id)!;
+        cur.opacity += (tgtO - cur.opacity) * 0.12;
+        cur.blur += (tgtB - cur.blur) * 0.12;
+        cur.fontSize += (tgtFs - cur.fontSize) * 0.12;
+        label.style.opacity = String(cur.opacity);
+        label.style.filter = cur.blur > 0.08 ? `blur(${cur.blur}px)` : 'none';
+        label.style.fontSize = `${cur.fontSize}px`;
       });
 
       renderer.render(scene, camera);
@@ -565,9 +1333,13 @@ export function Universe() {
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      gsap.killTweensOf(camera.position);
+      gsap.killTweensOf(controls.target);
+      resetFocusHandlerRef.current = null;
       controls.dispose();
       window.removeEventListener('resize', handleResize);
       renderer.domElement.removeEventListener('mousemove', updateMouse);
+      renderer.domElement.removeEventListener('click', onCanvasClick);
       simulation.stop();
 
       lineObjects.forEach((l) => scene.remove(l));
@@ -612,6 +1384,72 @@ export function Universe() {
             position: 'relative',
           }}
         >
+          {focusedCategoryId ? (
+            <button
+              type="button"
+              data-universe-back
+              onClick={() => resetFocusHandlerRef.current?.()}
+              style={{
+                position: 'absolute',
+                top: 16,
+                left: 16,
+                zIndex: 8,
+                cursor: 'pointer',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: 12,
+                color: '#A8A8B8',
+                padding: '8px 14px',
+                borderRadius: 999,
+                border: '1px solid rgba(255,255,255,0.12)',
+                background: 'rgba(12,12,16,0.55)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+              }}
+            >
+              ← universe
+            </button>
+          ) : null}
+          <div
+            ref={tooltipRef}
+            style={{
+              display: 'none',
+              position: 'absolute',
+              zIndex: 7,
+              pointerEvents: 'none',
+              background: 'rgba(12,12,16,0.85)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: 8,
+              padding: '6px 12px',
+              fontFamily: 'DM Sans, sans-serif',
+              fontSize: 12,
+              color: '#A8A8B8',
+              whiteSpace: 'nowrap',
+            }}
+          />
+          {detailPanel ? (
+            <div
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              onMouseDown={(e) => e.stopPropagation()}
+              style={{
+                position: 'absolute',
+                left: detailPanel.x,
+                top: detailPanel.y,
+                width: 280,
+                zIndex: 10,
+                background: 'rgba(12,12,16,0.92)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: 16,
+                padding: 24,
+                boxShadow: '0 0 40px rgba(0,0,0,0.4)',
+              }}
+            >
+              <UniverseDetailBody node={detailPanel.node} byId={nodeByIdForUi} />
+            </div>
+          ) : null}
           <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
           <div
             ref={labelsLayerRef}
