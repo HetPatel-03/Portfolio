@@ -188,6 +188,17 @@ export function LogoSupabase() {
   );
 }
 
+export function LogoDocker() {
+  return (
+    <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path
+        fill="#2496ED"
+        d="M40 56h12v12H40V56zm16 0h12v12H56V56zm16 0h12v12H72V56zm16 0h12v12H88V56zm12-16h12v12h-12V40zm-16 0h12v12H88V40zm-16 0h12v12H72V40zm-16 0h12v12H56V40zm-16 0h12v12H40V40zm-16 0h12v12H24V40zm88 32c8 0 14-6 16-14H28c-2 18-16 34-34 38v12h108c16 0 28-12 28-28 0-12-8-22-20-26v12c0 4-4 8-8 8h-8z"
+      />
+    </svg>
+  );
+}
+
 export function LogoSql() {
   return (
     <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden>

@@ -40,7 +40,7 @@ export function About() {
         style={{
           position: 'absolute',
           top: '50%',
-          left: '50%',
+          left: '25%',
           transform: 'translate(-50%, -50%)',
           fontFamily: "'Clash Display', sans-serif",
           fontWeight: 800,
