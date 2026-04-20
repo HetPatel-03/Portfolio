@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 
 export function Location() {
   return (
-    <section id="location" className="py-32 px-8">
+    <section id="location" className="section-bg-location py-32 px-8">
       <div className="max-w-7xl mx-auto">
         <p 
           className="text-xs mb-4"

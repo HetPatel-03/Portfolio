@@ -49,7 +49,7 @@ export function Contact() {
   ];
 
   return (
-    <section id="connect" className="py-32 px-8">
+    <section id="connect" className="section-bg-connect relative py-32 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-start mb-12">
           <div>

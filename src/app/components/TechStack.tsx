@@ -173,8 +173,11 @@ const STACK_ITEMS: StackItem[] = [
   },
 ];
 
-/** Auto-scroll speed (pixels per second) — lower = slower drift */
-const STACK_AUTO_SCROLL_PX_PER_SEC = 14;
+/** Auto-scroll: 1px per tick, fixed cadence */
+const STACK_AUTO_SCROLL_INTERVAL_MS = 20;
+const STACK_AUTO_SCROLL_DELTA_PX = 1;
+/** Resume auto-scroll after this much idle time following user interaction */
+const STACK_RESUME_AFTER_IDLE_MS = 10_000;
 
 const SECTION_PAD_X = 'clamp(40px, 8vw, 120px)';
 
@@ -255,7 +258,7 @@ export function TechStack() {
   const innerRef = useRef<HTMLDivElement>(null);
   const autoPausedRef = useRef(false);
   const cardResumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const rafRef = useRef<number>(0);
+  const scrollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const pauseCardsAndScheduleResume = useCallback(() => {
     autoPausedRef.current = true;
@@ -265,7 +268,7 @@ export function TechStack() {
     cardResumeTimeoutRef.current = setTimeout(() => {
       autoPausedRef.current = false;
       cardResumeTimeoutRef.current = null;
-    }, 10000);
+    }, STACK_RESUME_AFTER_IDLE_MS);
   }, []);
 
   useEffect(() => {
@@ -273,32 +276,24 @@ export function TechStack() {
     const inner = innerRef.current;
     if (!view || !inner) return;
 
-    let last = performance.now();
-    let cancelled = false;
-
-    const tick = (now: number) => {
-      if (cancelled) return;
-      const dt = Math.min((now - last) / 1000, 0.1);
-      last = now;
-
-      if (!autoPausedRef.current) {
-        const half = inner.scrollWidth / 2;
-        if (half > 0) {
-          view.scrollLeft += STACK_AUTO_SCROLL_PX_PER_SEC * dt;
-          if (view.scrollLeft >= half - 0.5) {
-            view.scrollLeft -= half;
-          }
+    const tick = () => {
+      if (autoPausedRef.current) return;
+      const half = inner.scrollWidth / 2;
+      if (half > 0) {
+        view.scrollLeft += STACK_AUTO_SCROLL_DELTA_PX;
+        if (view.scrollLeft >= half - 0.5) {
+          view.scrollLeft -= half;
         }
       }
-
-      rafRef.current = requestAnimationFrame(tick);
     };
 
-    rafRef.current = requestAnimationFrame(tick);
+    scrollIntervalRef.current = setInterval(tick, STACK_AUTO_SCROLL_INTERVAL_MS);
 
     return () => {
-      cancelled = true;
-      cancelAnimationFrame(rafRef.current);
+      if (scrollIntervalRef.current != null) {
+        clearInterval(scrollIntervalRef.current);
+        scrollIntervalRef.current = null;
+      }
     };
   }, []);
 
@@ -373,9 +368,8 @@ export function TechStack() {
             <div
               ref={viewportRef}
               className="stack-cards-viewport overflow-x-auto overflow-y-hidden"
-              onMouseEnter={pauseCardsAndScheduleResume}
-              onMouseDown={pauseCardsAndScheduleResume}
-              onTouchStart={pauseCardsAndScheduleResume}
+              onPointerDown={pauseCardsAndScheduleResume}
+              onWheel={pauseCardsAndScheduleResume}
             >
               <div ref={innerRef} className="stack-cards-row flex items-stretch gap-5" role="list">
                 {CARD_LOOP.map((tech, index) => (
@@ -408,7 +402,7 @@ export function TechStack() {
             opacity: 0.5,
           }}
         >
-          // slow auto-scroll · ‹ › or hover to pause
+          // 1px / 20ms · pauses on interaction · resumes after idle
         </p>
 
         <div className="stack-logo-ticker mt-8 overflow-hidden" aria-hidden>

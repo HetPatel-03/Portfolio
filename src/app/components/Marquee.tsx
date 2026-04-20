@@ -21,12 +21,11 @@ export function Marquee() {
   const allItems = [...items, ...items];
 
   return (
-    <div 
-      className="w-full py-4 overflow-hidden"
+    <div
+      className="section-bg-marquee w-full py-4 overflow-hidden"
       style={{
-        background: 'var(--bg-surface)',
         borderTop: '1px solid rgba(240, 237, 232, 0.06)',
-        borderBottom: '1px solid rgba(240, 237, 232, 0.06)'
+        borderBottom: '1px solid rgba(240, 237, 232, 0.06)',
       }}
     >
       <div 

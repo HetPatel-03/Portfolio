@@ -217,7 +217,7 @@ export function Universe() {
   }, []);
 
   return (
-    <section id="universe" className="py-32 px-8">
+    <section id="universe" className="section-bg-universe py-32 px-8">
       <div className="max-w-7xl mx-auto">
         <p 
           className="text-xs mb-4"

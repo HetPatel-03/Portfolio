@@ -35,7 +35,7 @@ export function Projects() {
   ];
 
   return (
-    <section id="projects" className="py-32 px-8">
+    <section id="projects" className="section-bg-projects relative py-32 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-start mb-12">
           <div>

@@ -22,8 +22,8 @@ export function Footer() {
   };
 
   return (
-    <footer 
-      className="py-12 px-8 border-t"
+    <footer
+      className="footer-bg py-12 px-8 border-t"
       style={{ borderColor: 'rgba(240, 237, 232, 0.06)' }}
     >
       <div className="max-w-7xl mx-auto">

@@ -24,15 +24,10 @@ export function Hero() {
   };
 
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
-      {/* Background gradient */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at 65% 50%, rgba(245,143,124,0.06) 0%, transparent 50%)'
-        }}
-      />
-
+    <section
+      id="hero"
+      className="section-bg-hero min-h-screen flex items-center justify-center relative overflow-hidden pt-20"
+    >
       {/* Noise texture overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
         <svg width="100%" height="100%">

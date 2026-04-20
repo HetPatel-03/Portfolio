@@ -137,7 +137,7 @@ export function Education() {
   ];
 
   return (
-    <section id="education" className="py-32 px-8">
+    <section id="education" className="section-bg-education relative py-32 px-8">
       <div className="max-w-7xl mx-auto">
         <p
           className="text-xs mb-4"

@@ -34,7 +34,7 @@ export function About() {
   };
 
   return (
-    <section id="about" className="py-32 px-8">
+    <section id="about" className="section-bg-about relative py-32 px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col gap-12 lg:flex-row lg:gap-16 lg:items-start">
           {/* Left column — 55% */}

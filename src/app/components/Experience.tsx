@@ -99,7 +99,7 @@ export function Experience() {
   ];
 
   return (
-    <section id="experience" className="py-32 px-8">
+    <section id="experience" className="section-bg-experience relative py-32 px-8">
       <div className="max-w-5xl mx-auto">
         <p 
           className="text-xs mb-4"
