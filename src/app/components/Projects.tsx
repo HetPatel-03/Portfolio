@@ -67,8 +67,8 @@ export function Projects() {
           {projects.map((project) => (
             <div key={project.id} className="project-card group">
               {/* Visual Area */}
-              <div 
-                className="h-[180px] relative overflow-hidden"
+              <div
+                className="project-card__media h-[180px] relative overflow-hidden"
                 style={{ background: project.gradient }}
               >
                 {/* Abstract SVG illustration */}
