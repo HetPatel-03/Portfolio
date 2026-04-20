@@ -388,7 +388,7 @@ export function Contact() {
             <img
               src="/Image2.png"
               alt="Het Patel - Toronto Waterfront"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%', display: 'block' }}
             />
             <div
               style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '180px', background: 'linear-gradient(to top, rgba(12,12,16,0.92) 0%, transparent 100%)', pointerEvents: 'none' }}
@@ -398,7 +398,7 @@ export function Contact() {
               <div style={{ fontFamily: 'DM Sans', fontSize: '13px', color: '#A8A8B8', marginBottom: '10px' }}>Toronto, ON · GTA</div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(200,241,53,0.12)', border: '1px solid rgba(200,241,53,0.3)', borderRadius: '999px', padding: '4px 12px' }}>
                 <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#C8F135' }} />
-                <span style={{ fontFamily: 'JetBrains Mono', fontSize: '11px', color: '#C8F135' }}>Open to work · 2025</span>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: '11px', color: '#C8F135' }}>Open to work · 2026</span>
               </div>
             </div>
           </div>
