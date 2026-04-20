@@ -173,9 +173,6 @@ const STACK_ITEMS: StackItem[] = [
   },
 ];
 
-/** Uniform card + viewport height (px) */
-const STACK_CARD_HEIGHT = 360;
-
 /** Auto-scroll speed (pixels per second) — lower = slower drift */
 const STACK_AUTO_SCROLL_PX_PER_SEC = 14;
 
@@ -192,7 +189,6 @@ function StackCard({ tech }: { tech: StackItem }) {
       className="stack-tech-card flex w-[280px] shrink-0 flex-col transition-[border-color,box-shadow] duration-300 ease-out"
       style={{
         width: 280,
-        height: STACK_CARD_HEIGHT,
         flexShrink: 0,
         boxSizing: 'border-box',
         background: 'rgba(255,255,255,0.03)',
@@ -242,7 +238,7 @@ function StackCard({ tech }: { tech: StackItem }) {
       </div>
 
       <p
-        className="mt-3 min-h-0 flex-1 overflow-y-auto text-[13px] leading-relaxed"
+        className="mt-3 text-[13px] leading-relaxed"
         style={{
           fontFamily: 'var(--font-body)',
           color: '#A8A8B8',
@@ -377,12 +373,11 @@ export function TechStack() {
             <div
               ref={viewportRef}
               className="stack-cards-viewport overflow-x-auto overflow-y-hidden"
-              style={{ height: STACK_CARD_HEIGHT }}
               onMouseEnter={pauseCardsAndScheduleResume}
               onMouseDown={pauseCardsAndScheduleResume}
               onTouchStart={pauseCardsAndScheduleResume}
             >
-              <div ref={innerRef} className="stack-cards-row flex h-full items-stretch gap-5" role="list">
+              <div ref={innerRef} className="stack-cards-row flex items-stretch gap-5" role="list">
                 {CARD_LOOP.map((tech, index) => (
                   <StackCard key={`${tech.id}-${index}`} tech={tech} />
                 ))}
