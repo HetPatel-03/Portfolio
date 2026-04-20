@@ -239,3 +239,29 @@ h1, h2 {
     0 20px 60px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
+
+.experience-card__bullets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.experience-card__bullets li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+.experience-card__bullets li:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.experience-card__bullets li::before {
+  content: '→';
+  color: #f2664a;
+  margin-right: 8px;
+  font-weight: 600;
+}

@@ -1,5 +1,43 @@
 import { getTechTagPillStyle } from '../lib/techTagPill';
 
+const experienceCardAccent: Record<
+  string,
+  { left: string; roleBadge: { background: string; border: string; color: string } }
+> = {
+  'Rogers Communications': {
+    left: '#F2664A',
+    roleBadge: {
+      background: 'rgba(242,102,74,0.12)',
+      border: '1px solid rgba(242,102,74,0.3)',
+      color: '#F2664A',
+    },
+  },
+  Freelance: {
+    left: '#C8F135',
+    roleBadge: {
+      background: 'rgba(200,241,53,0.12)',
+      border: '1px solid rgba(200,241,53,0.3)',
+      color: '#C8F135',
+    },
+  },
+  'Staples Canada ULC': {
+    left: '#60A5FA',
+    roleBadge: {
+      background: 'rgba(96,165,250,0.12)',
+      border: '1px solid rgba(96,165,250,0.3)',
+      color: '#60A5FA',
+    },
+  },
+  'Walmart Canada': {
+    left: '#FBBF24',
+    roleBadge: {
+      background: 'rgba(251,191,36,0.12)',
+      border: '1px solid rgba(251,191,36,0.3)',
+      color: '#FBBF24',
+    },
+  },
+};
+
 export function Experience() {
   const experiences = [
     {
@@ -16,7 +54,7 @@ export function Experience() {
         'Bridged commercial instincts with technical mindset'
       ],
       tags: ['Team Leadership', 'Rogers', 'Fido', 'Chatr', 'Excel Automation', 'KPI Tracking'],
-      color: '#F58F7C',
+      color: '#F2664A',
       featured: true
     },
     {
@@ -30,7 +68,7 @@ export function Experience() {
         'Managed full project lifecycle solo — discovery to deployment'
       ],
       tags: ['React', 'Node.js', 'PostgreSQL', 'React Native', 'Vercel', 'Full Stack'],
-      color: '#A8C5A0'
+      color: '#C8F135'
     },
     {
       company: 'Staples Canada ULC',
@@ -44,7 +82,7 @@ export function Experience() {
         'Managed activations across Rogers Bell Telus'
       ],
       tags: ['Wireless Sales', 'Team Leadership', 'Training', 'CRM'],
-      color: '#F2C4CE'
+      color: '#60A5FA'
     },
     {
       company: 'Walmart Canada',
@@ -56,7 +94,7 @@ export function Experience() {
         'Guided customers through complex tech decisions'
       ],
       tags: ['Consultative Sales', 'Electronics', 'Retail Operations'],
-      color: '#9E9C9A'
+      color: '#FBBF24'
     }
   ];
 
@@ -127,13 +165,13 @@ export function Experience() {
                     exp.featured ? 'scale-[1.02]' : ''
                   }`}
                   style={{
-                    background: 'rgba(44, 43, 48, 0.7)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(240, 237, 232, 0.08)',
-                    borderLeft: `3px solid ${exp.color}`,
-                    boxShadow: exp.featured 
-                      ? '0 0 40px rgba(245, 143, 124, 0.15)' 
-                      : '0 8px 32px rgba(0,0,0,0.2)'
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    backdropFilter: 'blur(20px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderLeft: `3px solid ${experienceCardAccent[exp.company].left}`,
+                    boxShadow:
+                      '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)',
                   }}
                 >
                   {/* Header */}
@@ -143,8 +181,7 @@ export function Experience() {
                         <span
                           className="px-3 py-1 rounded-full text-xs"
                           style={{
-                            background: `${exp.color}20`,
-                            color: exp.color,
+                            ...experienceCardAccent[exp.company].roleBadge,
                             fontFamily: 'var(--font-body)',
                             fontWeight: 500
                           }}
@@ -204,22 +241,13 @@ export function Experience() {
                   </div>
 
                   {/* Bullets */}
-                  <div className="space-y-2 mb-4">
+                  <ul className="experience-card__bullets mb-4">
                     {exp.bullets.map((bullet, i) => (
-                      <div key={i} className="flex gap-2 text-sm">
-                        <span style={{ color: 'var(--coral)' }}>•</span>
-                        <span 
-                          style={{ 
-                            color: 'var(--text-muted)',
-                            fontFamily: 'var(--font-body)',
-                            lineHeight: 1.6
-                          }}
-                        >
-                          {bullet}
-                        </span>
-                      </div>
+                      <li key={i} className="text-sm">
+                        {bullet}
+                      </li>
                     ))}
-                  </div>
+                  </ul>
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2">
