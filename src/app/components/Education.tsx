@@ -16,13 +16,14 @@ const certItemClass: Record<CertId, string> = {
   m365: 'education-cert-item education-cert-item--m365 education-clickable',
 };
 
-const ALGOMA_COURSES = [
-  'Data Structures',
-  'Algorithms',
-  'Web Development',
-  'Operating Systems',
-  'Database Management',
-  'Software Engineering',
+const courses = [
+  { name: 'Data Structures', bg: 'rgba(97,218,251,0.10)', border: 'rgba(97,218,251,0.25)', color: '#61DAFB' },
+  { name: 'Algorithms', bg: 'rgba(200,241,53,0.10)', border: 'rgba(200,241,53,0.25)', color: '#C8F135' },
+  { name: 'Web Development', bg: 'rgba(242,102,74,0.10)', border: 'rgba(242,102,74,0.25)', color: '#F2664A' },
+  { name: 'Operating Systems', bg: 'rgba(167,139,250,0.10)', border: 'rgba(167,139,250,0.25)', color: '#A78BFA' },
+  { name: 'Database Management', bg: 'rgba(62,207,142,0.10)', border: 'rgba(62,207,142,0.25)', color: '#3ECF8E' },
+  { name: 'Software Engineering', bg: 'rgba(251,191,36,0.10)', border: 'rgba(251,191,36,0.25)', color: '#FBBF24' },
+  { name: 'Artificial Intelligence', bg: 'rgba(249,168,212,0.10)', border: 'rgba(249,168,212,0.25)', color: '#F9A8D4' },
 ] as const;
 
 export function Education() {
@@ -233,7 +234,7 @@ export function Education() {
                   Bachelor of Computer Science
                 </div>
                 <div style={{ fontSize: '13px', color: '#A8A8B8', marginBottom: '16px', fontFamily: 'var(--font-body)' }}>
-                  Sept 2021 – Dec 2025 · Sault Ste. Marie, ON
+                  Jan 2023 – Dec 2025 · Brampton, ON
                 </div>
                 <div>
                   <div
@@ -249,20 +250,21 @@ export function Education() {
                     Key Courses
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                    {ALGOMA_COURSES.map((course) => (
+                    {courses.map((course) => (
                       <span
-                        key={course}
+                        key={course.name}
                         style={{
-                          background: 'rgba(200,241,53,0.08)',
-                          border: '1px solid rgba(200,241,53,0.2)',
-                          color: '#C8F135',
+                          background: course.bg,
+                          border: `1px solid ${course.border}`,
+                          color: course.color,
                           borderRadius: '20px',
-                          padding: '3px 10px',
-                          fontSize: '11px',
-                          fontFamily: 'var(--font-body)',
+                          padding: '4px 12px',
+                          fontSize: '12px',
+                          fontFamily: 'DM Sans',
+                          fontWeight: '500',
                         }}
                       >
-                        {course}
+                        {course.name}
                       </span>
                     ))}
                   </div>
@@ -299,16 +301,39 @@ export function Education() {
                   3.1{' '}
                   <span style={{ fontSize: '13px', color: '#A8A8B8', fontWeight: 400, fontFamily: 'var(--font-body)' }}>/ 4.0 GPA</span>
                 </div>
-                <div
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setFlipped(false);
+                  }}
                   style={{
-                    fontSize: '11px',
-                    color: 'rgba(200,241,53,0.4)',
-                    fontFamily: 'JetBrains Mono, var(--font-mono)',
                     marginTop: 'auto',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    background: 'rgba(200,241,53,0.08)',
+                    border: '1px solid rgba(200,241,53,0.25)',
+                    borderRadius: '30px',
+                    padding: '8px 18px',
+                    color: '#C8F135',
+                    fontSize: '12px',
+                    fontFamily: 'JetBrains Mono',
+                    cursor: 'pointer',
+                    alignSelf: 'flex-start',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(200,241,53,0.15)';
+                    e.currentTarget.style.borderColor = 'rgba(200,241,53,0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(200,241,53,0.08)';
+                    e.currentTarget.style.borderColor = 'rgba(200,241,53,0.25)';
                   }}
                 >
-                  // click to flip back
-                </div>
+                  ↩ flip back
+                </button>
               </div>
             </div>
           </div>
