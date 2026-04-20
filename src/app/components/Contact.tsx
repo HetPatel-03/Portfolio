@@ -378,19 +378,40 @@ export function Contact() {
               }}
             />
             <div
-              style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '120px', background: 'linear-gradient(to bottom, #0C0C10, transparent)', pointerEvents: 'none' }}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                fontFamily: "'Clash Display', sans-serif",
+                fontWeight: 800,
+                fontSize: 'clamp(40px, 7vw, 100px)',
+                color: 'rgba(255,255,255,0.12)',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.2em',
+                userSelect: 'none',
+                pointerEvents: 'none',
+                zIndex: 2,
+                lineHeight: 1,
+                textTransform: 'uppercase',
+              }}
+            >
+              TORONTO
+            </div>
+            <div
+              style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '120px', background: 'linear-gradient(to bottom, #0C0C10, transparent)', pointerEvents: 'none', zIndex: 1 }}
             />
             <div
-              style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '120px', background: 'linear-gradient(to top, #0C0C10, transparent)', pointerEvents: 'none' }}
+              style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '120px', background: 'linear-gradient(to top, #0C0C10, transparent)', pointerEvents: 'none', zIndex: 1 }}
             />
             <div
-              style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '100px', background: 'linear-gradient(to right, #0C0C10, transparent)', pointerEvents: 'none' }}
+              style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '100px', background: 'linear-gradient(to right, #0C0C10, transparent)', pointerEvents: 'none', zIndex: 1 }}
             />
             <div
-              style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: '100px', background: 'linear-gradient(to left, #0C0C10, transparent)', pointerEvents: 'none' }}
+              style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: '100px', background: 'linear-gradient(to left, #0C0C10, transparent)', pointerEvents: 'none', zIndex: 1 }}
             />
 
-            <div className="absolute" style={{ left: '22%', top: '45%', transform: 'translate(-50%, -50%)' }}>
+            <div className="absolute" style={{ left: '22%', top: '45%', transform: 'translate(-50%, -50%)', zIndex: 3 }}>
               <div
                 style={{
                   width: '20px',
