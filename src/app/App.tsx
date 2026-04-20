@@ -23,7 +23,6 @@ export default function App() {
       <Experience />
       <Education />
       <TechStack />
-      <Marquee />
       <Location />
       <Contact />
       <Footer />
