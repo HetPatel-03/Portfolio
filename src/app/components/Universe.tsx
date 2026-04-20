@@ -40,21 +40,18 @@ interface SceneNode {
   mesh: THREE.Mesh;
 }
 
-const CAT_RADIUS = 80;
-const SUB_RADIUS = 38;
-const LEAF_RADIUS = 18;
+const CAT_RADIUS = 120;
+const SUB_RADIUS = 45;
+const LEAF_RADIUS = 20;
 
-function fibonacciSpherePoints(count: number, radius: number): THREE.Vector3[] {
-  if (count <= 1) return [new THREE.Vector3(0, 0, radius)];
+/** Evenly spaced points on a circle in the XY plane (z = 0). */
+function fibonacciCirclePoints(count: number, radius: number): THREE.Vector3[] {
+  if (count <= 0) return [];
+  if (count === 1) return [new THREE.Vector3(radius, 0, 0)];
   const points: THREE.Vector3[] = [];
-  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
   for (let i = 0; i < count; i += 1) {
-    const y = 1 - (i / (count - 1)) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const theta = goldenAngle * i;
-    const x = Math.cos(theta) * r;
-    const z = Math.sin(theta) * r;
-    points.push(new THREE.Vector3(x * radius, y * radius, z * radius));
+    const angle = (i / count) * Math.PI * 2;
+    points.push(new THREE.Vector3(Math.cos(angle) * radius, Math.sin(angle) * radius, 0));
   }
   return points;
 }
@@ -142,7 +139,7 @@ export function Universe() {
     scene.background = new THREE.Color(0x0c0c10);
 
     const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 2000);
-    camera.position.set(0, 0, 240);
+    camera.position.set(0, 0, 200);
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -150,6 +147,7 @@ export function Universe() {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
+    controls.enableRotate = false;
     controls.enableZoom = true;
     controls.enablePan = true;
     controls.minDistance = 50;
@@ -170,7 +168,7 @@ export function Universe() {
       childrenByParent.set(n.parent, list);
     });
 
-    const categoryTargets = fibonacciSpherePoints(categoryNodes.length, CAT_RADIUS);
+    const categoryTargets = fibonacciCirclePoints(categoryNodes.length, CAT_RADIUS);
     const initialPositions = new Map<string, THREE.Vector3>();
     initialPositions.set('het', new THREE.Vector3(0, 0, 0));
     categoryNodes.forEach((node, i) => {
@@ -179,7 +177,7 @@ export function Universe() {
 
     categoryNodes.forEach((cat) => {
       const subs = (childrenByParent.get(cat.id) ?? []).filter((n) => n.type === 'sub');
-      const subTargets = fibonacciSpherePoints(subs.length, SUB_RADIUS);
+      const subTargets = fibonacciCirclePoints(subs.length, SUB_RADIUS);
       const catPos = initialPositions.get(cat.id) ?? new THREE.Vector3();
       subs.forEach((sub, i) => {
         initialPositions.set(sub.id, catPos.clone().add(subTargets[i]));
@@ -190,7 +188,7 @@ export function Universe() {
       .filter((n) => n.type === 'sub' && n.parent?.includes('skills'))
       .forEach((sub) => {
         const leaves = (childrenByParent.get(sub.id) ?? []).filter((n) => n.type === 'leaf');
-        const leafTargets = fibonacciSpherePoints(leaves.length, LEAF_RADIUS);
+        const leafTargets = fibonacciCirclePoints(leaves.length, LEAF_RADIUS);
         const subPos = initialPositions.get(sub.id) ?? new THREE.Vector3();
         leaves.forEach((leaf, i) => {
           initialPositions.set(leaf.id, subPos.clone().add(leafTargets[i]));
@@ -247,9 +245,7 @@ export function Universe() {
     for (let i = 0; i < 300; i += 1) {
       simulation.tick();
       simNodes.forEach((n) => {
-        n.vz += (n.targetZ - n.z) * 0.02;
-        n.vz *= 0.9;
-        n.z += n.vz;
+        n.z = n.targetZ;
       });
     }
 
@@ -392,24 +388,12 @@ export function Universe() {
     const scaleTargets = new Map<string, number>();
     nodes.forEach((n) => scaleTargets.set(n.id, 1));
     let hoveredCategoryId: string | null = null;
-    let autoRotate = true;
-    let resumeTimeout: ReturnType<typeof setTimeout> | null = null;
 
     const updateMouse = (event: MouseEvent) => {
       const rect = renderer.domElement.getBoundingClientRect();
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
     };
-
-    const stopAutoRotate = () => {
-      autoRotate = false;
-      if (resumeTimeout) clearTimeout(resumeTimeout);
-      resumeTimeout = setTimeout(() => {
-        autoRotate = true;
-      }, 4000);
-    };
-
-    controls.addEventListener('start', stopAutoRotate);
 
     const handleResize = () => {
       const width = container.clientWidth;
@@ -434,8 +418,6 @@ export function Universe() {
       rafRef.current = requestAnimationFrame(animate);
 
       controls.update();
-
-      if (autoRotate) scene.rotation.y += 0.0008;
 
       sceneNodesById.forEach(({ root }) => {
         root.lookAt(camera.position);
@@ -563,8 +545,6 @@ export function Universe() {
 
     return () => {
       cancelAnimationFrame(rafRef.current);
-      if (resumeTimeout) clearTimeout(resumeTimeout);
-      controls.removeEventListener('start', stopAutoRotate);
       controls.dispose();
       window.removeEventListener('resize', handleResize);
       renderer.domElement.removeEventListener('mousemove', updateMouse);
