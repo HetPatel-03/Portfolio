@@ -311,8 +311,14 @@ export function Contact() {
           <img
             src="/Map.png"
             alt="GTA Map"
-            className="w-full h-full"
-            style={{ objectFit: 'cover', objectPosition: 'center', opacity: 0.75 }}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center',
+              opacity: 0.75,
+              display: 'block',
+            }}
           />
 
           <div
