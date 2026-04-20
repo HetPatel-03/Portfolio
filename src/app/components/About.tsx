@@ -34,8 +34,28 @@ export function About() {
   };
 
   return (
-    <section id="about" className="section-bg-about relative py-32 px-8">
-      <div className="max-w-7xl mx-auto">
+    <section id="about" className="section-bg-about relative overflow-hidden py-32 px-8">
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute',
+          bottom: '-60px',
+          right: '-40px',
+          fontFamily: "'Clash Display', sans-serif",
+          fontWeight: 800,
+          fontSize: 'clamp(180px, 30vw, 380px)',
+          color: 'rgba(255,255,255,0.025)',
+          whiteSpace: 'nowrap',
+          letterSpacing: '-0.04em',
+          userSelect: 'none',
+          pointerEvents: 'none',
+          zIndex: 0,
+          lineHeight: 1,
+        }}
+      >
+        {`>_`}
+      </div>
+      <div className="max-w-7xl mx-auto relative z-[1]">
         <div className="flex flex-col gap-12 lg:flex-row lg:gap-16 lg:items-start">
           {/* Left column — 55% */}
           <div className="w-full min-w-0 lg:w-[55%] lg:shrink-0">
