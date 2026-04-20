@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { Mail, Linkedin, Github, Twitter } from 'lucide-react';
 
+function XLogoIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
 export function Contact() {
   const [formData, setFormData] = useState({
     name: '',
@@ -68,7 +76,7 @@ export function Contact() {
                 letterSpacing: '-1px'
               }}
             >
-              Have something worth building?
+              Get In Touch
             </h2>
           </div>
           <p 
@@ -85,9 +93,10 @@ export function Contact() {
             className="rounded-[20px] p-10"
             style={{
               background: 'rgba(255,255,255,0.03)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
+              backdropFilter: 'blur(12px) saturate(120%)',
+              WebkitBackdropFilter: 'blur(12px) saturate(120%)',
               border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
               borderRadius: '20px',
             }}
           >
@@ -237,70 +246,117 @@ export function Contact() {
 
           {/* Contact Methods */}
           <div>
-            <h3 
-              className="text-2xl mb-6"
+            <div
+              className="rounded-[20px] p-8"
               style={{
-                fontFamily: 'Clash Display, sans-serif',
-                fontWeight: 700,
-                color: 'var(--text-primary)'
+                background: 'rgba(255,255,255,0.03)',
+                backdropFilter: 'blur(12px) saturate(120%)',
+                WebkitBackdropFilter: 'blur(12px) saturate(120%)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+                borderRadius: '20px',
               }}
             >
-              Or say hi directly
-            </h3>
+              <h3 
+                className="text-2xl mb-6"
+                style={{
+                  fontFamily: 'Clash Display, sans-serif',
+                  fontWeight: 700,
+                  color: 'var(--text-primary)'
+                }}
+              >
+                Or say hi directly
+              </h3>
 
-            <div className="space-y-3">
-              {contactMethods.map((method) => {
-                const Component = 'a';
-                const Icon = method.icon;
-                
-                return (
-                  <Component
-                    key={method.label}
-                    href={method.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-4 rounded-xl transition-all duration-200 hover:border-[var(--coral)]"
-                    style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      borderRadius: '14px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    <div
-                      className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+              <div className="space-y-3">
+                {contactMethods.map((method) => {
+                  const Component = 'a';
+                  const Icon = method.icon;
+                  
+                  return (
+                    <Component
+                      key={method.label}
+                      href={method.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-4 p-4 rounded-xl transition-all duration-200 hover:border-[var(--coral)]"
                       style={{
-                        background: 'rgba(242,102,74,0.12)',
-                        border: '1px solid rgba(242,102,74,0.28)'
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: '14px',
+                        cursor: 'pointer'
                       }}
                     >
-                      <Icon size={20} style={{ color: 'var(--coral)' }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div 
-                        className="text-xs mb-1"
+                      <div
+                        className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
                         style={{
-                          color: 'var(--text-muted)',
-                          fontFamily: 'var(--font-body)'
+                          background: 'rgba(242,102,74,0.12)',
+                          border: '1px solid rgba(242,102,74,0.28)'
                         }}
                       >
-                        {method.label}
+                        {method.label === 'X' ? (
+                          <XLogoIcon />
+                        ) : (
+                          <Icon size={20} style={{ color: 'var(--coral)' }} />
+                        )}
                       </div>
-                      <div 
-                        className="text-sm truncate"
-                        style={{
-                          color: 'var(--text-primary)',
-                          fontFamily: 'var(--font-body)',
-                          fontWeight: 500
-                        }}
-                      >
-                        {method.value}
+                      <div className="flex-1 min-w-0">
+                        <div 
+                          className="text-xs mb-1"
+                          style={{
+                            color: 'var(--text-muted)',
+                            fontFamily: 'var(--font-body)'
+                          }}
+                        >
+                          {method.label}
+                        </div>
+                        <div 
+                          className="text-sm truncate"
+                          style={{
+                            color: 'var(--text-primary)',
+                            fontFamily: 'var(--font-body)',
+                            fontWeight: 500
+                          }}
+                        >
+                          {method.value}
+                        </div>
                       </div>
-                    </div>
-                  </Component>
-                );
-              })}
+                    </Component>
+                  );
+                })}
+              </div>
             </div>
+
+            <button
+              type="button"
+              onClick={() => window.open('/Resume.pdf', '_blank')}
+              className="w-full mt-4"
+              style={{
+                marginTop: '16px',
+                width: '100%',
+                padding: '14px',
+                borderRadius: '12px',
+                background: 'rgba(161,230,206,0.12)',
+                border: '1px solid rgba(161,230,206,0.35)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                color: '#A1E6CE',
+                fontFamily: 'JetBrains Mono',
+                fontSize: '13px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(161,230,206,0.2)';
+                e.currentTarget.style.borderColor = 'rgba(161,230,206,0.5)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(161,230,206,0.12)';
+                e.currentTarget.style.borderColor = 'rgba(161,230,206,0.35)';
+              }}
+            >
+              ↓ Download Resume
+            </button>
           </div>
         </div>
 
