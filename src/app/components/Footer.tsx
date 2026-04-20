@@ -7,7 +7,6 @@ export function Footer() {
     { label: 'Experience', id: 'experience' },
     { label: 'Education', id: 'education' },
     { label: 'Stack', id: 'stack' },
-    { label: 'Location', id: 'location' },
     { label: 'Connect', id: 'connect' },
   ];
 

@@ -85,6 +85,17 @@ h1, h2 {
   }
 }
 
+@keyframes connectPinPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
 .hero-image-container {
   position: absolute;
   right: 0;

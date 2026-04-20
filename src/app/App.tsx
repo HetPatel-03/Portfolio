@@ -7,9 +7,7 @@ import { Marquee } from './components/Marquee';
 import { Experience } from './components/Experience';
 import { Education } from './components/Education';
 import { TechStack } from './components/TechStack';
-import { Location } from './components/Location';
 import { Contact } from './components/Contact';
-import { Footer } from './components/Footer';
 
 export default function App() {
   return (
@@ -23,9 +21,7 @@ export default function App() {
       <Experience />
       <Education />
       <TechStack />
-      <Location />
       <Contact />
-      <Footer />
     </div>
   );
 }

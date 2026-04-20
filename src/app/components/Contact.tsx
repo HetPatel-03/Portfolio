@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Linkedin, Github, Twitter, MapPin } from 'lucide-react';
+import { Mail, Linkedin, Github, Twitter } from 'lucide-react';
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -39,13 +39,13 @@ export function Contact() {
       label: 'X',
       value: '@hetpatel',
       href: 'https://twitter.com/hetpatel'
-    },
-    {
-      icon: MapPin,
-      label: 'Location',
-      value: 'Brampton, ON · open to relocation',
-      href: null
     }
+  ];
+
+  const socialLinks = [
+    { icon: Github, href: 'https://github.com/hetpatel', label: 'GitHub' },
+    { icon: Linkedin, href: 'https://linkedin.com/in/hetpatel', label: 'LinkedIn' },
+    { icon: Twitter, href: 'https://twitter.com/hetpatel', label: 'X' },
   ];
 
   return (
@@ -82,18 +82,18 @@ export function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Contact Form */}
           <div
-            className="rounded-[20px] p-8"
+            className="rounded-[20px] p-10"
             style={{
-              background: 'rgba(44, 43, 48, 0.7)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(240, 237, 232, 0.08)',
-              borderTop: '2px solid rgba(245, 143, 124, 0.2)',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+              background: 'rgba(255,255,255,0.03)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '20px',
             }}
           >
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name & Email Row */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label 
                     className="block text-sm mb-2"
@@ -110,14 +110,15 @@ export function Contact() {
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl transition-all duration-200 focus:outline-none"
                     style={{
-                      background: 'rgba(44, 43, 48, 0.6)',
-                      border: '1px solid var(--border-color)',
-                      color: 'var(--text-primary)',
-                      fontFamily: 'var(--font-body)',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '10px',
+                      color: '#F0EDE8',
+                      fontFamily: 'DM Sans',
                       fontSize: '14px'
                     }}
-                    onFocus={(e) => e.target.style.borderColor = 'var(--coral)'}
-                    onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
+                    onFocus={(e) => e.target.style.borderColor = 'rgba(242,102,74,0.4)'}
+                    onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                   />
                 </div>
                 <div>
@@ -136,14 +137,15 @@ export function Contact() {
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl transition-all duration-200 focus:outline-none"
                     style={{
-                      background: 'rgba(44, 43, 48, 0.6)',
-                      border: '1px solid var(--border-color)',
-                      color: 'var(--text-primary)',
-                      fontFamily: 'var(--font-body)',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '10px',
+                      color: '#F0EDE8',
+                      fontFamily: 'DM Sans',
                       fontSize: '14px'
                     }}
-                    onFocus={(e) => e.target.style.borderColor = 'var(--coral)'}
-                    onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
+                    onFocus={(e) => e.target.style.borderColor = 'rgba(242,102,74,0.4)'}
+                    onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                   />
                 </div>
               </div>
@@ -165,14 +167,15 @@ export function Contact() {
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                   className="w-full px-4 py-3 rounded-xl transition-all duration-200 focus:outline-none"
                   style={{
-                    background: 'rgba(44, 43, 48, 0.6)',
-                    border: '1px solid var(--border-color)',
-                    color: 'var(--text-primary)',
-                    fontFamily: 'var(--font-body)',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '10px',
+                    color: '#F0EDE8',
+                    fontFamily: 'DM Sans',
                     fontSize: '14px'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = 'var(--coral)'}
-                  onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
+                  onFocus={(e) => e.target.style.borderColor = 'rgba(242,102,74,0.4)'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                 />
               </div>
 
@@ -193,14 +196,15 @@ export function Contact() {
                   rows={5}
                   className="w-full px-4 py-3 rounded-xl transition-all duration-200 focus:outline-none resize-none"
                   style={{
-                    background: 'rgba(44, 43, 48, 0.6)',
-                    border: '1px solid var(--border-color)',
-                    color: 'var(--text-primary)',
-                    fontFamily: 'var(--font-body)',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '10px',
+                    color: '#F0EDE8',
+                    fontFamily: 'DM Sans',
                     fontSize: '14px'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = 'var(--coral)'}
-                  onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
+                  onFocus={(e) => e.target.style.borderColor = 'rgba(242,102,74,0.4)'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                 />
               </div>
 
@@ -209,9 +213,9 @@ export function Contact() {
                 type="submit"
                 className="w-full py-3 rounded-full transition-all duration-200 hover:scale-[1.02]"
                 style={{
-                  background: 'var(--coral)',
-                  color: 'var(--bg-primary)',
-                  fontFamily: 'var(--font-body)',
+                  background: '#F2664A',
+                  color: '#0C0C10',
+                  fontFamily: 'DM Sans',
                   fontWeight: 500
                 }}
               >
@@ -236,7 +240,7 @@ export function Contact() {
             <h3 
               className="text-2xl mb-6"
               style={{
-                fontFamily: 'var(--font-heading)',
+                fontFamily: 'Clash Display, sans-serif',
                 fontWeight: 700,
                 color: 'var(--text-primary)'
               }}
@@ -246,25 +250,28 @@ export function Contact() {
 
             <div className="space-y-3">
               {contactMethods.map((method) => {
-                const Component = method.href ? 'a' : 'div';
+                const Component = 'a';
                 const Icon = method.icon;
                 
                 return (
                   <Component
                     key={method.label}
-                    {...(method.href ? { href: method.href, target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    href={method.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-4 p-4 rounded-xl transition-all duration-200 hover:border-[var(--coral)]"
                     style={{
-                      background: 'rgba(44, 43, 48, 0.7)',
-                      border: '1px solid rgba(240, 237, 232, 0.08)',
-                      cursor: method.href ? 'pointer' : 'default'
+                      background: 'rgba(255,255,255,0.03)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      borderRadius: '14px',
+                      cursor: 'pointer'
                     }}
                   >
                     <div
                       className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
                       style={{
-                        background: 'rgba(245, 143, 124, 0.1)',
-                        border: '1px solid rgba(245, 143, 124, 0.2)'
+                        background: 'rgba(242,102,74,0.12)',
+                        border: '1px solid rgba(242,102,74,0.28)'
                       }}
                     >
                       <Icon size={20} style={{ color: 'var(--coral)' }} />
@@ -294,6 +301,113 @@ export function Contact() {
                 );
               })}
             </div>
+          </div>
+        </div>
+
+        <div
+          className="w-full mt-[60px] rounded-[20px] overflow-hidden relative"
+          style={{ height: '420px' }}
+        >
+          <img
+            src="/Map.png"
+            alt="GTA Map"
+            className="w-full h-full"
+            style={{ objectFit: 'cover', objectPosition: 'center', opacity: 0.75 }}
+          />
+
+          <div
+            className="absolute top-0 left-0 right-0 pointer-events-none"
+            style={{ height: '120px', background: 'linear-gradient(to bottom, #0C0C10, transparent)' }}
+          />
+          <div
+            className="absolute bottom-0 left-0 right-0 pointer-events-none"
+            style={{ height: '120px', background: 'linear-gradient(to top, #0C0C10, transparent)' }}
+          />
+          <div
+            className="absolute top-0 left-0 bottom-0 pointer-events-none"
+            style={{ width: '120px', background: 'linear-gradient(to right, #0C0C10, transparent)' }}
+          />
+          <div
+            className="absolute top-0 right-0 bottom-0 pointer-events-none"
+            style={{ width: '120px', background: 'linear-gradient(to left, #0C0C10, transparent)' }}
+          />
+
+          <div className="absolute" style={{ left: '22%', top: '45%', transform: 'translate(-50%, -50%)' }}>
+            <div
+              style={{
+                width: '20px',
+                height: '20px',
+                borderRadius: '50%',
+                background: 'rgba(242,102,74,0.25)',
+                border: '1.5px solid #F2664A',
+                position: 'relative',
+                animation: 'connectPinPulse 2s infinite',
+              }}
+            >
+              <div
+                style={{
+                  width: '8px',
+                  height: '8px',
+                  background: '#F2664A',
+                  borderRadius: '50%',
+                  position: 'absolute',
+                  left: '50%',
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)',
+                }}
+              />
+            </div>
+
+            <div
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: '-60px',
+                transform: 'translateX(-50%)',
+                background: 'rgba(12,12,16,0.85)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                border: '1px solid rgba(242,102,74,0.3)',
+                borderRadius: '8px',
+                padding: '6px 12px',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <div style={{ color: '#F0EDE8', fontSize: '12px', fontFamily: 'DM Sans' }}>Brampton, ON</div>
+              <div style={{ color: '#A8A8B8', fontSize: '11px', fontFamily: 'DM Sans' }}>Available · GTA</div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="mt-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+        >
+          <div style={{ fontFamily: 'Clash Display, sans-serif', fontSize: '14px', color: '#F2664A' }}>
+            hetppatel.dev
+          </div>
+          <div style={{ color: '#A8A8B8', fontSize: '12px', fontFamily: 'DM Sans', textAlign: 'center' }}>
+            © 2025 Het Patel. Built with React + TypeScript.
+          </div>
+          <div className="flex items-center gap-2">
+            {socialLinks.map(({ icon: Icon, href, label }) => (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:border-[var(--coral)]"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
+                }}
+              >
+                <Icon size={15} style={{ color: '#F0EDE8' }} />
+              </a>
+            ))}
           </div>
         </div>
       </div>
