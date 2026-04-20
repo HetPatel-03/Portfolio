@@ -135,11 +135,13 @@ export function Universe() {
     const container = containerRef.current;
     const labelsLayer = labelsLayerRef.current;
 
+    const nodeById = new Map(nodes.map((n) => [n.id, n]));
+
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x0c0c10);
 
     const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 2000);
-    camera.position.set(0, 0, 200);
+    camera.position.set(0, 0, 220);
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -152,6 +154,8 @@ export function Universe() {
     controls.enablePan = true;
     controls.minDistance = 50;
     controls.maxDistance = 380;
+    controls.target.set(0, 0, 0);
+    controls.update();
 
     const ambient = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambient);
@@ -250,6 +254,11 @@ export function Universe() {
     }
 
     const simById = new Map(simNodes.map((n) => [n.id, n]));
+    const positionById = new Map<string, THREE.Vector3>();
+    simById.forEach((n, id) => {
+      positionById.set(id, new THREE.Vector3(n.x, n.y, n.z));
+    });
+
     const sceneNodesById = new Map<string, SceneNode>();
     const categoryMeshes: THREE.Mesh[] = [];
     const disposableGeometries: THREE.BufferGeometry[] = [];
@@ -355,33 +364,59 @@ export function Universe() {
       sceneNodesById.set(node.id, { data: node, root, mesh });
     });
 
-    simLinks.forEach((link) => {
-      const parentId = link.source as string;
-      const childId = link.target as string;
-      const parentNode = simById.get(parentId);
-      const childNode = simById.get(childId);
-      if (!parentNode || !childNode) return;
-
-      const pParent = new THREE.Vector3(parentNode.x, parentNode.y, parentNode.z);
-      const pChild = new THREE.Vector3(childNode.x, childNode.y, childNode.z);
-      const curve = new THREE.CatmullRomCurve3([pParent, pChild]);
-      const curvePoints = curve.getPoints(1);
-      const lineGeometry = new THREE.BufferGeometry().setFromPoints(curvePoints);
-      disposableGeometries.push(lineGeometry);
-
-      const parentColorHex = new THREE.Color(parentNode.color).getHex();
-      const lineMaterial = new THREE.LineBasicMaterial({
-        color: parentColorHex,
+    const lineMaterial = (color: string, opacity: number) => {
+      const mat = new THREE.LineBasicMaterial({
+        color: new THREE.Color(color),
         transparent: true,
-        opacity: 0.4,
+        opacity,
         depthWrite: false,
         depthTest: false,
       });
-      disposableMaterials.push(lineMaterial);
-      const line = new THREE.Line(lineGeometry, lineMaterial);
+      disposableMaterials.push(mat);
+      return mat;
+    };
+
+    const drawLine = (from: THREE.Vector3, to: THREE.Vector3, color: string, opacity: number) => {
+      const points = [from.clone(), to.clone()];
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      disposableGeometries.push(geometry);
+      const line = new THREE.Line(geometry, lineMaterial(color, opacity));
       scene.add(line);
       lineObjects.push(line);
-    });
+    };
+
+    const centerPosition = positionById.get('het');
+    if (centerPosition) {
+      nodes
+        .filter((n) => n.type === 'category')
+        .forEach((cat) => {
+          const categoryPosition = positionById.get(cat.id);
+          if (categoryPosition) drawLine(centerPosition, categoryPosition, cat.color, 0.5);
+        });
+    }
+
+    nodes
+      .filter((n) => n.type === 'sub')
+      .forEach((sub) => {
+        const cat = sub.parent ? nodeById.get(sub.parent) : undefined;
+        const categoryPosition = sub.parent ? positionById.get(sub.parent) : undefined;
+        const subPosition = positionById.get(sub.id);
+        if (cat && categoryPosition && subPosition) {
+          drawLine(categoryPosition, subPosition, cat.color, 0.3);
+        }
+      });
+
+    nodes
+      .filter((n) => n.type === 'leaf')
+      .forEach((leaf) => {
+        const sub = leaf.parent ? nodeById.get(leaf.parent) : undefined;
+        const cat = sub?.parent ? nodeById.get(sub.parent) : undefined;
+        const subPosition = leaf.parent ? positionById.get(leaf.parent) : undefined;
+        const leafPosition = positionById.get(leaf.id);
+        if (cat && subPosition && leafPosition) {
+          drawLine(subPosition, leafPosition, cat.color, 0.15);
+        }
+      });
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -502,40 +537,25 @@ export function Universe() {
 
         label.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
 
-        let blur = 4;
-        let opacity = 0.4;
-
-        if (node.type === 'category') {
-          if (cameraDistance <= 350) {
-            blur = 0;
-            opacity = 1;
-          }
-          if (cameraDistance > 350) {
-            blur = 4;
-            opacity = 0.4;
-          }
-          if (hoveredCategoryId === node.id) {
-            blur = 0;
-            opacity = 1;
-          }
-        } else if (node.type === 'sub') {
-          if (cameraDistance <= 200) {
-            blur = 0;
-            opacity = 0.85;
-          }
-          if (cameraDistance < 100) {
-            blur = 0;
-            opacity = 1;
-          }
-        } else if (node.type === 'leaf') {
-          if (cameraDistance < 100) {
-            blur = 0;
-            opacity = 0.8;
-          }
+        if (node.type === 'category' || node.type === 'center') {
+          label.style.filter = 'none';
+          label.style.opacity = '1';
+          return;
         }
 
-        label.style.filter = `blur(${blur}px)`;
-        label.style.opacity = `${opacity}`;
+        if (node.type === 'sub') {
+          const showSubLabel =
+            (node.parent != null && hoveredCategoryId === node.parent) || cameraDistance < 200;
+          label.style.filter = 'none';
+          label.style.opacity = showSubLabel ? '1' : '0';
+          return;
+        }
+
+        if (node.type === 'leaf') {
+          const showLeafLabel = cameraDistance < 100 && sceneNode.mesh.visible;
+          label.style.filter = 'none';
+          label.style.opacity = showLeafLabel ? '0.85' : '0';
+        }
       });
 
       renderer.render(scene, camera);
@@ -602,28 +622,108 @@ export function Universe() {
               zIndex: 2,
             }}
           >
-            {nodes.map((node) => (
-              <div
-                key={node.id}
-                ref={(el) => {
-                  labelRefs.current[node.id] = el;
-                }}
-                style={{
-                  position: 'absolute',
-                  transform: 'translate(-50%, -50%)',
-                  whiteSpace: 'nowrap',
-                  filter: 'blur(4px)',
-                  opacity: 0.4,
-                  color: node.type === 'category' ? node.color : '#A8A8B8',
-                  fontFamily: node.type === 'category' ? 'Clash Display, sans-serif' : 'DM Sans',
-                  fontSize: node.type === 'category' ? '13px' : '10px',
-                  fontWeight: node.type === 'category' ? 700 : 500,
-                  transition: 'opacity 0.2s ease, filter 0.2s ease',
-                }}
-              >
-                {node.label}
-              </div>
-            ))}
+            {nodes.map((node) => {
+              const baseLabel = {
+                position: 'absolute' as const,
+                pointerEvents: 'none' as const,
+                whiteSpace: 'nowrap' as const,
+                transform: 'translate(-50%, -50%)',
+              };
+
+              if (node.type === 'category') {
+                return (
+                  <div
+                    key={node.id}
+                    ref={(el) => {
+                      labelRefs.current[node.id] = el;
+                    }}
+                    style={{
+                      ...baseLabel,
+                      filter: 'none',
+                      opacity: 1,
+                      fontSize: '12px',
+                      fontFamily: 'Clash Display, sans-serif',
+                      fontWeight: 700,
+                      color: node.color,
+                      textShadow: '0 0 8px rgba(0,0,0,0.8)',
+                      transition: 'opacity 0.15s ease',
+                    }}
+                  >
+                    {node.label}
+                  </div>
+                );
+              }
+
+              if (node.type === 'center') {
+                return (
+                  <div
+                    key={node.id}
+                    ref={(el) => {
+                      labelRefs.current[node.id] = el;
+                    }}
+                    style={{
+                      ...baseLabel,
+                      filter: 'none',
+                      opacity: 1,
+                      fontSize: '12px',
+                      fontFamily: 'Clash Display, sans-serif',
+                      fontWeight: 700,
+                      color: node.color,
+                      textShadow: '0 0 8px rgba(0,0,0,0.8)',
+                      transition: 'opacity 0.15s ease',
+                    }}
+                  >
+                    {node.label}
+                  </div>
+                );
+              }
+
+              if (node.type === 'sub') {
+                return (
+                  <div
+                    key={node.id}
+                    ref={(el) => {
+                      labelRefs.current[node.id] = el;
+                    }}
+                    style={{
+                      ...baseLabel,
+                      filter: 'none',
+                      opacity: 0,
+                      fontSize: '9px',
+                      fontFamily: 'DM Sans, sans-serif',
+                      fontWeight: 500,
+                      color: '#A8A8B8',
+                      textShadow: '0 0 6px rgba(0,0,0,0.85)',
+                      transition: 'opacity 0.15s ease',
+                    }}
+                  >
+                    {node.label}
+                  </div>
+                );
+              }
+
+              return (
+                <div
+                  key={node.id}
+                  ref={(el) => {
+                    labelRefs.current[node.id] = el;
+                  }}
+                  style={{
+                    ...baseLabel,
+                    filter: 'none',
+                    opacity: 0,
+                    fontSize: '9px',
+                    fontFamily: 'DM Sans, sans-serif',
+                    fontWeight: 500,
+                    color: '#9CA3AF',
+                    textShadow: '0 0 6px rgba(0,0,0,0.85)',
+                    transition: 'opacity 0.15s ease',
+                  }}
+                >
+                  {node.label}
+                </div>
+              );
+            })}
           </div>
           <div
             ref={hintRef}
