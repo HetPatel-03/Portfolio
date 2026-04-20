@@ -1,49 +1,17 @@
-import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
-
-const NAV_SECTION_IDS = [
-  'about',
-  'universe',
-  'projects',
-  'experience',
-  'education',
-  'stack',
-  'connect',
-] as const;
-
-const THRESHOLDS = Array.from({ length: 21 }, (_, i) => i / 20);
+import { useState, useEffect, useRef } from 'react';
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState<string>('');
-  const [bubble, setBubble] = useState({
+  const [activeSection, setActiveSection] = useState<string>('hero');
+  const [bubbleStyle, setBubbleStyle] = useState({
     left: 0,
-    top: 0,
     width: 0,
+    top: 0,
     height: 0,
-    visible: false,
+    opacity: 0,
   });
 
-  const linkContainerRef = useRef<HTMLDivElement>(null);
-  const linkRefs = useRef<Partial<Record<string, HTMLButtonElement>>>({});
-
-  const updateBubblePosition = useCallback(() => {
-    const container = linkContainerRef.current;
-    const btn = activeSection ? linkRefs.current[activeSection] : null;
-    if (!container || !btn || !NAV_SECTION_IDS.includes(activeSection as (typeof NAV_SECTION_IDS)[number])) {
-      setBubble((b) => ({ ...b, visible: false }));
-      return;
-    }
-
-    const cr = container.getBoundingClientRect();
-    const br = btn.getBoundingClientRect();
-    setBubble({
-      left: br.left - cr.left - 8,
-      top: br.top - cr.top,
-      width: br.width + 16,
-      height: br.height,
-      visible: true,
-    });
-  }, [activeSection]);
+  const navRefs = useRef<Record<string, HTMLElement | null>>({});
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -53,52 +21,72 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    const ratios = new Map<string, number>();
-
-    const pickActive = () => {
-      let bestId = '';
-      let bestRatio = 0;
-      for (const id of NAV_SECTION_IDS) {
-        const r = ratios.get(id) ?? 0;
-        if (r >= 0.5 && r > bestRatio) {
-          bestRatio = r;
-          bestId = id;
-        }
-      }
-      setActiveSection(bestId);
-    };
-
+    const sections = [
+      'hero',
+      'about',
+      'universe',
+      'projects',
+      'experience',
+      'education',
+      'stack',
+      'connect',
+    ];
     const observers: IntersectionObserver[] = [];
 
-    for (const id of NAV_SECTION_IDS) {
+    sections.forEach((id) => {
       const el = document.getElementById(id);
-      if (!el) continue;
-
-      const obs = new IntersectionObserver(
-        (entries) => {
-          const e = entries[0];
-          if (e) ratios.set(id, e.intersectionRatio);
-          pickActive();
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveSection(id);
         },
-        { threshold: THRESHOLDS }
+        { threshold: 0.3, rootMargin: '-10% 0px -10% 0px' }
       );
-
-      obs.observe(el);
-      observers.push(obs);
-    }
+      observer.observe(el);
+      observers.push(observer);
+    });
 
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-  useLayoutEffect(() => {
-    updateBubblePosition();
-  }, [updateBubblePosition]);
+  useEffect(() => {
+    const bubbleTargetId = activeSection === 'hero' ? 'about' : activeSection;
+    const activeLink = navRefs.current[bubbleTargetId];
+    if (!activeLink) {
+      setBubbleStyle((s) => ({ ...s, opacity: 0 }));
+      return;
+    }
+    const parentRect = activeLink.closest('.nav-links-container')?.getBoundingClientRect();
+    const rect = activeLink.getBoundingClientRect();
+    if (!parentRect) return;
+    setBubbleStyle({
+      left: rect.left - parentRect.left - 10,
+      width: rect.width + 20,
+      top: rect.top - parentRect.top - 6,
+      height: rect.height + 12,
+      opacity: 1,
+    });
+  }, [activeSection]);
 
   useEffect(() => {
-    const onResize = () => updateBubblePosition();
+    const onResize = () => {
+      const bubbleTargetId = activeSection === 'hero' ? 'about' : activeSection;
+      const activeLink = navRefs.current[bubbleTargetId];
+      if (!activeLink) return;
+      const parentRect = activeLink.closest('.nav-links-container')?.getBoundingClientRect();
+      const rect = activeLink.getBoundingClientRect();
+      if (!parentRect) return;
+      setBubbleStyle({
+        left: rect.left - parentRect.left - 10,
+        width: rect.width + 20,
+        top: rect.top - parentRect.top - 6,
+        height: rect.height + 12,
+        opacity: 1,
+      });
+    };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
-  }, [updateBubblePosition]);
+  }, [activeSection]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -142,7 +130,6 @@ export function Navbar() {
             '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
         }}
       >
-        {/* Logo */}
         <button
           type="button"
           onClick={() => scrollToSection('hero')}
@@ -171,38 +158,37 @@ export function Navbar() {
           </span>
         </button>
 
-        {/* Nav Links */}
-        <div ref={linkContainerRef} className="relative flex items-center gap-6">
+        <div className="nav-links-container relative flex items-center gap-6">
           <div
             style={{
               position: 'absolute',
-              left: bubble.left,
-              top: bubble.top,
-              width: bubble.visible ? bubble.width : 0,
-              height: bubble.visible ? bubble.height : 0,
-              opacity: bubble.visible ? 1 : 0,
-              background: 'rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255,255,255,0.12)',
+              background: 'rgba(255,255,255,0.09)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255,255,255,0.14)',
               borderRadius: '999px',
-              transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              transition: 'all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
               pointerEvents: 'none',
               zIndex: 0,
+              left: bubbleStyle.left,
+              width: bubbleStyle.width,
+              top: bubbleStyle.top,
+              height: bubbleStyle.height,
+              opacity: bubbleStyle.opacity,
             }}
             aria-hidden
           />
-          {navLinks.map((link) => {
-            const isActive = activeSection === link.id;
+          {navLinks.map((item) => {
+            const isActive =
+              activeSection === item.id || (activeSection === 'hero' && item.id === 'about');
             return (
               <button
-                key={link.id}
+                key={item.id}
                 type="button"
                 ref={(el) => {
-                  if (el) linkRefs.current[link.id] = el;
-                  else delete linkRefs.current[link.id];
+                  navRefs.current[item.id] = el;
                 }}
-                onClick={() => scrollToSection(link.id)}
+                onClick={() => scrollToSection(item.id)}
                 className="relative text-sm"
                 style={{
                   position: 'relative',
@@ -216,13 +202,12 @@ export function Navbar() {
                   padding: 0,
                 }}
               >
-                {link.label}
+                {item.label}
               </button>
             );
           })}
         </div>
 
-        {/* Contact Button */}
         <button
           type="button"
           onClick={() => scrollToSection('connect')}
