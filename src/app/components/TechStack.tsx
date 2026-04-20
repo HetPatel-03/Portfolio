@@ -393,18 +393,6 @@ export function TechStack() {
           </button>
         </div>
 
-        <p
-          className="mt-4 text-center"
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: 11,
-            color: '#A8A8B8',
-            opacity: 0.5,
-          }}
-        >
-          // 1px / 20ms · pauses on interaction · resumes after idle
-        </p>
-
         <div className="stack-logo-ticker mt-8 overflow-hidden" aria-hidden>
           <div className="stack-logo-ticker-inner">
             {TICKER_SEQUENCE.map((tech, index) => {

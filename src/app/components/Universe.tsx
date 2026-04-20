@@ -898,7 +898,6 @@ export function Universe() {
         };
         if (node.type === 'sub') {
           subMeshes.push(mesh);
-          root.scale.set(0, 0, 0);
         } else {
           leafMeshes.push(mesh);
         }
@@ -1097,20 +1096,18 @@ export function Universe() {
 
       gsap.killTweensOf(camera.position);
       gsap.killTweensOf(controls.target);
-      sceneNodesById.forEach(({ data, root }) => {
-        if (data.type === 'sub') gsap.killTweensOf(root.scale);
-      });
 
+      const nodePosition = { x: simN.x, y: simN.y, z: simN.z };
       gsap.to(camera.position, {
-        x: simN.x * 0.4,
-        y: simN.y * 0.4,
-        z: 120,
+        x: nodePosition.x * 0.5,
+        y: nodePosition.y * 0.5,
+        z: 160,
         duration: 0.8,
         ease: 'power2.out',
       });
       gsap.to(controls.target, {
-        x: simN.x,
-        y: simN.y,
+        x: nodePosition.x,
+        y: nodePosition.y,
         z: 0,
         duration: 0.8,
         ease: 'power2.out',
@@ -1126,27 +1123,19 @@ export function Universe() {
           const sn = sceneNodesById.get(s.id);
           if (!sn) return;
           sn.mesh.visible = false;
-          sn.root.scale.set(0, 0, 0);
+          sn.root.scale.set(1, 1, 1);
           const m = sn.mesh.material as THREE.MeshBasicMaterial;
           m.opacity = 0;
         });
 
-      subIds.forEach((sid, index) => {
+      subIds.forEach((sid) => {
         const sn = sceneNodesById.get(sid);
         if (!sn) return;
         sn.root.visible = true;
         sn.mesh.visible = true;
-        sn.root.scale.set(0, 0, 0);
+        sn.root.scale.set(1, 1, 1);
         const m = sn.mesh.material as THREE.MeshBasicMaterial;
         m.opacity = 1;
-        gsap.to(sn.root.scale, {
-          x: 1,
-          y: 1,
-          z: 1,
-          duration: 0.4,
-          delay: index * 0.05,
-          ease: 'back.out(1.7)',
-        });
       });
     };
 
@@ -1156,9 +1145,6 @@ export function Universe() {
       setDetailRef.current(null);
       gsap.killTweensOf(camera.position);
       gsap.killTweensOf(controls.target);
-      sceneNodesById.forEach(({ data, root }) => {
-        if (data.type === 'sub') gsap.killTweensOf(root.scale);
-      });
       gsap.to(camera.position, {
         x: 0,
         y: 0,
@@ -1311,32 +1297,46 @@ export function Universe() {
         }
       });
 
-      sceneNodesById.forEach(({ data, root, mesh }) => {
+      const HOVER_MAX_SCALE = 1.2;
+
+      sceneNodesById.forEach(({ data, root, mesh, ringMesh }) => {
         if (data.type === 'category' || data.type === 'center') {
           const target = scaleTargets.get(data.id) ?? 1;
-          const next = THREE.MathUtils.lerp(root.scale.x, target, 0.15);
+          let next = THREE.MathUtils.lerp(root.scale.x, target, 0.15);
+          next = Math.min(HOVER_MAX_SCALE, Math.max(1, next));
+          if (!Number.isFinite(next)) next = 1;
           root.scale.set(next, next, next);
+          mesh.scale.set(1, 1, 1);
+          if (ringMesh && data.type === 'category') ringMesh.scale.set(1, 1, 1);
           return;
         }
         if (data.type === 'sub') {
-          if (fid && data.parent === fid) {
-            if (hoveredSubId === data.id) root.scale.multiplyScalar(1.15);
-            return;
-          }
-          const mat = mesh.material as THREE.MeshBasicMaterial;
-          const tgt = mesh.visible && mat.opacity > 0.04 ? 1 : 0;
-          const prevI = (root.userData._subIntrinsic as number) ?? 0;
-          const intrinsic = THREE.MathUtils.lerp(prevI, tgt, 0.18);
-          root.userData._subIntrinsic = intrinsic;
-          const h = hoveredSubId === data.id ? 1.15 : 1;
-          root.scale.set(intrinsic * h, intrinsic * h, intrinsic * h);
+          const hovered = hoveredSubId === data.id && mesh.visible;
+          let h = hovered ? 1.15 : 1;
+          h = Math.min(HOVER_MAX_SCALE, h);
+          if (!Number.isFinite(h)) h = 1;
+          root.scale.set(h, h, h);
           return;
         }
         if (data.type === 'leaf') {
-          const mat = mesh.material as THREE.MeshBasicMaterial;
-          const tgt = mesh.visible && mat.opacity > 0.04 ? 1 : 0;
-          const next = THREE.MathUtils.lerp(root.scale.x, tgt, 0.18);
-          root.scale.set(next, next, next);
+          root.scale.set(1, 1, 1);
+        }
+      });
+
+      sceneNodesById.forEach(({ data, root, mesh, ringMesh }) => {
+        if (Math.abs(root.scale.x - root.scale.y) > 1e-4 || Math.abs(root.scale.x - root.scale.z) > 1e-4) {
+          const u = (root.scale.x + root.scale.y + root.scale.z) / 3;
+          root.scale.set(u, u, u);
+        }
+        if (data.type === 'sub' || data.type === 'leaf') {
+          const hovered = data.type === 'sub' && hoveredSubId === data.id && mesh.visible;
+          if (!hovered && (Math.abs(root.scale.x - 1) > 1e-4 || Math.abs(root.scale.y - 1) > 1e-4)) {
+            root.scale.set(1, 1, 1);
+          }
+        }
+        if (data.type === 'category' || data.type === 'center') {
+          mesh.scale.set(1, 1, 1);
+          if (ringMesh && data.type === 'category') ringMesh.scale.set(1, 1, 1);
         }
       });
 
