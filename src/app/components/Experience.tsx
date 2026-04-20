@@ -1,4 +1,4 @@
-import { getTechTagPillStyle } from '../lib/techTagPill';
+import { getExperienceTechTagPillStyle } from '../lib/techTagPill';
 
 const experienceCardAccent: Record<
   string,
@@ -250,9 +250,9 @@ export function Experience() {
                   </ul>
 
                   {/* Tags */}
-                  <div className="flex flex-wrap gap-2">
+                  <div className="tech-tags-row flex flex-wrap gap-2">
                     {exp.tags.map((tag) => (
-                      <span key={tag} style={getTechTagPillStyle(tag)}>
+                      <span key={tag} style={getExperienceTechTagPillStyle(tag)}>
                         {tag}
                       </span>
                     ))}
