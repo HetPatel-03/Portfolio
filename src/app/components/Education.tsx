@@ -16,6 +16,33 @@ const certItemClass: Record<CertId, string> = {
   m365: 'education-cert-item education-cert-item--m365 education-clickable',
 };
 
+const deanListPillBase = {
+  display: 'inline-block' as const,
+  borderRadius: '20px',
+  padding: '4px 12px',
+  fontSize: '12px',
+  fontWeight: 500 as const,
+  fontFamily: 'var(--font-body)',
+  backdropFilter: 'blur(8px)',
+  WebkitBackdropFilter: 'blur(8px)',
+};
+
+/** Pastel teal/cyan (2023) and amber/yellow (2024) — front + back consistent */
+const deanListPillByYear = {
+  '2023': {
+    ...deanListPillBase,
+    background: 'rgba(95, 180, 172, 0.15)',
+    border: '1px solid rgba(95, 180, 172, 0.4)',
+    color: '#A8D5CF',
+  },
+  '2024': {
+    ...deanListPillBase,
+    background: 'rgba(218, 175, 95, 0.15)',
+    border: '1px solid rgba(218, 175, 95, 0.4)',
+    color: '#E5D4A8',
+  },
+} as const;
+
 const courses = [
   { name: 'Data Structures', bg: 'rgba(97,218,251,0.10)', border: 'rgba(97,218,251,0.25)', color: '#61DAFB' },
   { name: 'Algorithms', bg: 'rgba(200,241,53,0.10)', border: 'rgba(200,241,53,0.25)', color: '#C8F135' },
@@ -171,8 +198,8 @@ export function Education() {
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {['2023', '2024'].map((year) => (
-                    <div key={year} className="education-deans-pill font-medium" style={{ fontFamily: 'var(--font-body)' }}>
+                  {(['2023', '2024'] as const).map((year) => (
+                    <div key={year} style={deanListPillByYear[year]}>
                       Dean&apos;s List {year}
                     </div>
                   ))}
@@ -270,32 +297,8 @@ export function Education() {
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
-                  <span
-                    style={{
-                      background: 'rgba(200,241,53,0.1)',
-                      border: '1px solid rgba(200,241,53,0.25)',
-                      color: '#C8F135',
-                      borderRadius: '20px',
-                      padding: '4px 12px',
-                      fontSize: '12px',
-                      fontFamily: 'var(--font-body)',
-                    }}
-                  >
-                    Dean&apos;s List 2023
-                  </span>
-                  <span
-                    style={{
-                      background: 'rgba(200,241,53,0.1)',
-                      border: '1px solid rgba(200,241,53,0.25)',
-                      color: '#C8F135',
-                      borderRadius: '20px',
-                      padding: '4px 12px',
-                      fontSize: '12px',
-                      fontFamily: 'var(--font-body)',
-                    }}
-                  >
-                    Dean&apos;s List 2024
-                  </span>
+                  <span style={deanListPillByYear['2023']}>Dean&apos;s List 2023</span>
+                  <span style={deanListPillByYear['2024']}>Dean&apos;s List 2024</span>
                 </div>
                 <div style={{ fontSize: '28px', fontWeight: 800, color: '#C8F135', marginTop: '8px', fontFamily: 'var(--font-heading)' }}>
                   3.1{' '}
@@ -312,24 +315,29 @@ export function Education() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    background: 'rgba(200,241,53,0.08)',
-                    border: '1px solid rgba(200,241,53,0.25)',
-                    borderRadius: '30px',
-                    padding: '8px 18px',
-                    color: '#C8F135',
+                    background: 'rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    borderRadius: '999px',
+                    padding: '6px 16px',
+                    color: '#A8A8B8',
                     fontSize: '12px',
-                    fontFamily: 'JetBrains Mono',
+                    fontFamily: 'JetBrains Mono, var(--font-mono)',
                     cursor: 'pointer',
                     alignSelf: 'flex-start',
                     transition: 'all 0.2s ease',
+                    transform: 'translateY(0)',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(200,241,53,0.15)';
-                    e.currentTarget.style.borderColor = 'rgba(200,241,53,0.4)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.border = '1px solid rgba(255,255,255,0.1)';
+                    e.currentTarget.style.color = '#F0EDE8';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(200,241,53,0.08)';
-                    e.currentTarget.style.borderColor = 'rgba(200,241,53,0.25)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.border = '1px solid rgba(255,255,255,0.12)';
+                    e.currentTarget.style.color = '#A8A8B8';
                   }}
                 >
                   ↩ flip back
