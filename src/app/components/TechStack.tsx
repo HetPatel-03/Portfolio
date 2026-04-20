@@ -319,11 +319,9 @@ export function TechStack() {
                     style={{
                       width: 280,
                       flexShrink: 0,
-                      background: 'rgba(255,255,255,0.04)',
+                      background: 'rgba(255,255,255,0)',
                       border: '1px solid rgba(255,255,255,0.08)',
                       borderRadius: 16,
-                      backdropFilter: 'blur(20px)',
-                      WebkitBackdropFilter: 'blur(20px)',
                       padding: 24,
                     }}
                     onMouseEnter={(e) => {
@@ -338,7 +336,7 @@ export function TechStack() {
                     <div
                       className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
                       style={{
-                        background: rgbaHex(tech.color, 0.12),
+                        background: rgbaHex(tech.color, 0.18),
                         border: `1px solid ${rgbaHex(tech.color, 0.2)}`,
                         borderRadius: 12,
                       }}
