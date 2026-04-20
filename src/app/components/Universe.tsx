@@ -36,6 +36,7 @@ interface SimNode extends SimulationNodeDatum {
 
 interface SceneNode {
   data: Node;
+  root: THREE.Object3D;
   mesh: THREE.Mesh;
 }
 
@@ -154,11 +155,8 @@ export function Universe() {
     controls.minDistance = 50;
     controls.maxDistance = 380;
 
-    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambient = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambient);
-    const point = new THREE.PointLight(0xffffff, 1.2, 1200);
-    point.position.set(0, 0, 0);
-    scene.add(point);
 
     const graphGroup = new THREE.Group();
     scene.add(graphGroup);
@@ -258,7 +256,6 @@ export function Universe() {
     const simById = new Map(simNodes.map((n) => [n.id, n]));
     const sceneNodesById = new Map<string, SceneNode>();
     const categoryMeshes: THREE.Mesh[] = [];
-    const allMeshes: THREE.Mesh[] = [];
     const disposableGeometries: THREE.BufferGeometry[] = [];
     const disposableMaterials: THREE.Material[] = [];
     const disposableTextures: THREE.Texture[] = [];
@@ -267,18 +264,20 @@ export function Universe() {
     const textureLoader = new THREE.TextureLoader();
 
     simNodes.forEach((node) => {
-      const geometry = new THREE.SphereGeometry(node.size, 32, 32);
-      disposableGeometries.push(geometry);
+      let root: THREE.Object3D;
+      let mesh: THREE.Mesh;
 
-      let material: THREE.MeshStandardMaterial;
       if (node.type === 'center') {
-        material = new THREE.MeshStandardMaterial({
+        const group = new THREE.Group();
+        const geometry = new THREE.CircleGeometry(node.size, 64);
+        disposableGeometries.push(geometry);
+        const material = new THREE.MeshBasicMaterial({
           color: 0xffffff,
-          map: undefined,
-          roughness: 0.1,
-          metalness: 0,
-          transparent: false,
+          side: THREE.DoubleSide,
         });
+        disposableMaterials.push(material);
+        mesh = new THREE.Mesh(geometry, material);
+        mesh.userData = { id: node.id, type: node.type };
         textureLoader.load('/Me_Memoji_Laptop.png', (tex) => {
           tex.colorSpace = THREE.SRGBColorSpace;
           tex.center.set(0.5, 0.5);
@@ -290,36 +289,75 @@ export function Universe() {
           material.needsUpdate = true;
           renderer.render(scene, camera);
         });
-      } else {
-        material = new THREE.MeshStandardMaterial({
+
+        const ringGeometry = new THREE.RingGeometry(44, 48, 64);
+        disposableGeometries.push(ringGeometry);
+        const ringMaterial = new THREE.MeshBasicMaterial({
+          color: 0xf2664a,
+          transparent: true,
+          opacity: 0.6,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        });
+        disposableMaterials.push(ringMaterial);
+        const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
+        ringMesh.position.z = 0.02;
+
+        group.add(mesh);
+        group.add(ringMesh);
+        root = group;
+      } else if (node.type === 'category') {
+        const group = new THREE.Group();
+        const r = node.size;
+        const geometry = new THREE.CircleGeometry(r, 64);
+        disposableGeometries.push(geometry);
+        const material = new THREE.MeshBasicMaterial({
           color: node.color,
-          roughness: 0.3,
-          metalness: 0.4,
+          side: THREE.DoubleSide,
+          transparent: false,
+          opacity: 1,
+        });
+        disposableMaterials.push(material);
+        mesh = new THREE.Mesh(geometry, material);
+        mesh.userData = { id: node.id, type: node.type };
+
+        const ringGeometry = new THREE.RingGeometry(r + 2, r + 5, 64);
+        disposableGeometries.push(ringGeometry);
+        const ringMaterial = new THREE.MeshBasicMaterial({
+          color: node.color,
+          transparent: true,
+          opacity: 0.5,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        });
+        disposableMaterials.push(ringMaterial);
+        const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
+        ringMesh.position.z = 0.02;
+
+        group.add(mesh);
+        group.add(ringMesh);
+        root = group;
+        categoryMeshes.push(mesh);
+      } else {
+        const geometry = new THREE.CircleGeometry(node.size, 64);
+        disposableGeometries.push(geometry);
+        const material = new THREE.MeshBasicMaterial({
+          color: node.color,
+          side: THREE.DoubleSide,
           transparent: node.type === 'sub' || node.type === 'leaf',
           opacity: node.type === 'category' ? 1 : 0,
         });
+        disposableMaterials.push(material);
+        mesh = new THREE.Mesh(geometry, material);
+        root = mesh;
+        mesh.userData = { id: node.id, type: node.type };
       }
-      disposableMaterials.push(material);
 
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.position.set(node.x, node.y, node.z);
-      mesh.userData = { id: node.id, type: node.type };
+      root.position.set(node.x, node.y, node.z);
       mesh.visible = node.type === 'center' || node.type === 'category';
-      graphGroup.add(mesh);
-      allMeshes.push(mesh);
-      sceneNodesById.set(node.id, { data: node, mesh });
-
-      if (node.type === 'category') {
-        categoryMeshes.push(mesh);
-        const glow = new THREE.PointLight(new THREE.Color(node.color), 0.4, 120);
-        glow.position.copy(mesh.position);
-        graphGroup.add(glow);
-      }
+      graphGroup.add(root);
+      sceneNodesById.set(node.id, { data: node, root, mesh });
     });
-
-    const centerGlow = new THREE.PointLight(0xf2664a, 2, 200);
-    centerGlow.position.set(0, 0, 0);
-    graphGroup.add(centerGlow);
 
     simLinks.forEach((link) => {
       const parentId = link.source as string;
@@ -399,6 +437,10 @@ export function Universe() {
 
       if (autoRotate) scene.rotation.y += 0.0008;
 
+      sceneNodesById.forEach(({ root }) => {
+        root.lookAt(camera.position);
+      });
+
       raycaster.setFromCamera(mouse, camera);
       const intersections = raycaster.intersectObjects(categoryMeshes, false);
       hoveredCategoryId = intersections.length > 0 ? (intersections[0].object.userData.id as string) : null;
@@ -423,7 +465,7 @@ export function Universe() {
         }
 
         if (data.type === 'sub' || data.type === 'leaf') {
-          const material = mesh.material as THREE.MeshStandardMaterial;
+          const material = mesh.material as THREE.MeshBasicMaterial;
           let targetOpacity = 0;
           let shouldBeVisible = false;
 
@@ -456,10 +498,10 @@ export function Universe() {
         }
       });
 
-      sceneNodesById.forEach(({ data, mesh }) => {
+      sceneNodesById.forEach(({ data, root }) => {
         const target = scaleTargets.get(data.id) ?? 1;
-        const next = THREE.MathUtils.lerp(mesh.scale.x, target, 0.15);
-        mesh.scale.set(next, next, next);
+        const next = THREE.MathUtils.lerp(root.scale.x, target, 0.15);
+        root.scale.set(next, next, next);
       });
 
       nodes.forEach((node) => {
