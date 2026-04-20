@@ -38,9 +38,13 @@ export function Navbar() {
       if (!el) return;
       const observer = new IntersectionObserver(
         ([entry]) => {
+          console.log('[Navbar IO]', id, {
+            isIntersecting: entry.isIntersecting,
+            ratio: entry.intersectionRatio,
+          });
           if (entry.isIntersecting) setActiveSection(id);
         },
-        { threshold: 0.3, rootMargin: '-10% 0px -10% 0px' }
+        { threshold: 0.15, rootMargin: '-10% 0px -10% 0px' }
       );
       observer.observe(el);
       observers.push(observer);
@@ -52,6 +56,7 @@ export function Navbar() {
   useEffect(() => {
     const bubbleTargetId = activeSection === 'hero' ? 'about' : activeSection;
     const activeLink = navRefs.current[bubbleTargetId];
+    console.log('[Navbar refs]', navRefs.current);
     if (!activeLink) {
       setBubbleStyle((s) => ({ ...s, opacity: 0 }));
       return;
