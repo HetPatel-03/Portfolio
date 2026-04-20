@@ -342,7 +342,7 @@ export function TechStack() {
                 letterSpacing: '-1px',
               }}
             >
-              Tools I reach for.
+              My Tech Arsenal.
             </h2>
           </div>
           <p
