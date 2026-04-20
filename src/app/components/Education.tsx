@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 type CertId = 'cs50x' | 'cs50web' | 'm365';
 
@@ -16,9 +16,42 @@ const certItemClass: Record<CertId, string> = {
   m365: 'education-cert-item education-cert-item--m365 education-clickable',
 };
 
+const ALGOMA_COURSES = [
+  'Data Structures',
+  'Algorithms',
+  'Web Development',
+  'Operating Systems',
+  'Database Management',
+  'Software Engineering',
+] as const;
+
 export function Education() {
-  const [algExpanded, setAlgExpanded] = useState(false);
+  const [flipped, setFlipped] = useState(false);
   const [modalCert, setModalCert] = useState<Certification | null>(null);
+  const [flipHeight, setFlipHeight] = useState(380);
+  const frontRef = useRef<HTMLDivElement>(null);
+  const backRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const front = frontRef.current;
+    const back = backRef.current;
+    if (!front || !back) return;
+
+    const measure = () => {
+      const h = Math.max(380, Math.ceil(front.scrollHeight), Math.ceil(back.scrollHeight));
+      setFlipHeight(h);
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(front);
+    ro.observe(back);
+    window.addEventListener('resize', measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, []);
 
   const certifications: Certification[] = [
     {
@@ -67,139 +100,217 @@ export function Education() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Algoma University Card */}
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => setAlgExpanded((e) => !e)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                setAlgExpanded((v) => !v);
-              }
-            }}
-            className="education-liquid-card education-clickable p-8"
-            aria-expanded={algExpanded}
-          >
+          {/* Algoma University — flip card */}
+          <div className="flip-container" style={{ height: flipHeight }}>
             <div
-              style={{
-                width: '56px',
-                height: '56px',
-                borderRadius: '50%',
-                background: 'rgba(200, 241, 53, 0.12)',
-                border: '2px solid rgba(200, 241, 53, 0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: 'Clash Display, sans-serif',
-                fontWeight: '700',
-                fontSize: '18px',
-                color: '#C8F135',
-                marginBottom: '16px',
+              role="button"
+              tabIndex={0}
+              className={`flip-card${flipped ? ' flipped' : ''}`}
+              onClick={() => setFlipped((f) => !f)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setFlipped((f) => !f);
+                }
               }}
+              aria-expanded={flipped}
+              aria-label="Algoma University — click to flip for more details"
             >
-              AU
-            </div>
-
-            <h3
-              className="text-2xl mb-2"
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 800,
-                color: 'var(--text-primary)',
-              }}
-            >
-              Algoma University
-            </h3>
-
-            <p
-              className="text-base mb-3"
-              style={{
-                color: 'var(--text-primary)',
-                fontFamily: 'var(--font-body)',
-                fontWeight: 500,
-              }}
-            >
-              Bachelor of Computer Science
-            </p>
-
-            <p
-              className="text-sm mb-6"
-              style={{
-                color: 'var(--text-muted)',
-                fontFamily: 'var(--font-mono)',
-              }}
-            >
-              Sept 2021 – Dec 2025
-            </p>
-
-            <div className="flex flex-wrap gap-2 mb-4">
-              {['2023', '2024'].map((year) => (
-                <div key={year} className="education-deans-pill font-medium" style={{ fontFamily: 'var(--font-body)' }}>
-                  Dean&apos;s List {year}
+              <div ref={frontRef} className="flip-front">
+                <div
+                  style={{
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: '50%',
+                    background: 'rgba(200, 241, 53, 0.12)',
+                    border: '2px solid rgba(200, 241, 53, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontFamily: 'Clash Display, sans-serif',
+                    fontWeight: '700',
+                    fontSize: '18px',
+                    color: '#C8F135',
+                    marginBottom: '16px',
+                  }}
+                >
+                  AU
                 </div>
-              ))}
-            </div>
 
-            <div className="flex items-baseline gap-2">
-              <span
-                className="text-3xl"
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 800,
-                  color: 'var(--coral)',
-                }}
-              >
-                3.1
-              </span>
-              <span
-                className="text-sm"
-                style={{
-                  color: 'var(--text-muted)',
-                  fontFamily: 'var(--font-body)',
-                }}
-              >
-                / 4.0 GPA
-              </span>
-            </div>
+                <h3
+                  className="text-2xl mb-2"
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontWeight: 800,
+                    color: 'var(--text-primary)',
+                  }}
+                >
+                  Algoma University
+                </h3>
 
-            {algExpanded && (
-              <div
-                className="mt-6 pt-6 space-y-3 text-sm"
-                style={{
-                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                  color: 'var(--text-muted)',
-                  fontFamily: 'var(--font-body)',
-                  lineHeight: 1.6,
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <p>
-                  <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Key courses: </span>
-                  Data Structures, Web Development, Operating Systems, Algorithms, Database Management
+                <p
+                  className="text-base mb-3"
+                  style={{
+                    color: 'var(--text-primary)',
+                    fontFamily: 'var(--font-body)',
+                    fontWeight: 500,
+                  }}
+                >
+                  Bachelor of Computer Science
                 </p>
-                <p>
-                  <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Activities: </span>
-                  Dean&apos;s List 2023 & 2024
+
+                <p
+                  className="text-sm mb-6"
+                  style={{
+                    color: 'var(--text-muted)',
+                    fontFamily: 'var(--font-mono)',
+                  }}
+                >
+                  Sept 2021 – Dec 2025
                 </p>
-                <p>
-                  <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Location: </span>
-                  Sault Ste. Marie, ON
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {['2023', '2024'].map((year) => (
+                    <div key={year} className="education-deans-pill font-medium" style={{ fontFamily: 'var(--font-body)' }}>
+                      Dean&apos;s List {year}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex items-baseline gap-2">
+                  <span
+                    className="text-3xl"
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 800,
+                      color: 'var(--coral)',
+                    }}
+                  >
+                    3.1
+                  </span>
+                  <span
+                    className="text-sm"
+                    style={{
+                      color: 'var(--text-muted)',
+                      fontFamily: 'var(--font-body)',
+                    }}
+                  >
+                    / 4.0 GPA
+                  </span>
+                </div>
+
+                <p
+                  className="mt-6 text-xs"
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    color: 'rgba(158, 156, 154, 0.75)',
+                  }}
+                >
+                  // click to flip
                 </p>
               </div>
-            )}
 
-            {!algExpanded && (
-              <p
-                className="mt-6 text-xs"
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  color: 'rgba(158, 156, 154, 0.75)',
-                }}
-              >
-                // click to see more
-              </p>
-            )}
+              <div ref={backRef} className="flip-back">
+                <div
+                  style={{
+                    fontSize: '12px',
+                    color: 'rgba(200,241,53,0.6)',
+                    fontFamily: 'JetBrains Mono, var(--font-mono)',
+                    marginBottom: '8px',
+                  }}
+                >
+                  // algoma university · details
+                </div>
+                <div
+                  style={{
+                    fontSize: '20px',
+                    fontWeight: 800,
+                    color: '#F0EDE8',
+                    marginBottom: '4px',
+                    fontFamily: 'var(--font-heading)',
+                  }}
+                >
+                  Bachelor of Computer Science
+                </div>
+                <div style={{ fontSize: '13px', color: '#A8A8B8', marginBottom: '16px', fontFamily: 'var(--font-body)' }}>
+                  Sept 2021 – Dec 2025 · Sault Ste. Marie, ON
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontSize: '11px',
+                      color: 'rgba(200,241,53,0.7)',
+                      letterSpacing: '1px',
+                      textTransform: 'uppercase',
+                      marginBottom: '8px',
+                      fontFamily: 'var(--font-body)',
+                    }}
+                  >
+                    Key Courses
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {ALGOMA_COURSES.map((course) => (
+                      <span
+                        key={course}
+                        style={{
+                          background: 'rgba(200,241,53,0.08)',
+                          border: '1px solid rgba(200,241,53,0.2)',
+                          color: '#C8F135',
+                          borderRadius: '20px',
+                          padding: '3px 10px',
+                          fontSize: '11px',
+                          fontFamily: 'var(--font-body)',
+                        }}
+                      >
+                        {course}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
+                  <span
+                    style={{
+                      background: 'rgba(200,241,53,0.1)',
+                      border: '1px solid rgba(200,241,53,0.25)',
+                      color: '#C8F135',
+                      borderRadius: '20px',
+                      padding: '4px 12px',
+                      fontSize: '12px',
+                      fontFamily: 'var(--font-body)',
+                    }}
+                  >
+                    Dean&apos;s List 2023
+                  </span>
+                  <span
+                    style={{
+                      background: 'rgba(200,241,53,0.1)',
+                      border: '1px solid rgba(200,241,53,0.25)',
+                      color: '#C8F135',
+                      borderRadius: '20px',
+                      padding: '4px 12px',
+                      fontSize: '12px',
+                      fontFamily: 'var(--font-body)',
+                    }}
+                  >
+                    Dean&apos;s List 2024
+                  </span>
+                </div>
+                <div style={{ fontSize: '28px', fontWeight: 800, color: '#C8F135', marginTop: '8px', fontFamily: 'var(--font-heading)' }}>
+                  3.1{' '}
+                  <span style={{ fontSize: '13px', color: '#A8A8B8', fontWeight: 400, fontFamily: 'var(--font-body)' }}>/ 4.0 GPA</span>
+                </div>
+                <div
+                  style={{
+                    fontSize: '11px',
+                    color: 'rgba(200,241,53,0.4)',
+                    fontFamily: 'JetBrains Mono, var(--font-mono)',
+                    marginTop: 'auto',
+                  }}
+                >
+                  // click to flip back
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Certifications Card */}
