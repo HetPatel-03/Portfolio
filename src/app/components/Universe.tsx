@@ -42,7 +42,7 @@ interface SceneNode {
 }
 
 const CAT_RADIUS = 120;
-const SUB_RADIUS = 45;
+const SUB_RADIUS = 58;
 const LEAF_RADIUS = 20;
 
 /** Evenly spaced points on a circle in the XY plane (z = 0). */
@@ -517,7 +517,7 @@ function UniverseSimpleSubDetail({ node, byId }: { node: Node; byId: Map<string,
   );
 }
 
-const SUB_MESH_BASE_COLOR = 0x94a3b8;
+const SUB_MESH_BASE_COLOR = 0x4a5568;
 
 export function Universe() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -653,7 +653,7 @@ export function Universe() {
     scene.background = new THREE.Color(0x0c0c10);
 
     const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 2000);
-    camera.position.set(0, 0, 220);
+    camera.position.set(0, 0, 320);
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -669,8 +669,8 @@ export function Universe() {
       MIDDLE: THREE.MOUSE.DOLLY,
       RIGHT: THREE.MOUSE.ROTATE,
     };
-    controls.minDistance = 50;
-    controls.maxDistance = 380;
+    controls.minDistance = 80;
+    controls.maxDistance = 450;
     controls.target.set(0, 0, 0);
     controls.update();
 
@@ -810,6 +810,7 @@ export function Universe() {
         });
         disposableMaterials.push(material);
         mesh = new THREE.Mesh(geometry, material);
+        mesh.scale.set(1, 1, 1);
         mesh.userData = { id: node.id, nodeId: node.id, type: node.type };
         textureLoader.load('/Me_Memoji_Laptop.png', (tex) => {
           tex.colorSpace = THREE.SRGBColorSpace;
@@ -834,6 +835,7 @@ export function Universe() {
         });
         disposableMaterials.push(ringMaterial);
         const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.scale.set(1, 1, 1);
         ring.position.z = 0.02;
         ringMesh = ring;
 
@@ -853,6 +855,7 @@ export function Universe() {
         });
         disposableMaterials.push(material);
         mesh = new THREE.Mesh(geometry, material);
+        mesh.scale.set(1, 1, 1);
         mesh.userData = { id: node.id, nodeId: node.id, type: node.type };
 
         const ringGeometry = new THREE.RingGeometry(r + 2, r + 5, 64);
@@ -866,6 +869,7 @@ export function Universe() {
         });
         disposableMaterials.push(ringMaterial);
         const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.scale.set(1, 1, 1);
         ring.position.z = 0.02;
         ringMesh = ring;
 
@@ -884,6 +888,7 @@ export function Universe() {
         });
         disposableMaterials.push(material);
         mesh = new THREE.Mesh(geometry, material);
+        mesh.scale.set(1, 1, 1);
         root = mesh;
         mesh.userData = {
           id: node.id,
@@ -1157,7 +1162,7 @@ export function Universe() {
       gsap.to(camera.position, {
         x: 0,
         y: 0,
-        z: 220,
+        z: 320,
         duration: 0.8,
         ease: 'power2.out',
       });
@@ -1172,11 +1177,24 @@ export function Universe() {
       applyCategoryDim(null);
     };
 
+    const centerRingMeshForPulse = sceneNodesById.get('het')?.ringMesh ?? null;
+    if (centerRingMeshForPulse) {
+      gsap.to(centerRingMeshForPulse.scale, {
+        x: 1.08,
+        y: 1.08,
+        z: 1,
+        duration: 2,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+      });
+    }
+
     const handleResize = () => {
       const width = container.clientWidth;
       const height = container.clientHeight;
       renderer.setSize(width, height);
-      camera.aspect = width / height;
+      camera.aspect = width / Math.max(height, 1);
       camera.updateProjectionMatrix();
     };
 
@@ -1370,11 +1388,13 @@ export function Universe() {
         label.style.left = `${x}px`;
         label.style.top = `${yBelow}px`;
         label.style.transform = 'translateX(-50%)';
-        label.style.opacity = '1';
         label.style.filter = 'none';
 
         if (node.type === 'sub') {
+          label.style.opacity = cameraDistance < 200 ? '0.8' : '0';
           label.style.color = hoveredSubId === node.id && node.parent ? (nodeById.get(node.parent)?.color ?? '#A8A8B8') : '#A8A8B8';
+        } else {
+          label.style.opacity = '1';
         }
       });
 
@@ -1387,6 +1407,7 @@ export function Universe() {
       cancelAnimationFrame(rafRef.current);
       gsap.killTweensOf(camera.position);
       gsap.killTweensOf(controls.target);
+      if (centerRingMeshForPulse) gsap.killTweensOf(centerRingMeshForPulse.scale);
       resetFocusHandlerRef.current = null;
       controls.dispose();
       window.removeEventListener('resize', handleResize);
@@ -1580,6 +1601,7 @@ export function Universe() {
                       fontSize: '10px',
                       color: '#A8A8B8',
                       fontWeight: 600,
+                      transition: 'opacity 0.3s ease',
                     }}
                   >
                     {node.label}
