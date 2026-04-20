@@ -26,7 +26,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="section-bg-hero min-h-screen flex items-center justify-center relative overflow-hidden pt-20"
+      className="section-bg-hero min-h-screen flex items-center justify-center relative overflow-hidden py-[120px]"
     >
       {/* Noise texture overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
