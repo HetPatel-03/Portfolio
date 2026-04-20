@@ -1527,7 +1527,28 @@ export function Universe() {
               )}
             </div>
           ) : null}
-          <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              fontFamily: "'Clash Display', sans-serif",
+              fontWeight: 800,
+              fontSize: 'clamp(60px, 12vw, 160px)',
+              color: 'rgba(255,255,255,0.018)',
+              whiteSpace: 'nowrap',
+              letterSpacing: '0.15em',
+              userSelect: 'none',
+              pointerEvents: 'none',
+              zIndex: 0,
+              lineHeight: 1,
+              textTransform: 'uppercase',
+            }}
+          >
+            UNIVERSE
+          </div>
+          <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', position: 'relative', zIndex: 1 }} />
           <div
             ref={labelsLayerRef}
             style={{
