@@ -39,9 +39,9 @@ export function Hero() {
       </div>
 
       <div className="max-w-7xl mx-auto px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="flex flex-col md:flex-row md:items-center gap-12 md:gap-16">
           {/* Left Side */}
-          <div className="relative z-10">
+          <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-center pb-[60px] text-center md:text-left">
             {/* Availability badge */}
             <div 
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
@@ -139,7 +139,7 @@ export function Hero() {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex gap-4 mb-8">
+            <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-8">
               <button
                 onClick={() => scrollToSection('connect')}
                 className="px-6 py-3 rounded-full transition-all duration-200 hover:scale-105"
@@ -170,6 +170,7 @@ export function Hero() {
 
             {/* Social — glass pill links */}
             <div
+              className="flex flex-wrap justify-center md:justify-start"
               style={{
                 display: 'flex',
                 gap: '10px',
@@ -276,7 +277,7 @@ export function Hero() {
           </div>
 
           {/* Right Side - Hero image */}
-          <div className="relative h-[600px] w-full">
+          <div className="relative w-full md:w-1/2 h-[420px] md:h-[600px] self-end">
             <div className="hero-image-container">
               <img
                 src={meHero}
