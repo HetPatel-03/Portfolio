@@ -147,3 +147,85 @@ export function LogoFigma() {
     </svg>
   );
 }
+
+export function LogoJava() {
+  return (
+    <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <rect width="128" height="128" rx="20" fill="#F89820" />
+      <path
+        fill="#fff"
+        d="M44 36h16c14 0 22 8 22 22 0 10-4 16-14 18l16 28H56L44 80h-8v-44zm8 12v20h6c6 0 10-4 10-10s-4-10-10-10h-6z"
+      />
+    </svg>
+  );
+}
+
+export function LogoAws() {
+  return (
+    <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <rect width="128" height="128" rx="12" fill="#252F3E" />
+      <path
+        fill="#FF9900"
+        d="M36 72c8-16 24-26 44-26 12 0 22 4 30 10l-6 8c-6-4-14-8-24-8-14 0-26 8-32 20h-12zm56 8c-2 6-8 10-16 10-10 0-16-6-16-14 0-10 8-14 20-14 4 0 8 0 12 2v-2c0-6-4-10-12-10-6 0-10 2-14 6l-8-8c6-6 14-10 24-10 14 0 22 8 22 22v18H92v-6c-4 4-10 6-16 6-10 0-16-6-16-14 0-8 8-12 20-12 4 0 8 1 12 2v-2c0-6-4-8-10-8-6 0-10 2-12 6z"
+      />
+      <path
+        fill="#FF9900"
+        fillRule="evenodd"
+        d="M64 88c-14 0-26-4-36-12l-4 4c12 10 26 16 40 16s28-6 40-16l-4-4c-10 8-22 12-36 12z"
+      />
+    </svg>
+  );
+}
+
+export function LogoSupabase() {
+  return (
+    <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path
+        fill="#3ECF8E"
+        d="M78 12 28 70c-4 4-2 10 4 10h22l-8 36c-2 8 10 12 14 4l50-58c4-4 2-10-4-10H84l10-36c2-8-10-12-16-4z"
+      />
+    </svg>
+  );
+}
+
+export function LogoSql() {
+  return (
+    <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <ellipse cx="64" cy="34" rx="40" ry="14" fill="#4479A1" />
+      <path fill="#2d5a7a" d="M24 34v28c0 8 18 14 40 14s40-6 40-14V34" />
+      <ellipse cx="64" cy="62" rx="40" ry="14" fill="#4479A1" />
+      <path fill="#2d5a7a" d="M24 62v28c0 8 18 14 40 14s40-6 40-14V62" />
+      <ellipse cx="64" cy="90" rx="40" ry="14" fill="#4479A1" />
+    </svg>
+  );
+}
+
+export function LogoOpenAI() {
+  return (
+    <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <circle cx="50" cy="64" r="32" fill="none" stroke="#74AA9C" strokeWidth="12" />
+      <circle cx="78" cy="64" r="32" fill="none" stroke="#74AA9C" strokeWidth="12" opacity="0.75" />
+    </svg>
+  );
+}
+
+/** Simple neural-network mark in brand colour */
+export function LogoMachineLearning() {
+  const c = '#FF6B6B';
+  return (
+    <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path
+        fill="none"
+        stroke={c}
+        strokeWidth="4"
+        strokeLinecap="round"
+        d="M32 32h20M76 32h20M32 64h20M76 64h20M32 96h20M76 96h20M52 32l24 32M52 96l24-32"
+      />
+      <circle cx="32" cy="32" r="10" fill={c} />
+      <circle cx="96" cy="32" r="10" fill={c} />
+      <circle cx="64" cy="64" r="12" fill={c} />
+      <circle cx="32" cy="96" r="10" fill={c} />
+      <circle cx="96" cy="96" r="10" fill={c} />
+    </svg>
+  );
+}

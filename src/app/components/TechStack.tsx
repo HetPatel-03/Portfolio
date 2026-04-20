@@ -11,6 +11,12 @@ import {
   LogoGit,
   LogoVite,
   LogoFigma,
+  LogoJava,
+  LogoAws,
+  LogoSupabase,
+  LogoSql,
+  LogoOpenAI,
+  LogoMachineLearning,
 } from './stack/StackLogos';
 
 function rgbFromHex(hex: string): [number, number, number] {
@@ -117,131 +123,156 @@ const STACK_ITEMS: StackItem[] = [
       'Wireframing to high-fidelity mockups before any code — component libraries, auto-layout, dev mode handoff',
     Logo: LogoFigma,
   },
+  {
+    id: 'java',
+    name: 'Java',
+    color: '#F89820',
+    proof:
+      'OOP fundamentals, data structures and algorithms practised through Algoma CS coursework and Codility assessments',
+    Logo: LogoJava,
+  },
+  {
+    id: 'aws',
+    name: 'AWS',
+    color: '#FF9900',
+    proof:
+      'S3, EC2, Lambda basics explored for cloud deployment architecture on side projects',
+    Logo: LogoAws,
+  },
+  {
+    id: 'supabase',
+    name: 'Supabase',
+    color: '#3ECF8E',
+    proof:
+      'Postgres-backed auth and realtime DB used as backend layer on rapid-prototype projects',
+    Logo: LogoSupabase,
+  },
+  {
+    id: 'sql',
+    name: 'SQL',
+    color: '#4479A1',
+    proof:
+      'Complex queries, joins, subqueries, window functions — used across coursework and production database work',
+    Logo: LogoSql,
+  },
+  {
+    id: 'openai',
+    name: 'OpenAI API',
+    color: '#74AA9C',
+    proof:
+      'Integrated LLM endpoints into Digifixr lead-gen pipeline for automated copy generation and classification',
+    Logo: LogoOpenAI,
+  },
+  {
+    id: 'ml',
+    name: 'Machine Learning',
+    color: '#FF6B6B',
+    proof:
+      'Supervised learning concepts, scikit-learn, model evaluation — studied through Algoma AI coursework',
+    Logo: LogoMachineLearning,
+  },
 ];
 
 const TRACK_HEIGHT = 280;
 
 const SECTION_PAD_X = 'clamp(40px, 8vw, 120px)';
 
-/** Two copies for seamless ticker (translate -50%) */
+const CARD_LOOP = [...STACK_ITEMS, ...STACK_ITEMS];
 const TICKER_SEQUENCE = [...STACK_ITEMS, ...STACK_ITEMS];
 
+function StackCard({ tech }: { tech: StackItem }) {
+  const { Logo } = tech;
+  return (
+    <article
+      role="listitem"
+      className="stack-tech-card flex w-[280px] shrink-0 flex-col transition-[border-color,box-shadow] duration-300 ease-out"
+      style={{
+        width: 280,
+        flexShrink: 0,
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: 16,
+        backdropFilter: 'blur(8px) saturate(120%)',
+        WebkitBackdropFilter: 'blur(8px) saturate(120%)',
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+        padding: 24,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = rgbaHex(tech.color, 0.35);
+        e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.08), 0 0 24px ${rgbaHex(tech.color, 0.08)}`;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+        e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.06)';
+      }}
+    >
+      <div
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+        style={{
+          background: rgbaHex(tech.color, 0.18),
+          border: `1px solid ${rgbaHex(tech.color, 0.2)}`,
+          borderRadius: 12,
+        }}
+      >
+        <div className="h-8 w-8 [&_svg]:h-full [&_svg]:w-full">
+          <Logo />
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <span
+          style={{
+            background: rgbaHex(tech.color, 0.15),
+            border: `1px solid ${rgbaHex(tech.color, 0.3)}`,
+            borderRadius: 999,
+            padding: '3px 10px',
+            fontFamily: 'var(--font-mono)',
+            fontSize: 11,
+            color: tech.color,
+          }}
+        >
+          {tech.name}
+        </span>
+      </div>
+
+      <p
+        className="mt-3 text-[13px] leading-relaxed"
+        style={{
+          fontFamily: 'var(--font-body)',
+          color: '#A8A8B8',
+        }}
+      >
+        {tech.proof}
+      </p>
+    </article>
+  );
+}
+
 export function TechStack() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef({ active: false, startX: 0, startScroll: 0 });
-  const autoScrollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const inactivityTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cardsInfiniteRef = useRef<HTMLDivElement>(null);
+  const cardResumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const stopAutoScroll = useCallback(() => {
-    if (autoScrollIntervalRef.current != null) {
-      clearInterval(autoScrollIntervalRef.current);
-      autoScrollIntervalRef.current = null;
+  const pauseCardsAndScheduleResume = useCallback(() => {
+    const el = cardsInfiniteRef.current;
+    if (el) el.style.animationPlayState = 'paused';
+    if (cardResumeTimeoutRef.current != null) {
+      clearTimeout(cardResumeTimeoutRef.current);
     }
-  }, []);
-
-  const startAutoScroll = useCallback(() => {
-    if (autoScrollIntervalRef.current != null) return;
-    autoScrollIntervalRef.current = setInterval(() => {
-      const el = scrollRef.current;
-      if (!el) return;
-      el.scrollLeft += 1;
-      if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 0.5) {
-        el.scrollLeft = 0;
-      }
-    }, 20);
-  }, []);
-
-  const pauseAutoScrollAndScheduleResume = useCallback(() => {
-    stopAutoScroll();
-    if (inactivityTimeoutRef.current != null) {
-      clearTimeout(inactivityTimeoutRef.current);
-    }
-    inactivityTimeoutRef.current = setTimeout(() => {
-      startAutoScroll();
-      inactivityTimeoutRef.current = null;
+    cardResumeTimeoutRef.current = setTimeout(() => {
+      const t = cardsInfiniteRef.current;
+      if (t) t.style.animationPlayState = 'running';
+      cardResumeTimeoutRef.current = null;
     }, 10000);
-  }, [startAutoScroll, stopAutoScroll]);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const onWheel = (e: WheelEvent) => {
-      pauseAutoScrollAndScheduleResume();
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault();
-        el.scrollLeft += e.deltaY;
-      }
-    };
-
-    const onPause = () => pauseAutoScrollAndScheduleResume();
-
-    el.addEventListener('wheel', onWheel, { passive: false });
-    el.addEventListener('mouseenter', onPause);
-    el.addEventListener('touchstart', onPause, { passive: true });
-
-    startAutoScroll();
-
-    return () => {
-      el.removeEventListener('wheel', onWheel);
-      el.removeEventListener('mouseenter', onPause);
-      el.removeEventListener('touchstart', onPause);
-      stopAutoScroll();
-      if (inactivityTimeoutRef.current != null) {
-        clearTimeout(inactivityTimeoutRef.current);
-        inactivityTimeoutRef.current = null;
-      }
-    };
-  }, [pauseAutoScrollAndScheduleResume, startAutoScroll, stopAutoScroll]);
-
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      const track = scrollRef.current;
-      if (!track || !dragRef.current.active) return;
-      track.scrollLeft = dragRef.current.startScroll - (e.pageX - dragRef.current.startX);
-    };
-
-    const onUp = () => {
-      const track = scrollRef.current;
-      dragRef.current.active = false;
-      if (track) track.style.removeProperty('cursor');
-    };
-
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup', onUp);
-    return () => {
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
-    };
   }, []);
 
-  const onTrackMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    pauseAutoScrollAndScheduleResume();
-    const track = scrollRef.current;
-    if (!track) return;
-    dragRef.current = {
-      active: true,
-      startX: e.pageX,
-      startScroll: track.scrollLeft,
+  useEffect(() => {
+    return () => {
+      if (cardResumeTimeoutRef.current != null) {
+        clearTimeout(cardResumeTimeoutRef.current);
+        cardResumeTimeoutRef.current = null;
+      }
     };
-    track.style.cursor = 'grabbing';
-  };
-
-  const scrollByNav = (delta: number) => {
-    pauseAutoScrollAndScheduleResume();
-    scrollRef.current?.scrollBy({ left: delta, behavior: 'smooth' });
-  };
-
-  const trackPadStyle = {
-    paddingLeft: SECTION_PAD_X,
-    paddingRight: 0,
-  };
-
-  const spacerStyle = {
-    flexShrink: 0 as const,
-    width: SECTION_PAD_X,
-    minWidth: SECTION_PAD_X,
-  };
+  }, []);
 
   return (
     <section
@@ -285,114 +316,27 @@ export function TechStack() {
           </p>
         </header>
 
-        <div className="relative z-[1] flex items-center gap-3">
-          <button
-            type="button"
-            className="stack-nav-btn"
-            aria-label="Scroll stack left"
-            onMouseDown={() => pauseAutoScrollAndScheduleResume()}
-            onClick={() => scrollByNav(-320)}
+        <div className="relative z-[1] stack-track-wrap">
+          <div
+            className="stack-cards-viewport overflow-hidden"
+            style={{ height: TRACK_HEIGHT }}
+            onMouseEnter={pauseCardsAndScheduleResume}
+            onMouseDown={pauseCardsAndScheduleResume}
+            onTouchStart={pauseCardsAndScheduleResume}
           >
-            ‹
-          </button>
-
-          <div className="stack-track-wrap min-w-0 flex-1">
             <div
-              ref={scrollRef}
+              ref={cardsInfiniteRef}
+              className="stack-cards-infinite-inner flex items-center gap-5"
               role="list"
-              className="stack-scroll-row flex gap-5 overflow-x-auto overflow-y-hidden select-none"
-              style={{
-                ...trackPadStyle,
-                height: TRACK_HEIGHT,
-                alignItems: 'center',
-                scrollbarWidth: 'thin',
-              }}
-              onMouseDown={onTrackMouseDown}
             >
-              {STACK_ITEMS.map((tech) => {
-                const { Logo } = tech;
-                return (
-                  <article
-                    key={tech.id}
-                    role="listitem"
-                    className="stack-tech-card flex w-[280px] shrink-0 flex-col transition-[border-color,box-shadow] duration-300 ease-out"
-                    style={{
-                      width: 280,
-                      flexShrink: 0,
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      borderRadius: 16,
-                      backdropFilter: 'blur(8px) saturate(120%)',
-                      WebkitBackdropFilter: 'blur(8px) saturate(120%)',
-                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
-                      padding: 24,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = rgbaHex(tech.color, 0.35);
-                      e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.08), 0 0 24px ${rgbaHex(tech.color, 0.08)}`;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-                      e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.06)';
-                    }}
-                  >
-                    <div
-                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
-                      style={{
-                        background: rgbaHex(tech.color, 0.18),
-                        border: `1px solid ${rgbaHex(tech.color, 0.2)}`,
-                        borderRadius: 12,
-                      }}
-                    >
-                      <div className="h-8 w-8 [&_svg]:h-full [&_svg]:w-full">
-                        <Logo />
-                      </div>
-                    </div>
-
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      <span
-                        style={{
-                          background: rgbaHex(tech.color, 0.15),
-                          border: `1px solid ${rgbaHex(tech.color, 0.3)}`,
-                          borderRadius: 999,
-                          padding: '3px 10px',
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: 11,
-                          color: tech.color,
-                        }}
-                      >
-                        {tech.name}
-                      </span>
-                    </div>
-
-                    <p
-                      className="mt-3 text-[13px] leading-relaxed"
-                      style={{
-                        fontFamily: 'var(--font-body)',
-                        color: '#A8A8B8',
-                      }}
-                    >
-                      {tech.proof}
-                    </p>
-                  </article>
-                );
-              })}
-              <div aria-hidden className="shrink-0" style={spacerStyle} />
+              {CARD_LOOP.map((tech, index) => (
+                <StackCard key={`${tech.id}-${index}`} tech={tech} />
+              ))}
             </div>
-
-            <div className="stack-fade stack-fade--left" aria-hidden />
-            <div className="stack-fade stack-fade--right" aria-hidden />
           </div>
 
-          <button
-            type="button"
-            className="stack-nav-btn"
-            aria-label="Scroll stack right"
-            onMouseDown={() => pauseAutoScrollAndScheduleResume()}
-            onClick={() => scrollByNav(320)}
-          >
-            ›
-          </button>
+          <div className="stack-fade stack-fade--left" aria-hidden />
+          <div className="stack-fade stack-fade--right" aria-hidden />
         </div>
 
         <p
@@ -404,7 +348,7 @@ export function TechStack() {
             opacity: 0.5,
           }}
         >
-          // drag or scroll →
+          // infinite scroll · hover to pause
         </p>
 
         <div className="stack-logo-ticker mt-8 overflow-hidden" aria-hidden>

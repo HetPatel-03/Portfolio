@@ -432,34 +432,26 @@ h1, h2 {
   background-size: auto, auto, 28px 28px;
 }
 
-.stack-nav-btn {
-  z-index: 3;
-  flex-shrink: 0;
-  display: flex;
-  width: 44px;
-  height: 44px;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: #f0ede8;
-  font-size: 18px;
-  line-height: 1;
-  cursor: pointer;
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease;
+.stack-cards-viewport {
+  position: relative;
 }
 
-.stack-nav-btn:hover {
-  background: rgba(242, 102, 74, 0.15);
-  border-color: rgba(242, 102, 74, 0.4);
-  color: #f2664a;
+.stack-cards-infinite-inner {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 1.25rem;
+  animation: infiniteScroll 40s linear infinite;
+}
+
+@keyframes infiniteScroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .stack-logo-ticker-inner {
@@ -497,14 +489,6 @@ h1, h2 {
 
 .stack-track-wrap {
   position: relative;
-}
-
-.stack-scroll-row {
-  cursor: grab;
-}
-
-.stack-scroll-row:active {
-  cursor: grabbing;
 }
 
 .stack-fade {
