@@ -173,7 +173,11 @@ const STACK_ITEMS: StackItem[] = [
   },
 ];
 
-const TRACK_HEIGHT = 280;
+/** Uniform card + viewport height (px) */
+const STACK_CARD_HEIGHT = 360;
+
+/** Auto-scroll speed (pixels per second) — lower = slower drift */
+const STACK_AUTO_SCROLL_PX_PER_SEC = 14;
 
 const SECTION_PAD_X = 'clamp(40px, 8vw, 120px)';
 
@@ -188,7 +192,9 @@ function StackCard({ tech }: { tech: StackItem }) {
       className="stack-tech-card flex w-[280px] shrink-0 flex-col transition-[border-color,box-shadow] duration-300 ease-out"
       style={{
         width: 280,
+        height: STACK_CARD_HEIGHT,
         flexShrink: 0,
+        boxSizing: 'border-box',
         background: 'rgba(255,255,255,0.03)',
         border: '1px solid rgba(255,255,255,0.08)',
         borderRadius: 16,
@@ -236,7 +242,7 @@ function StackCard({ tech }: { tech: StackItem }) {
       </div>
 
       <p
-        className="mt-3 text-[13px] leading-relaxed"
+        className="mt-3 min-h-0 flex-1 overflow-y-auto text-[13px] leading-relaxed"
         style={{
           fontFamily: 'var(--font-body)',
           color: '#A8A8B8',
@@ -249,20 +255,55 @@ function StackCard({ tech }: { tech: StackItem }) {
 }
 
 export function TechStack() {
-  const cardsInfiniteRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const autoPausedRef = useRef(false);
   const cardResumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rafRef = useRef<number>(0);
 
   const pauseCardsAndScheduleResume = useCallback(() => {
-    const el = cardsInfiniteRef.current;
-    if (el) el.style.animationPlayState = 'paused';
+    autoPausedRef.current = true;
     if (cardResumeTimeoutRef.current != null) {
       clearTimeout(cardResumeTimeoutRef.current);
     }
     cardResumeTimeoutRef.current = setTimeout(() => {
-      const t = cardsInfiniteRef.current;
-      if (t) t.style.animationPlayState = 'running';
+      autoPausedRef.current = false;
       cardResumeTimeoutRef.current = null;
     }, 10000);
+  }, []);
+
+  useEffect(() => {
+    const view = viewportRef.current;
+    const inner = innerRef.current;
+    if (!view || !inner) return;
+
+    let last = performance.now();
+    let cancelled = false;
+
+    const tick = (now: number) => {
+      if (cancelled) return;
+      const dt = Math.min((now - last) / 1000, 0.1);
+      last = now;
+
+      if (!autoPausedRef.current) {
+        const half = inner.scrollWidth / 2;
+        if (half > 0) {
+          view.scrollLeft += STACK_AUTO_SCROLL_PX_PER_SEC * dt;
+          if (view.scrollLeft >= half - 0.5) {
+            view.scrollLeft -= half;
+          }
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -273,6 +314,11 @@ export function TechStack() {
       }
     };
   }, []);
+
+  const nudgeTrack = (direction: -1 | 1) => {
+    pauseCardsAndScheduleResume();
+    viewportRef.current?.scrollBy({ left: direction * 320, behavior: 'smooth' });
+  };
 
   return (
     <section
@@ -316,27 +362,46 @@ export function TechStack() {
           </p>
         </header>
 
-        <div className="relative z-[1] stack-track-wrap">
-          <div
-            className="stack-cards-viewport overflow-hidden"
-            style={{ height: TRACK_HEIGHT }}
-            onMouseEnter={pauseCardsAndScheduleResume}
-            onMouseDown={pauseCardsAndScheduleResume}
-            onTouchStart={pauseCardsAndScheduleResume}
+        <div className="relative z-[1] flex items-center gap-3">
+          <button
+            type="button"
+            className="stack-nav-btn"
+            aria-label="Scroll stack left"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => nudgeTrack(-1)}
           >
+            ‹
+          </button>
+
+          <div className="stack-track-wrap min-w-0 flex-1 relative">
             <div
-              ref={cardsInfiniteRef}
-              className="stack-cards-infinite-inner flex items-center gap-5"
-              role="list"
+              ref={viewportRef}
+              className="stack-cards-viewport overflow-x-auto overflow-y-hidden"
+              style={{ height: STACK_CARD_HEIGHT }}
+              onMouseEnter={pauseCardsAndScheduleResume}
+              onMouseDown={pauseCardsAndScheduleResume}
+              onTouchStart={pauseCardsAndScheduleResume}
             >
-              {CARD_LOOP.map((tech, index) => (
-                <StackCard key={`${tech.id}-${index}`} tech={tech} />
-              ))}
+              <div ref={innerRef} className="stack-cards-row flex h-full items-stretch gap-5" role="list">
+                {CARD_LOOP.map((tech, index) => (
+                  <StackCard key={`${tech.id}-${index}`} tech={tech} />
+                ))}
+              </div>
             </div>
+
+            <div className="stack-fade stack-fade--left" aria-hidden />
+            <div className="stack-fade stack-fade--right" aria-hidden />
           </div>
 
-          <div className="stack-fade stack-fade--left" aria-hidden />
-          <div className="stack-fade stack-fade--right" aria-hidden />
+          <button
+            type="button"
+            className="stack-nav-btn"
+            aria-label="Scroll stack right"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => nudgeTrack(1)}
+          >
+            ›
+          </button>
         </div>
 
         <p
@@ -348,7 +413,7 @@ export function TechStack() {
             opacity: 0.5,
           }}
         >
-          // infinite scroll · hover to pause
+          // slow auto-scroll · ‹ › or hover to pause
         </p>
 
         <div className="stack-logo-ticker mt-8 overflow-hidden" aria-hidden>
