@@ -468,6 +468,57 @@ function UniverseDetailBody({ node, byId }: { node: Node; byId: Map<string, Node
   );
 }
 
+function subOneLineBlurb(node: Node): string {
+  const d = SUB_DETAIL[node.id];
+  return (
+    d?.description ??
+    d?.body ??
+    d?.bullets?.[0] ??
+    'Part of this cluster — open the graph to see how it connects.'
+  );
+}
+
+function UniverseSimpleSubDetail({ node, byId }: { node: Node; byId: Map<string, Node> }) {
+  const parent = node.parent ? byId.get(node.parent) : undefined;
+  const heading: CSSProperties = {
+    fontFamily: 'Clash Display, sans-serif',
+    fontSize: 16,
+    fontWeight: 700,
+    color: '#fff',
+    margin: '0 0 12px',
+  };
+  return (
+    <div>
+      <p style={heading}>{node.label}</p>
+      {parent ? (
+        <span
+          style={{
+            ...pillStyle,
+            color: parent.color,
+            borderColor: `${parent.color}66`,
+            background: `${parent.color}22`,
+          }}
+        >
+          {parent.label}
+        </span>
+      ) : null}
+      <p
+        style={{
+          marginTop: 16,
+          color: '#A8A8B8',
+          fontSize: 13,
+          fontFamily: 'DM Sans, sans-serif',
+          lineHeight: 1.5,
+        }}
+      >
+        {subOneLineBlurb(node)}
+      </p>
+    </div>
+  );
+}
+
+const SUB_MESH_BASE_COLOR = 0x94a3b8;
+
 export function Universe() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -479,7 +530,12 @@ export function Universe() {
   const rafRef = useRef<number>(0);
 
   const [focusedCategoryId, setFocusedCategoryId] = useState<string | null>(null);
-  const [detailPanel, setDetailPanel] = useState<{ node: Node; x: number; y: number } | null>(null);
+  const [detailPanel, setDetailPanel] = useState<{
+    node: Node;
+    x: number;
+    y: number;
+    quickSub?: boolean;
+  } | null>(null);
   const resetFocusHandlerRef = useRef<(() => void) | null>(null);
   const focusCatRef = useRef<string | null>(null);
   const setFocusRef = useRef(setFocusedCategoryId);
@@ -608,6 +664,11 @@ export function Universe() {
     controls.enableRotate = false;
     controls.enableZoom = true;
     controls.enablePan = true;
+    controls.mouseButtons = {
+      LEFT: THREE.MOUSE.PAN,
+      MIDDLE: THREE.MOUSE.DOLLY,
+      RIGHT: THREE.MOUSE.ROTATE,
+    };
     controls.minDistance = 50;
     controls.maxDistance = 380;
     controls.target.set(0, 0, 0);
@@ -749,7 +810,7 @@ export function Universe() {
         });
         disposableMaterials.push(material);
         mesh = new THREE.Mesh(geometry, material);
-        mesh.userData = { id: node.id, type: node.type };
+        mesh.userData = { id: node.id, nodeId: node.id, type: node.type };
         textureLoader.load('/Me_Memoji_Laptop.png', (tex) => {
           tex.colorSpace = THREE.SRGBColorSpace;
           tex.center.set(0.5, 0.5);
@@ -792,7 +853,7 @@ export function Universe() {
         });
         disposableMaterials.push(material);
         mesh = new THREE.Mesh(geometry, material);
-        mesh.userData = { id: node.id, type: node.type };
+        mesh.userData = { id: node.id, nodeId: node.id, type: node.type };
 
         const ringGeometry = new THREE.RingGeometry(r + 2, r + 5, 64);
         disposableGeometries.push(ringGeometry);
@@ -816,7 +877,7 @@ export function Universe() {
         const geometry = new THREE.CircleGeometry(node.size, 64);
         disposableGeometries.push(geometry);
         const material = new THREE.MeshBasicMaterial({
-          color: node.color,
+          color: node.type === 'sub' ? SUB_MESH_BASE_COLOR : node.color,
           side: THREE.DoubleSide,
           transparent: node.type === 'sub' || node.type === 'leaf',
           opacity: 0,
@@ -824,7 +885,12 @@ export function Universe() {
         disposableMaterials.push(material);
         mesh = new THREE.Mesh(geometry, material);
         root = mesh;
-        mesh.userData = { id: node.id, type: node.type };
+        mesh.userData = {
+          id: node.id,
+          nodeId: node.id,
+          parentId: node.parent,
+          type: node.type,
+        };
         if (node.type === 'sub') {
           subMeshes.push(mesh);
           root.scale.set(0, 0, 0);
@@ -898,18 +964,11 @@ export function Universe() {
     const scaleTargets = new Map<string, number>();
     nodes.forEach((n) => scaleTargets.set(n.id, 1));
     let hoveredCategoryId: string | null = null;
-
-    const labelLerp = new Map<string, { opacity: number; blur: number; fontSize: number }>();
-    nodes.forEach((n) => {
-      labelLerp.set(n.id, {
-        opacity: n.type === 'center' || n.type === 'category' ? 1 : 0,
-        blur: 0,
-        fontSize: n.type === 'leaf' ? 8 : n.type === 'sub' ? 9 : 12,
-      });
-    });
+    let hoveredSubId: string | null = null;
 
     const tmp = new THREE.Vector3();
     const world = new THREE.Vector3();
+    const labelBelowScratch = new THREE.Vector3();
 
     const applyCategoryDim = (focusedId: string | null) => {
       sceneNodesById.forEach((sn) => {
@@ -983,12 +1042,12 @@ export function Universe() {
       mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
     };
 
-    const openDetailAtWorld = (n: Node, worldPos: THREE.Vector3) => {
+    const openDetailAtWorld = (n: Node, worldPos: THREE.Vector3, quickSub = false) => {
       tmp.copy(worldPos).project(camera);
       let px = (tmp.x * 0.5 + 0.5) * container.clientWidth + 28;
       let py = (-tmp.y * 0.5 + 0.5) * container.clientHeight - 28;
       const c = clampPanelPos(px, py, 280, 320);
-      setDetailRef.current?.({ node: n, x: c.x, y: c.y });
+      setDetailRef.current?.({ node: n, x: c.x, y: c.y, quickSub });
     };
 
     const onCanvasClick = (event: MouseEvent) => {
@@ -997,22 +1056,22 @@ export function Universe() {
 
       const leafHit = raycaster.intersectObjects(leafMeshes, false)[0];
       if (leafHit) {
-        const id = leafHit.object.userData.id as string;
+        const id = (leafHit.object.userData.nodeId ?? leafHit.object.userData.id) as string;
         const hitNode = nodeById.get(id);
         if (hitNode?.type === 'leaf') {
           leafHit.object.getWorldPosition(world);
-          openDetailAtWorld(hitNode, world);
+          openDetailAtWorld(hitNode, world, false);
         }
         return;
       }
 
       const subHit = raycaster.intersectObjects(subMeshes, false)[0];
       if (subHit) {
-        const id = subHit.object.userData.id as string;
+        const id = (subHit.object.userData.nodeId ?? subHit.object.userData.id) as string;
         const hitNode = nodeById.get(id);
         if (hitNode?.type === 'sub') {
           subHit.object.getWorldPosition(world);
-          openDetailAtWorld(hitNode, world);
+          openDetailAtWorld(hitNode, world, true);
         }
         return;
       }
@@ -1021,7 +1080,7 @@ export function Universe() {
       if (!catHit) return;
 
       setDetailRef.current(null);
-      const id = catHit.object.userData.id as string;
+      const id = (catHit.object.userData.nodeId ?? catHit.object.userData.id) as string;
       const simN = simById.get(id);
       if (!simN) return;
 
@@ -1140,8 +1199,15 @@ export function Universe() {
       });
 
       raycaster.setFromCamera(mouse, camera);
-      const intersections = raycaster.intersectObjects(categoryMeshes, false);
-      hoveredCategoryId = intersections.length > 0 ? (intersections[0].object.userData.id as string) : null;
+      const pickTargets = [...subMeshes, ...categoryMeshes];
+      const pickHits = raycaster.intersectObjects(pickTargets, false);
+      hoveredSubId = null;
+      hoveredCategoryId = null;
+      if (pickHits.length > 0) {
+        const u = pickHits[0].object.userData;
+        if (u.type === 'sub') hoveredSubId = (u.nodeId ?? u.id) as string;
+        else if (u.type === 'category') hoveredCategoryId = (u.nodeId ?? u.id) as string;
+      }
 
       const cameraDistance = camera.position.length();
       let nearestCategoryId: string | null = null;
@@ -1215,6 +1281,18 @@ export function Universe() {
         }
       });
 
+      sceneNodesById.forEach(({ data, mesh }) => {
+        if (data.type !== 'sub') return;
+        const mat = mesh.material as THREE.MeshBasicMaterial;
+        const pid = data.parent;
+        const cat = pid ? nodeById.get(pid) : undefined;
+        if (hoveredSubId === data.id && cat) {
+          mat.color.set(cat.color);
+        } else {
+          mat.color.setHex(SUB_MESH_BASE_COLOR);
+        }
+      });
+
       sceneNodesById.forEach(({ data, root, mesh }) => {
         if (data.type === 'category' || data.type === 'center') {
           const target = scaleTargets.get(data.id) ?? 1;
@@ -1223,11 +1301,17 @@ export function Universe() {
           return;
         }
         if (data.type === 'sub') {
-          if (fid && data.parent === fid) return;
+          if (fid && data.parent === fid) {
+            if (hoveredSubId === data.id) root.scale.multiplyScalar(1.15);
+            return;
+          }
           const mat = mesh.material as THREE.MeshBasicMaterial;
           const tgt = mesh.visible && mat.opacity > 0.04 ? 1 : 0;
-          const next = THREE.MathUtils.lerp(root.scale.x, tgt, 0.18);
-          root.scale.set(next, next, next);
+          const prevI = (root.userData._subIntrinsic as number) ?? 0;
+          const intrinsic = THREE.MathUtils.lerp(prevI, tgt, 0.18);
+          root.userData._subIntrinsic = intrinsic;
+          const h = hoveredSubId === data.id ? 1.15 : 1;
+          root.scale.set(intrinsic * h, intrinsic * h, intrinsic * h);
           return;
         }
         if (data.type === 'leaf') {
@@ -1263,10 +1347,19 @@ export function Universe() {
         const sceneNode = sceneNodesById.get(node.id);
         if (!label || !sceneNode) return;
 
-        sceneNode.mesh.getWorldPosition(tmp);
+        const cw = container.clientWidth;
+        const ch = container.clientHeight;
+
+        sceneNode.mesh.getWorldPosition(world);
+        tmp.copy(world);
         tmp.project(camera);
-        const x = (tmp.x * 0.5 + 0.5) * container.clientWidth;
-        const y = (-tmp.y * 0.5 + 0.5) * container.clientHeight;
+        const x = (tmp.x * 0.5 + 0.5) * cw;
+
+        labelBelowScratch.copy(world);
+        labelBelowScratch.y -= node.size;
+        labelBelowScratch.project(camera);
+        const yBelow = (-labelBelowScratch.y * 0.5 + 0.5) * ch + 10;
+
         const inFront = tmp.z >= -1 && tmp.z <= 1;
         const visMesh = node.type === 'center' || node.type === 'category' ? true : sceneNode.mesh.visible;
         const visible = inFront && visMesh;
@@ -1274,56 +1367,15 @@ export function Universe() {
         label.style.display = visible ? 'block' : 'none';
         if (!visible) return;
 
-        label.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+        label.style.left = `${x}px`;
+        label.style.top = `${yBelow}px`;
+        label.style.transform = 'translateX(-50%)';
+        label.style.opacity = '1';
+        label.style.filter = 'none';
 
-        let tgtO = 1;
-        let tgtB = 0;
-        let tgtFs = 12;
-
-        if (node.type === 'center') {
-          tgtO = cameraDistance > 300 ? 1 : 1;
-          tgtB = 0;
-          tgtFs = 12;
-        } else if (node.type === 'category') {
-          if (fid && node.id !== fid) {
-            tgtO = 0.35;
-            tgtB = 0;
-          } else if (cameraDistance > 300) {
-            tgtO = 0.4;
-            tgtB = 3;
-          } else if (cameraDistance >= 180) {
-            tgtO = 1;
-            tgtB = 0;
-          } else {
-            tgtO = 1;
-            tgtB = 0;
-          }
-          tgtFs = 12;
-        } else if (node.type === 'sub') {
-          tgtFs = 9;
-          tgtB = 0;
-          if (fid && node.parent !== fid) {
-            tgtO = 0;
-          } else if (fid && node.parent === fid) {
-            tgtO = 0.85;
-          } else if (cameraDistance < 180) {
-            tgtO = 0.7;
-          } else {
-            tgtO = 0;
-          }
-        } else if (node.type === 'leaf') {
-          tgtFs = cameraDistance < 120 ? 8 : 9;
-          tgtB = 0;
-          tgtO = cameraDistance < 120 && sceneNode.mesh.visible ? 0.6 : 0;
+        if (node.type === 'sub') {
+          label.style.color = hoveredSubId === node.id && node.parent ? (nodeById.get(node.parent)?.color ?? '#A8A8B8') : '#A8A8B8';
         }
-
-        const cur = labelLerp.get(node.id)!;
-        cur.opacity += (tgtO - cur.opacity) * 0.12;
-        cur.blur += (tgtB - cur.blur) * 0.12;
-        cur.fontSize += (tgtFs - cur.fontSize) * 0.12;
-        label.style.opacity = String(cur.opacity);
-        label.style.filter = cur.blur > 0.08 ? `blur(${cur.blur}px)` : 'none';
-        label.style.fontSize = `${cur.fontSize}px`;
       });
 
       renderer.render(scene, camera);
@@ -1447,7 +1499,11 @@ export function Universe() {
                 boxShadow: '0 0 40px rgba(0,0,0,0.4)',
               }}
             >
-              <UniverseDetailBody node={detailPanel.node} byId={nodeByIdForUi} />
+              {detailPanel.quickSub ? (
+                <UniverseSimpleSubDetail node={detailPanel.node} byId={nodeByIdForUi} />
+              ) : (
+                <UniverseDetailBody node={detailPanel.node} byId={nodeByIdForUi} />
+              )}
             </div>
           ) : null}
           <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
@@ -1461,11 +1517,19 @@ export function Universe() {
             }}
           >
             {nodes.map((node) => {
-              const baseLabel = {
-                position: 'absolute' as const,
-                pointerEvents: 'none' as const,
-                whiteSpace: 'nowrap' as const,
-                transform: 'translate(-50%, -50%)',
+              const baseLabel: CSSProperties = {
+                position: 'absolute',
+                pointerEvents: 'none',
+                whiteSpace: 'nowrap',
+                textAlign: 'center',
+                transform: 'translateX(-50%)',
+                fontFamily: 'DM Sans, sans-serif',
+                fontSize: '12px',
+                color: '#F0EDE8',
+                fontWeight: 600,
+                textShadow: '0 2px 8px rgba(0,0,0,1), 0 0 12px rgba(0,0,0,0.9)',
+                opacity: 1,
+                filter: 'none',
               };
 
               if (node.type === 'category') {
@@ -1477,14 +1541,9 @@ export function Universe() {
                     }}
                     style={{
                       ...baseLabel,
-                      filter: 'none',
-                      opacity: 1,
-                      fontSize: '12px',
-                      fontFamily: 'Clash Display, sans-serif',
-                      fontWeight: 700,
+                      fontSize: '13px',
                       color: node.color,
-                      textShadow: '0 0 8px rgba(0,0,0,0.8)',
-                      transition: 'opacity 0.15s ease',
+                      fontWeight: 700,
                     }}
                   >
                     {node.label}
@@ -1501,14 +1560,7 @@ export function Universe() {
                     }}
                     style={{
                       ...baseLabel,
-                      filter: 'none',
-                      opacity: 1,
-                      fontSize: '12px',
-                      fontFamily: 'Clash Display, sans-serif',
-                      fontWeight: 700,
-                      color: node.color,
-                      textShadow: '0 0 8px rgba(0,0,0,0.8)',
-                      transition: 'opacity 0.15s ease',
+                      color: '#F0EDE8',
                     }}
                   >
                     {node.label}
@@ -1525,14 +1577,9 @@ export function Universe() {
                     }}
                     style={{
                       ...baseLabel,
-                      filter: 'none',
-                      opacity: 0,
-                      fontSize: '9px',
-                      fontFamily: 'DM Sans, sans-serif',
-                      fontWeight: 500,
+                      fontSize: '10px',
                       color: '#A8A8B8',
-                      textShadow: '0 0 6px rgba(0,0,0,0.85)',
-                      transition: 'opacity 0.15s ease',
+                      fontWeight: 600,
                     }}
                   >
                     {node.label}
@@ -1548,14 +1595,8 @@ export function Universe() {
                   }}
                   style={{
                     ...baseLabel,
-                    filter: 'none',
-                    opacity: 0,
-                    fontSize: '9px',
-                    fontFamily: 'DM Sans, sans-serif',
-                    fontWeight: 500,
-                    color: '#9CA3AF',
-                    textShadow: '0 0 6px rgba(0,0,0,0.85)',
-                    transition: 'opacity 0.15s ease',
+                    fontSize: '12px',
+                    color: '#F0EDE8',
                   }}
                 >
                   {node.label}
