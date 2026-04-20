@@ -33,8 +33,8 @@ export function Hero() {
         alignItems: 'center',
         position: 'relative',
         paddingTop: '80px',
-        paddingLeft: 'clamp(40px, 8vw, 120px)',
-        paddingRight: 'clamp(40px, 8vw, 120px)',
+        paddingLeft: 'clamp(24px, 5vw, 80px)',
+        paddingRight: '0',
       }}
     >
       {/* Noise texture overlay */}
@@ -50,12 +50,12 @@ export function Hero() {
       <div className="w-full">
         <div
           className="flex flex-col md:flex-row gap-12 md:gap-16"
-          style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', alignItems: 'center', justifyContent: 'space-between' }}
+          style={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}
         >
           {/* Left Side */}
           <div
             className="relative z-10 w-full text-center md:text-left"
-            style={{ flex: '0 0 55%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+            style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'center', marginLeft: 0, paddingLeft: 0 }}
           >
             {/* Availability badge */}
             <div 
@@ -64,6 +64,7 @@ export function Hero() {
                 background: 'rgba(44, 43, 48, 0.7)',
                 border: '1px solid rgba(240, 237, 232, 0.08)',
                 backdropFilter: 'blur(20px)',
+                marginLeft: 0,
               }}
             >
               <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'var(--sage-green)' }} />
@@ -94,7 +95,8 @@ export function Hero() {
               style={{ 
                 color: 'rgba(240, 237, 232, 0.4)', 
                 fontFamily: 'var(--font-body)',
-                fontWeight: 400
+                fontWeight: 400,
+                marginLeft: 0,
               }}
             >
               Hi, I'm
@@ -109,7 +111,8 @@ export function Hero() {
                 fontWeight: 800,
                 color: 'var(--text-primary)',
                 letterSpacing: '-3px',
-                lineHeight: 0.95
+                lineHeight: 0.95,
+                marginLeft: 0,
               }}
             >
               Het Patel.
@@ -147,14 +150,15 @@ export function Hero() {
               className="text-base mb-8 max-w-xl"
               style={{ 
                 color: 'var(--text-muted)', 
-                fontFamily: 'var(--font-body)' 
+                fontFamily: 'var(--font-body)',
+                marginLeft: 0,
               }}
             >
               I build end-to-end products. Engineer. Product thinker. Top performer.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-8">
+            <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-8" style={{ marginLeft: 0 }}>
               <button
                 onClick={() => scrollToSection('connect')}
                 className="px-6 py-3 rounded-full transition-all duration-200 hover:scale-105"
@@ -190,6 +194,7 @@ export function Hero() {
                 display: 'flex',
                 gap: '10px',
                 marginTop: '24px',
+                marginLeft: 0,
               }}
             >
               <a
@@ -294,7 +299,7 @@ export function Hero() {
           {/* Right Side - Hero image */}
           <div
             className="relative w-full h-[420px] md:h-[600px]"
-            style={{ flex: '0 0 45%', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'stretch' }}
+            style={{ flex: '0 0 42%', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'stretch', padding: 0 }}
           >
             <div
               style={{
