@@ -39,12 +39,13 @@ export function About() {
         aria-hidden
         style={{
           position: 'absolute',
-          bottom: '-60px',
-          right: '-40px',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
           fontFamily: "'Clash Display', sans-serif",
           fontWeight: 800,
-          fontSize: 'clamp(180px, 30vw, 380px)',
-          color: 'rgba(255,255,255,0.025)',
+          fontSize: 'clamp(200px, 35vw, 420px)',
+          color: 'rgba(255,255,255,0.022)',
           whiteSpace: 'nowrap',
           letterSpacing: '-0.04em',
           userSelect: 'none',
@@ -56,9 +57,9 @@ export function About() {
         {`>_`}
       </div>
       <div className="max-w-7xl mx-auto relative z-[1]">
-        <div className="flex flex-col gap-12 lg:flex-row lg:gap-16 lg:items-start">
+        <div className="relative z-[1] flex flex-col gap-12 lg:flex-row lg:gap-16 lg:items-start">
           {/* Left column — 55% */}
-          <div className="w-full min-w-0 lg:w-[55%] lg:shrink-0">
+          <div className="relative z-[1] w-full min-w-0 lg:w-[55%] lg:shrink-0">
             {/* Section Tag */}
             <p
               className="text-xs mb-4"
@@ -95,7 +96,7 @@ export function About() {
               Full Stack Engineer who builds products people actually use.
             </p>
 
-            <div className="mb-10 space-y-6">
+            <div className="relative z-[1] mb-10 space-y-6">
               {[
                 "Throughout my software development journey, I've shown a strong commitment to innovation and creative problem-solving — from building live platforms to integrating real APIs used by real users.",
                 'My analytical approach helps me break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
@@ -117,7 +118,7 @@ export function About() {
             </div>
 
             {/* CTAs */}
-            <div className="flex flex-wrap gap-4">
+            <div className="relative z-[1] flex flex-wrap gap-4">
               <button
                 type="button"
                 onClick={() => scrollToSection('connect')}
@@ -150,9 +151,10 @@ export function About() {
           </div>
 
           {/* Right column — 45% */}
-          <div className="w-full min-w-0 lg:w-[45%] lg:shrink-0">
+          <div className="relative z-[1] w-full min-w-0 lg:w-[45%] lg:shrink-0">
             {/* Terminal card */}
             <div
+              className="relative z-[1]"
               style={{
                 background: 'rgba(20, 20, 28, 0.9)',
                 backdropFilter: 'blur(20px)',
@@ -165,6 +167,7 @@ export function About() {
               }}
             >
               <div
+                className="relative z-[1]"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -173,6 +176,7 @@ export function About() {
                 }}
               >
                 <div
+                  className="relative z-[1]"
                   style={{
                     width: '10px',
                     height: '10px',
@@ -181,6 +185,7 @@ export function About() {
                   }}
                 />
                 <div
+                  className="relative z-[1]"
                   style={{
                     width: '10px',
                     height: '10px',
@@ -189,6 +194,7 @@ export function About() {
                   }}
                 />
                 <div
+                  className="relative z-[1]"
                   style={{
                     width: '10px',
                     height: '10px',
@@ -206,62 +212,62 @@ export function About() {
                   het@portfolio ~ %
                 </span>
               </div>
-              <div style={{ lineHeight: '1.8' }}>
-                <div>
+              <div className="relative z-[1]" style={{ lineHeight: '1.8' }}>
+                <div className="relative z-[1]">
                   <span style={{ color: '#60A5FA' }}>const </span>
                   <span style={{ color: '#F0EDE8' }}>name </span>
                   <span style={{ color: '#F0EDE8' }}>=</span>
                   <span style={{ color: '#C8F135' }}> &quot;Het Patel&quot;</span>
                 </div>
-                <div>
+                <div className="relative z-[1]">
                   <span style={{ color: '#60A5FA' }}>const </span>
                   <span style={{ color: '#F0EDE8' }}>role </span>
                   <span style={{ color: '#F0EDE8' }}>=</span>
                   <span style={{ color: '#C8F135' }}> &quot;Full Stack Engineer&quot;</span>
                 </div>
-                <div>
+                <div className="relative z-[1]">
                   <span style={{ color: '#60A5FA' }}>const </span>
                   <span style={{ color: '#F0EDE8' }}>location </span>
                   <span style={{ color: '#F0EDE8' }}>=</span>
                   <span style={{ color: '#C8F135' }}> &quot;Brampton, ON 🍁&quot;</span>
                 </div>
-                <div>
+                <div className="relative z-[1]">
                   <span style={{ color: '#60A5FA' }}>const </span>
                   <span style={{ color: '#F0EDE8' }}>stack </span>
                   <span style={{ color: '#F0EDE8' }}>=</span>
                   <span style={{ color: '#C8F135' }}> [&quot;React&quot;,&quot;Node&quot;,&quot;TypeScript&quot;]</span>
                 </div>
-                <div>
+                <div className="relative z-[1]">
                   <span style={{ color: '#60A5FA' }}>const </span>
                   <span style={{ color: '#F0EDE8' }}>status </span>
                   <span style={{ color: '#F0EDE8' }}>=</span>
                   <span style={{ color: '#C8F135' }}> &quot;Available 2026 ✅&quot;</span>
                 </div>
-                <div style={{ marginTop: '8px' }}>
+                <div className="relative z-[1]" style={{ marginTop: '8px' }}>
                   <span style={{ color: 'rgba(240,237,232,0.4)' }}>
                     // trilingual: English · Hindi · Gujarati
                   </span>
                 </div>
-                <div>
+                <div className="relative z-[1]">
                   <span style={{ color: 'rgba(240,237,232,0.4)' }}>
                     // top 150 canada · top 3 GTA
                   </span>
                 </div>
-                <div style={{ marginTop: '4px' }}>
+                <div className="relative z-[1]" style={{ marginTop: '4px' }}>
                   <span style={{ color: '#F2664A' }}>█</span>
                 </div>
               </div>
             </div>
 
             {/* Stat cards 2×2 */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="relative z-[1] grid grid-cols-2 gap-4">
               {stats.map((stat, index) => (
                 <div
                   key={index}
-                  className={`about-stat-card about-stat-card--${stat.variant}`}
+                  className={`about-stat-card about-stat-card--${stat.variant} relative z-[1]`}
                 >
-                  <div className="about-stat-number">{stat.number}</div>
-                  <div className="about-stat-label">{stat.label}</div>
+                  <div className="about-stat-number relative z-[1]">{stat.number}</div>
+                  <div className="about-stat-label relative z-[1]">{stat.label}</div>
                 </div>
               ))}
             </div>
