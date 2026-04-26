@@ -106,7 +106,7 @@ export function Hero() {
             onUpdate: () => {
               const angle = Math.abs(Number(gsap.getProperty(heroImageRef.current, 'rotateY')));
               if (angle >= 90 && !swapped) {
-                heroImageRef.current!.src = '/Image2.png';
+                heroImageRef.current!.src = '/Image2.png.PNG';
                 swapped = true;
               }
             },

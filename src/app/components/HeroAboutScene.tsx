@@ -77,7 +77,7 @@ export function HeroAboutScene() {
 
         // Create back-face image (cross-fade to avoid mirror artifacts)
         const imgBack = document.createElement('img');
-        imgBack.src = '/Image2.png';
+        imgBack.src = '/Image2.png.PNG';
         imgBack.alt = 'Het Patel';
         Object.assign(imgBack.style, {
           position: 'absolute',
