@@ -61,18 +61,21 @@ export function HeroAboutScene() {
         gsap.set(terminalCol, { autoAlpha: 0, x: 60 });
         gsap.set(Array.from(statsGrid.children), { autoAlpha: 0, y: 60 });
         gsap.set(photoBadge, { autoAlpha: 0, y: 20 });
-        gsap.set(imgWrapper, { x: 0, scale: 1, autoAlpha: 1, clearProps: 'filter' });
+        gsap.set(imgWrapper, {
+          x: 0,
+          rotationY: 0,
+          transformOrigin: '50% 50%',
+          transformPerspective: 1200,
+          scale: 1,
+          autoAlpha: 1,
+          clearProps: 'filter',
+        });
         gsap.set(imgFront, { autoAlpha: 1, rotateY: 0, scale: 1, transformOrigin: '50% 50%' });
-        // Back image stays un-rotated; we reveal it via the pop-swap.
-        gsap.set(imgBack, { autoAlpha: 0, rotateY: 0, scale: 1, transformOrigin: '50% 50%' });
+        gsap.set(imgBack, { autoAlpha: 1, rotateY: 180, scale: 1, transformOrigin: '50% 50%' });
 
         // Measure once at rest to prevent scrub snapping.
         const rect = imgWrapper.getBoundingClientRect();
-        const imgCx = rect.left + rect.width / 2;
-        const screenCx = window.innerWidth / 2;
         const rightGap = window.innerWidth - rect.right;
-
-        const toCenter = screenCx - imgCx;
         const toLeft = -(rect.left - rightGap * 0.5);
 
         const tl = gsap.timeline({
@@ -92,30 +95,22 @@ export function HeroAboutScene() {
         tl.to(heroLeft, { autoAlpha: 0, y: -60, filter: 'blur(8px)', duration: 1.5 }, 0)
           .to(aboutText, { autoAlpha: 1, y: 0, duration: 1.5, ease: 'power2.out' }, 0.5)
 
-          // Beat 2: About out, image to center spotlight.
-          .to(aboutText, { autoAlpha: 0, y: -30, filter: 'blur(6px)', duration: 1 }, 2)
-          .to(imgWrapper, { x: toCenter, duration: 1.2 }, 2)
-
-        // Beat 3: instant pop-swap at center.
-        .to(leftColumn, { filter: 'blur(12px)', opacity: 0.3, duration: 0.4 }, 2.8)
-        .to(imgWrapper, { scale: 0, autoAlpha: 0, duration: 0.3, ease: 'power2.in' }, 3)
-        .set(imgFront, { autoAlpha: 0 }, 3.1)
-        .set(imgBack, { autoAlpha: 1 }, 3.1)
-        .to(imgWrapper, { scale: 1, autoAlpha: 1, duration: 0.4, ease: 'back.out(1.7)' }, 3.2)
-        .to(leftColumn, { filter: 'blur(0px)', opacity: 1, duration: 0.3 }, 3.5)
-        .to(terminalCol, { autoAlpha: 0.3, duration: 0.5 }, 3.0)
-
-          // Beat 4: Real photo left, right-side credentials in.
-          .to(imgWrapper, { x: toLeft, duration: 1.2 }, 4.5)
-        .to(terminalCol, { autoAlpha: 1, x: 0, duration: 0.8, ease: 'power2.out' }, 4.2)
-        .to(photoBadge, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power2.out' }, 4.2)
+          // Beat 2-4: continuous travel with in-flight flip (no center pause).
+          .to(aboutText, { autoAlpha: 0, y: -30, filter: 'blur(6px)', duration: 0.8 }, 2)
+          .to(leftColumn, { filter: 'blur(8px)', opacity: 0.5, duration: 0.5 }, 2.25)
+          .to(imgWrapper, { x: toLeft, duration: 2.1, ease: 'power2.inOut' }, 2.2)
+          .to(imgWrapper, { rotationY: 180, duration: 1.5, ease: 'power2.inOut' }, 2.45)
+          .to(leftColumn, { filter: 'blur(0px)', opacity: 1, duration: 0.45 }, 3.65)
+          .to(terminalCol, { autoAlpha: 0.35, duration: 0.4 }, 3.15)
+          .to(terminalCol, { autoAlpha: 1, x: 0, duration: 0.8, ease: 'power2.out' }, 4.0)
+          .to(photoBadge, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power2.out' }, 4.0)
           .to(Array.from(statsGrid.children), {
             autoAlpha: 1,
             y: 0,
             duration: 1,
             stagger: 0.12,
             ease: 'back.out(1.2)',
-        }, 4.4)
+          }, 4.2)
 
           // Beat 5: Hold final layout before release.
           .to({}, { duration: 1.5 }, 6);
@@ -328,15 +323,17 @@ export function HeroAboutScene() {
                     position: 'absolute',
                     bottom: 0,
                     right: 0,
-                    height: '92vh',
+                    height: '86vh',
                     width: 'auto',
-                    maxHeight: '800px',
+                    maxHeight: '740px',
                     objectFit: 'contain',
                     objectPosition: 'bottom',
                     filter: 'drop-shadow(0 0 60px rgba(242,102,74,0.25))',
                     willChange: 'transform, opacity',
                     display: 'block',
-                    opacity: 0,
+                    opacity: 1,
+                    transform: 'rotateY(180deg)',
+                    backfaceVisibility: 'hidden',
                     transformStyle: 'preserve-3d',
                   }}
                 />
@@ -348,9 +345,9 @@ export function HeroAboutScene() {
                     position: 'absolute',
                     bottom: 0,
                     right: 0,
-                    height: '92vh',
+                    height: '86vh',
                     width: 'auto',
-                    maxHeight: '800px',
+                    maxHeight: '740px',
                     objectFit: 'contain',
                     objectPosition: 'bottom',
                     filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.18))',
@@ -358,6 +355,7 @@ export function HeroAboutScene() {
                     willChange: 'transform, opacity',
                     display: 'block',
                     opacity: 1,
+                    backfaceVisibility: 'hidden',
                     transformStyle: 'preserve-3d',
                   }}
                 />
