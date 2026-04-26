@@ -365,8 +365,8 @@ export function HeroAboutScene() {
                 ref={photoBadgeRef}
                 style={{
                   position: 'absolute',
-                  bottom: '38%',
-                  left: '-14%',
+                  top: '24%',
+                  left: '-18%',
                   background: 'rgba(20,20,28,0.9)',
                   backdropFilter: 'blur(20px)',
                   border: '1px solid rgba(242,102,74,0.3)',
