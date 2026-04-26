@@ -332,7 +332,7 @@ export function HeroAboutScene() {
                     willChange: 'transform, opacity',
                     display: 'block',
                     opacity: 1,
-                    transform: 'rotateY(180deg)',
+                    transform: 'rotateY(180deg) scale(1.85)',
                     backfaceVisibility: 'hidden',
                     transformStyle: 'preserve-3d',
                   }}
@@ -359,31 +359,32 @@ export function HeroAboutScene() {
                     transformStyle: 'preserve-3d',
                   }}
                 />
-                <div
-                  ref={photoBadgeRef}
-                  style={{
-                    position: 'absolute',
-                    bottom: '20%',
-                    right: '-20px',
-                    background: 'rgba(20,20,28,0.9)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(242,102,74,0.3)',
-                    borderRadius: '12px',
-                    padding: '12px 16px',
-                    zIndex: 30,
-                    opacity: 0,
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  <div style={{ color: 'var(--coral)', fontFamily: 'var(--font-mono)', fontSize: '11px', marginBottom: '4px' }}>
-                    // currently
-                  </div>
-                  <div style={{ color: '#F0EDE8', fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500 }}>
-                    Open to work · 2026
-                  </div>
-                  <div style={{ color: 'rgba(240,237,232,0.5)', fontFamily: 'var(--font-body)', fontSize: '12px' }}>
-                    Brampton, ON · GTA
-                  </div>
+              </div>
+
+              <div
+                ref={photoBadgeRef}
+                style={{
+                  position: 'absolute',
+                  bottom: '20%',
+                  left: '-8%',
+                  background: 'rgba(20,20,28,0.9)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(242,102,74,0.3)',
+                  borderRadius: '12px',
+                  padding: '12px 16px',
+                  zIndex: 30,
+                  opacity: 0,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                <div style={{ color: 'var(--coral)', fontFamily: 'var(--font-mono)', fontSize: '11px', marginBottom: '4px' }}>
+                  // currently
+                </div>
+                <div style={{ color: '#F0EDE8', fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500 }}>
+                  Open to work · 2026
+                </div>
+                <div style={{ color: 'rgba(240,237,232,0.5)', fontFamily: 'var(--font-body)', fontSize: '12px' }}>
+                  Brampton, ON · GTA
                 </div>
               </div>
 
