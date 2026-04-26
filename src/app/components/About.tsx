@@ -73,6 +73,7 @@ export function About() {
 
             {/* Heading */}
             <h2
+              data-about-reveal
               className="mb-8"
               style={{
                 fontFamily: 'var(--font-heading)',
@@ -80,17 +81,22 @@ export function About() {
                 color: 'var(--text-primary)',
                 letterSpacing: '-1px',
                 fontSize: 'clamp(20px, 2.5vw, 32px)',
+                opacity: 0,
+                transform: 'translateX(-40px)',
               }}
             >
               Software Engineer. Problem Solver. Product Minded.
             </h2>
 
             <p
+              data-about-reveal
               className="text-xl mb-8"
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 700,
                 color: '#D0D0E0',
+                opacity: 0,
+                transform: 'translateX(-40px)',
               }}
             >
               Full Stack Engineer who builds products people actually use.
@@ -103,12 +109,15 @@ export function About() {
                 'I build full-stack applications end-to-end — designing REST APIs, structuring database schemas, and deploying to cloud infrastructure. Every project I ship is live, documented, and built with real users in mind.',
               ].map((text, index) => (
                 <p
+                  data-about-line
                   key={index}
                   className="flex gap-3 text-[15px] leading-relaxed"
                   style={{
                     color: '#A8A8B8',
                     fontFamily: 'var(--font-body)',
                     lineHeight: 1.8,
+                    opacity: 0,
+                    transform: 'translateY(40px)',
                   }}
                 >
                   <span style={{ color: '#F2664A' }}>→</span>
@@ -118,7 +127,11 @@ export function About() {
             </div>
 
             {/* CTAs */}
-            <div className="relative z-[1] flex flex-wrap gap-4">
+            <div
+              data-about-reveal
+              className="relative z-[1] flex flex-wrap gap-4"
+              style={{ opacity: 0, transform: 'translateX(-40px)' }}
+            >
               <button
                 type="button"
                 onClick={() => scrollToSection('connect')}
@@ -154,6 +167,7 @@ export function About() {
           <div className="relative z-[1] w-full min-w-0 lg:w-[45%] lg:shrink-0">
             {/* Terminal card */}
             <div
+              data-about-terminal
               className="relative z-[1]"
               style={{
                 background: 'rgba(20, 20, 28, 0.9)',
@@ -164,6 +178,8 @@ export function About() {
                 fontFamily: 'JetBrains Mono, monospace',
                 fontSize: '13px',
                 marginBottom: '16px',
+                opacity: 0,
+                transform: 'translateY(60px)',
               }}
             >
               <div
@@ -263,8 +279,10 @@ export function About() {
             <div className="relative z-[1] grid grid-cols-2 gap-4">
               {stats.map((stat, index) => (
                 <div
+                  data-about-stat
                   key={index}
                   className={`about-stat-card about-stat-card--${stat.variant} relative z-[1]`}
+                  style={{ opacity: 0, transform: 'translateY(60px)' }}
                 >
                   <div className="about-stat-number relative z-[1]">{stat.number}</div>
                   <div className="about-stat-label relative z-[1]">{stat.label}</div>

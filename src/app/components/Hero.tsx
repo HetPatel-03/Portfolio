@@ -1,16 +1,165 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { motion } from 'motion/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import meHero from '../../assets/Me_Hero.png';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function Hero() {
   const [cycleIndex, setCycleIndex] = useState(0);
+  const [heroImageSrc, setHeroImageSrc] = useState(meHero);
   const cycleWords = ['Software Engineer.', 'Problem Solver.', 'Product Minded.', 'Full Stack Dev.'];
+  const heroSectionRef = useRef<HTMLElement | null>(null);
+  const heroLeftRef = useRef<HTMLDivElement | null>(null);
+  const heroImageShellRef = useRef<HTMLDivElement | null>(null);
+  const heroImageRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCycleIndex((prev) => (prev + 1) % cycleWords.length);
     }, 2500);
     return () => clearInterval(interval);
+  }, []);
+
+  useLayoutEffect(() => {
+    const scene = document.getElementById('hero-about-scene');
+    if (!scene || !heroImageShellRef.current || !heroImageRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const aboutLines = gsap.utils.toArray<HTMLElement>('[data-about-line]');
+      const aboutReveal = gsap.utils.toArray<HTMLElement>('[data-about-reveal]');
+      const aboutTerminal = document.querySelector<HTMLElement>('[data-about-terminal]');
+      const aboutStats = gsap.utils.toArray<HTMLElement>('[data-about-stat]');
+
+      gsap.set(heroImageRef.current, { rotateY: 0, transformOrigin: 'center center' });
+      gsap.set(heroImageShellRef.current, { x: 0, y: 0, scale: 1 });
+      gsap.set(heroLeftRef.current, { opacity: 1 });
+
+      const flipState = { angle: 0, swapped: false };
+      const getToAboutRightX = () => window.innerWidth * 0.05;
+      const getToCenterX = () => -window.innerWidth * 0.16;
+      const getToFinalLeftX = () => -window.innerWidth * 0.43;
+      const getToAboutY = () => window.innerHeight * 0.9;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: scene,
+          start: 'top top',
+          end: '+=400%',
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      tl.to(
+        heroLeftRef.current,
+        { opacity: 0, duration: 15, ease: 'none' },
+        0
+      )
+        .to(
+          heroImageShellRef.current,
+          {
+            x: getToAboutRightX,
+            y: getToAboutY,
+            duration: 30,
+            ease: 'none',
+          },
+          0
+        )
+        .to(
+          aboutLines,
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
+            duration: 8,
+            ease: 'power2.out',
+          },
+          4
+        )
+        .to(
+          aboutReveal,
+          {
+            x: 0,
+            opacity: 1,
+            stagger: 0.1,
+            duration: 8,
+            ease: 'power2.out',
+          },
+          6
+        )
+        .to(
+          heroImageShellRef.current,
+          {
+            x: getToCenterX,
+            scale: 1.05,
+            duration: 20,
+            ease: 'power2.inOut',
+          },
+          30
+        )
+        .to(
+          flipState,
+          {
+            angle: 180,
+            duration: 15,
+            ease: 'none',
+            onUpdate: () => {
+              const shadow = 12 + (flipState.angle / 180) * 18;
+              gsap.set(heroImageRef.current, {
+                rotateY: flipState.angle,
+                boxShadow: `0 ${shadow}px ${shadow * 1.8}px rgba(0,0,0,0.28)`,
+              });
+              if (flipState.angle >= 90 && !flipState.swapped) {
+                setHeroImageSrc('/Image2.png');
+                flipState.swapped = true;
+              } else if (flipState.angle < 90 && flipState.swapped) {
+                setHeroImageSrc(meHero);
+                flipState.swapped = false;
+              }
+            },
+          },
+          50
+        )
+        .to(
+          heroImageShellRef.current,
+          {
+            x: getToFinalLeftX,
+            y: getToAboutY,
+            scale: 1,
+            duration: 20,
+            ease: 'power2.inOut',
+          },
+          65
+        )
+        .to(
+          aboutTerminal,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 8,
+            ease: 'power2.out',
+          },
+          68
+        )
+        .to(
+          aboutStats,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 8,
+            stagger: 0.12,
+            ease: 'back.out(1.2)',
+          },
+          70
+        );
+    }, heroSectionRef);
+
+    ScrollTrigger.refresh();
+    return () => ctx.revert();
   }, []);
 
   const scrollToSection = (sectionId: string) => {
@@ -25,8 +174,9 @@ export function Hero() {
 
   return (
     <section
+      ref={heroSectionRef}
       id="hero"
-      className="section-bg-hero relative overflow-hidden"
+      className="section-bg-hero relative"
       style={{
         minHeight: '100vh',
         display: 'flex',
@@ -54,6 +204,7 @@ export function Hero() {
         >
           {/* Left Side */}
           <div
+            ref={heroLeftRef}
             className="relative z-10 w-full text-center md:text-left"
             style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'center', marginLeft: 0, paddingLeft: 0 }}
           >
@@ -302,16 +453,19 @@ export function Hero() {
             style={{ flex: '0 0 42%', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'stretch', padding: 0 }}
           >
             <div
+              ref={heroImageShellRef}
               style={{
                 display: 'flex',
                 alignItems: 'flex-end',
                 justifyContent: 'flex-end',
                 width: '100%',
                 height: '100%',
+                perspective: '1000px',
               }}
             >
               <img
-                src={meHero}
+                ref={heroImageRef}
+                src={heroImageSrc}
                 alt="Het Patel"
                 style={{
                   height: '90%',
@@ -320,7 +474,8 @@ export function Hero() {
                   objectPosition: 'bottom',
                   maxHeight: '700px',
                   filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.15))',
-                  animation: 'heroFloat 3s ease-in-out infinite',
+                  transformStyle: 'preserve-3d',
+                  willChange: 'transform',
                 }}
               />
             </div>

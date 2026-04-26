@@ -13,8 +13,10 @@ export default function App() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
       <Navbar />
-      <Hero />
-      <About />
+      <div id="hero-about-scene" style={{ position: 'relative' }}>
+        <Hero />
+        <About />
+      </div>
       <Universe />
       <Projects />
       <Marquee />
