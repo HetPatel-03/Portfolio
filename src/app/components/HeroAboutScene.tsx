@@ -18,146 +18,130 @@ export function HeroAboutScene() {
 
   const sceneRef = useRef<HTMLDivElement>(null);
   const heroLeftRef = useRef<HTMLDivElement>(null);
-  const aboutLeftRef = useRef<HTMLDivElement>(null);
+  const aboutTextRef = useRef<HTMLDivElement>(null);
   const imgWrapperRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
-  const terminalRef = useRef<HTMLDivElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
-  const aboutRightRef = useRef<HTMLDivElement>(null);
+  const imgFrontRef = useRef<HTMLImageElement>(null);
+  const imgBackRef = useRef<HTMLImageElement>(null);
+  const terminalColRef = useRef<HTMLDivElement>(null);
+  const statsGridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCycleIndex((prev) => (prev + 1) % cycleWords.length);
+      setCycleIndex((p) => (p + 1) % cycleWords.length);
     }, 2500);
     return () => clearInterval(interval);
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-    }
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
   };
 
   useLayoutEffect(() => {
-    const timer = setTimeout(() => {
+    const refreshDelay = window.setTimeout(() => {
       const ctx = gsap.context(() => {
         const scene = sceneRef.current;
         const heroLeft = heroLeftRef.current;
-        const aboutLeft = aboutLeftRef.current;
+        const aboutText = aboutTextRef.current;
         const imgWrapper = imgWrapperRef.current;
-        const img = imgRef.current;
-        const terminal = terminalRef.current;
-        const statsEl = statsRef.current;
-        const aboutRight = aboutRightRef.current;
+        const imgFront = imgFrontRef.current;
+        const imgBack = imgBackRef.current;
+        const terminalCol = terminalColRef.current;
+        const statsGrid = statsGridRef.current;
 
-        if (!scene || !heroLeft || !aboutLeft || !imgWrapper || !img || !terminal || !statsEl || !aboutRight) return;
+        if (!scene || !heroLeft || !aboutText || !imgWrapper || !imgFront || !imgBack || !terminalCol || !statsGrid) return;
 
         // Initial states
-        gsap.set(aboutLeft, { opacity: 0, y: 30 });
-        gsap.set(aboutRight, { opacity: 0 });
-        gsap.set(terminal, { opacity: 0, y: 50 });
-        gsap.set(Array.from(statsEl.children), { opacity: 0, y: 50 });
+        gsap.set(aboutText, { autoAlpha: 0, y: 50 });
+        gsap.set(terminalCol, { autoAlpha: 0, x: 60 });
+        gsap.set(Array.from(statsGrid.children), { autoAlpha: 0, y: 60 });
+        gsap.set(imgFront, { autoAlpha: 1, rotateY: 0, scale: 1, transformOrigin: '50% 50%' });
+        gsap.set(imgBack, { autoAlpha: 0, rotateY: -90, scale: 0.9, transformOrigin: '50% 50%' });
 
-        // Measure original positions (before any animation)
+        // Measure once at rest to prevent scrub snapping.
         const rect = imgWrapper.getBoundingClientRect();
-        const imgLeft = rect.left;
-        const imgRight = rect.right;
-        const imgW = rect.width;
+        const imgCx = rect.left + rect.width / 2;
+        const screenCx = window.innerWidth / 2;
+        const rightGap = window.innerWidth - rect.right;
 
-        // centerX: move image so its center = screen center
-        const centerX = window.innerWidth / 2 - (imgLeft + imgW / 2);
+        const toCenter = screenCx - imgCx;
+        const toLeft = -(rect.left - rightGap);
 
-        // leftX: mirror — same gap from left as currently from right
-        const rightGap = window.innerWidth - imgRight;
-        const leftX = -(imgLeft - rightGap);
-
-        // Create back-face image (cross-fade to avoid mirror artifacts)
-        const imgBack = document.createElement('img');
-        imgBack.src = '/Image2.png.PNG';
-        imgBack.alt = 'Het Patel';
-        Object.assign(imgBack.style, {
-          position: 'absolute',
-          inset: '0',
-          width: '100%',
-          height: '100%',
-          objectFit: 'contain',
-          objectPosition: 'bottom center',
-          opacity: '0',
-          borderRadius: '12px',
-          filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.2))',
-        });
-        imgWrapper.style.position = 'relative';
-        imgWrapper.appendChild(imgBack);
-
-        // Front image stacks too
-        Object.assign(img.style, {
-          position: 'absolute',
-          inset: '0',
-          width: '100%',
-          height: '100%',
-          objectFit: 'contain',
-          objectPosition: 'bottom center',
-        });
-
-        // Timeline
         const tl = gsap.timeline({
+          defaults: { ease: 'power2.inOut' },
           scrollTrigger: {
             trigger: scene,
             start: 'top top',
-            end: '+=550%',
+            end: '+=350%',
             pin: true,
-            scrub: 1,
+            scrub: 0.8,
             anticipatePin: 1,
+            invalidateOnRefresh: true,
           },
         });
 
-        // PHASE 1: Hero text out -> about text in. Image stays still.
-        tl.to(heroLeft, { opacity: 0, y: -50, filter: 'blur(6px)', duration: 2, ease: 'power2.inOut' }, 0);
-        tl.to(aboutLeft, { opacity: 1, y: 0, duration: 2.5, ease: 'power2.out' }, 1.5);
+        // Beat 1: Hero out, About in. Image stays still on right.
+        tl.to(heroLeft, { autoAlpha: 0, y: -60, filter: 'blur(8px)', duration: 1.5 }, 0)
+          .to(aboutText, { autoAlpha: 1, y: 0, duration: 1.5, ease: 'power2.out' }, 0.5)
 
-        // PHASE 2: About text blurs out. Image slides to CENTER.
-        tl.to(aboutLeft, { opacity: 0, filter: 'blur(8px)', y: -20, duration: 2, ease: 'power2.inOut' }, 4);
-        tl.to(imgWrapper, { x: centerX, duration: 3, ease: 'power2.inOut' }, 4.5);
+          // Beat 2: About out, image to center spotlight.
+          .to(aboutText, { autoAlpha: 0, y: -30, filter: 'blur(6px)', duration: 1 }, 2)
+          .to(imgWrapper, { x: toCenter, duration: 1.2 }, 2)
 
-        // PHASE 2B: Cross-fade at center. Memoji out -> real photo in.
-        tl.to(img, { opacity: 0, scale: 0.95, duration: 2, ease: 'power2.inOut' }, 7.5);
-        tl.fromTo(imgBack, { opacity: 0, scale: 1.05 }, { opacity: 1, scale: 1, duration: 2, ease: 'power2.out' }, 8.5);
+          // Beat 3: Card-like flip via cross-fade at center.
+          .to(imgFront, { autoAlpha: 0, rotateY: 90, scale: 0.9, duration: 0.8, ease: 'power2.in' }, 3)
+          .to(imgBack, { autoAlpha: 1, rotateY: 0, scale: 1, duration: 0.8, ease: 'power2.out' }, 3.6)
 
-        // PHASE 3: Real photo slides LEFT. Left text + right content reveals.
-        tl.to(imgWrapper, { x: leftX, duration: 3.5, ease: 'power2.inOut' }, 11);
-        tl.to(aboutLeft, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 2, ease: 'power2.out' }, 12);
-        tl.to(aboutRight, { opacity: 1, duration: 1.5, ease: 'power2.out' }, 12.5);
-        tl.to(terminal, { opacity: 1, y: 0, duration: 1.5, ease: 'power2.out' }, 13);
-        tl.to(Array.from(statsEl.children), { opacity: 1, y: 0, duration: 1.2, stagger: 0.12, ease: 'back.out(1.2)' }, 13.5);
+          // Beat 4: Real photo left, right-side credentials in.
+          .to(imgWrapper, { x: toLeft, duration: 1.2 }, 4.5)
+          .to(terminalCol, { autoAlpha: 1, x: 0, duration: 1, ease: 'power2.out' }, 5)
+          .to(Array.from(statsGrid.children), {
+            autoAlpha: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.12,
+            ease: 'back.out(1.2)',
+          }, 5.1)
 
-        // PHASE 4: HOLD — user reads static about layout before Universe
-        tl.to({}, { duration: 5 }, 17);
-
-        ScrollTrigger.refresh();
+          // Beat 5: Hold final layout before release.
+          .to({}, { duration: 1.5 }, 6);
       }, sceneRef);
 
+      ScrollTrigger.refresh();
       return () => ctx.revert();
     }, 150);
 
-    return () => clearTimeout(timer);
+    return () => {
+      window.clearTimeout(refreshDelay);
+    };
   }, []);
 
   return (
     <div
       ref={sceneRef}
       id="hero-about-scene"
-      style={{ position: 'relative', minHeight: '100vh', overflow: 'visible', background: 'var(--bg-primary)' }}
+      style={{
+        position: 'relative',
+        minHeight: '100vh',
+        overflow: 'visible',
+        background: 'var(--bg-primary)',
+      }}
     >
       <section
         id="hero"
         className="section-bg-hero"
-        style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', paddingTop: '80px', paddingLeft: 'clamp(24px, 5vw, 80px)', paddingRight: '0', overflow: 'visible' }}
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          paddingTop: '80px',
+          paddingLeft: 'clamp(24px, 5vw, 80px)',
+          paddingRight: '0',
+          overflow: 'visible',
+          position: 'relative',
+        }}
       >
-        {/* Noise */}
+        {/* Noise texture */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
           <svg width="100%" height="100%">
             <filter id="noise">
@@ -168,227 +152,254 @@ export function HeroAboutScene() {
         </div>
 
         <div className="w-full" style={{ position: 'relative' }}>
-          <div className="flex flex-col md:flex-row gap-12 md:gap-16" style={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div
+            className="flex flex-col md:flex-row"
+            style={{ width: '100%', alignItems: 'stretch', justifyContent: 'space-between', gap: 0 }}
+          >
             {/* LEFT COLUMN */}
-            <div style={{ flex: '1', position: 'relative', minHeight: '560px', display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'visible' }}>
-              {/* Hero content — fades OUT phase 1 */}
-              <div ref={heroLeftRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%' }}>
+            <div style={{
+              flex: '1',
+              position: 'relative',
+              minHeight: '580px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              overflow: 'visible',
+            }}>
+              {/* LAYER A: Hero content — fades OUT beat 1 */}
+              <div ref={heroLeftRef} style={{
+                position: 'absolute', top: '50%', left: 0,
+                width: '100%', transform: 'translateY(-50%)',
+              }}>
                 <div
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
-                  style={{ background: 'rgba(44,43,48,0.7)', border: '1px solid rgba(240,237,232,0.08)', backdropFilter: 'blur(20px)', width: 'fit-content' }}
+                  style={{
+                    background: 'rgba(44,43,48,0.7)',
+                    border: '1px solid rgba(240,237,232,0.08)',
+                    backdropFilter: 'blur(20px)',
+                    width: 'fit-content',
+                  }}
                 >
                   <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'var(--sage-green)' }} />
                   <span className="text-sm" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}>
                     Available for opportunities · Summer 2026
                   </span>
                 </div>
-                <div
-                  className="absolute pointer-events-none select-none"
-                  style={{ left: '-32px', top: '128px', fontSize: '280px', fontFamily: 'var(--font-heading)', fontWeight: 800, color: 'rgba(240,237,232,0.02)', lineHeight: 1, zIndex: -1, filter: 'blur(2px)' }}
-                >
-                  {'</>'}
-                </div>
-                <p className="text-[22px] mb-2" style={{ color: 'rgba(240,237,232,0.4)', fontFamily: 'var(--font-body)', fontWeight: 400 }}>
+
+                <div className="absolute pointer-events-none select-none" style={{
+                  left: '-32px', top: '100px',
+                  fontSize: '280px', fontFamily: 'var(--font-heading)', fontWeight: 800,
+                  color: 'rgba(240,237,232,0.02)', lineHeight: 1, zIndex: -1, filter: 'blur(2px)',
+                }}>{'</>'}</div>
+
+                <p style={{ fontSize: '22px', color: 'rgba(240,237,232,0.4)', fontFamily: 'var(--font-body)', fontWeight: 400, marginBottom: '8px' }}>
                   Hi, I&apos;m
                 </p>
-                <h1 className="mb-4" style={{ fontSize: '96px', fontFamily: 'var(--font-heading)', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-3px', lineHeight: 0.95 }}>
+                <h1 style={{
+                  fontSize: 'clamp(56px, 7vw, 96px)',
+                  fontFamily: 'var(--font-heading)', fontWeight: 800,
+                  color: 'var(--text-primary)', letterSpacing: '-3px',
+                  lineHeight: 0.95, marginBottom: '16px',
+                }}>
                   Het Patel.
                 </h1>
-                <div className="relative mb-6 h-[52px] w-full overflow-hidden sm:h-[56px] md:h-[60px]">
-                  {cycleWords.map((word, index) => (
-                    <motion.span
-                      key={word}
+
+                <div className="relative mb-6 overflow-hidden" style={{ height: '60px' }}>
+                  {cycleWords.map((word, i) => (
+                    <motion.span key={word}
                       initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: index === cycleIndex ? 1 : 0, y: index === cycleIndex ? 0 : 10 }}
+                      animate={{ opacity: i === cycleIndex ? 1 : 0, y: i === cycleIndex ? 0 : 10 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute inset-0 flex w-full items-center overflow-hidden"
-                      style={{ fontSize: 'clamp(18px, 2.65vw + 0.4rem, 40px)', fontFamily: 'var(--font-heading)', fontWeight: 800, color: 'var(--coral)', letterSpacing: '-0.03em', lineHeight: 1, whiteSpace: 'nowrap' }}
-                    >
-                      {word}
-                    </motion.span>
+                      className="absolute inset-0 flex items-center"
+                      style={{
+                        fontSize: 'clamp(18px, 2.65vw + 0.4rem, 40px)',
+                        fontFamily: 'var(--font-heading)', fontWeight: 800,
+                        color: 'var(--coral)', letterSpacing: '-0.03em', whiteSpace: 'nowrap',
+                      }}
+                    >{word}</motion.span>
                   ))}
                 </div>
-                <p className="text-base mb-8 max-w-xl" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}>
+
+                <p style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)', marginBottom: '32px', maxWidth: '480px' }}>
                   I build end-to-end products. Engineer. Product thinker. Top performer.
                 </p>
-                <div className="flex flex-wrap gap-4 mb-8">
-                  <button
-                    onClick={() => scrollToSection('connect')}
-                    className="px-6 py-3 rounded-full transition-all duration-200 hover:scale-105"
-                    style={{ background: 'var(--coral)', color: 'var(--bg-primary)', fontFamily: 'var(--font-body)', fontWeight: 500, height: '48px' }}
-                  >
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '32px' }}>
+                  <button onClick={() => scrollToSection('connect')}
+                    style={{ padding: '12px 24px', background: 'var(--coral)', color: 'var(--bg-primary)', fontFamily: 'var(--font-body)', fontWeight: 500, borderRadius: '50px', border: 'none', cursor: 'pointer', height: '48px' }}>
                     Contact Me →
                   </button>
-                  <button
-                    onClick={() => scrollToSection('projects')}
-                    className="px-6 py-3 rounded-full transition-all duration-200"
-                    style={{ background: 'transparent', border: '1px solid rgba(240,237,232,0.15)', color: 'var(--text-primary)', fontFamily: 'var(--font-body)', height: '48px' }}
-                  >
+                  <button onClick={() => scrollToSection('projects')}
+                    style={{ padding: '12px 24px', background: 'transparent', border: '1px solid rgba(240,237,232,0.15)', color: 'var(--text-primary)', fontFamily: 'var(--font-body)', borderRadius: '50px', cursor: 'pointer', height: '48px' }}>
                     Explore My Work
                   </button>
                 </div>
-                <div className="flex flex-wrap gap-[10px]">
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   {[
-                    {
-                      label: 'GitHub',
-                      href: 'https://github.com/HetPatel-03',
-                      icon: (
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                        </svg>
-                      ),
-                    },
-                    {
-                      label: 'LinkedIn',
-                      href: 'https://linkedin.com/in/hetpatel',
-                      icon: (
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                        </svg>
-                      ),
-                    },
-                    {
-                      label: 'X',
-                      href: 'https://x.com/hetpatel',
-                      icon: (
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                        </svg>
-                      ),
-                    },
+                    { label: 'GitHub', href: 'https://github.com/HetPatel-03', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg> },
+                    { label: 'LinkedIn', href: 'https://linkedin.com/in/hetpatel', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg> },
+                    { label: 'X', href: 'https://x.com/hetpatel', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> },
                   ].map(({ label, href, icon }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        padding: '8px 16px',
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '50px',
-                        color: '#F0EDE8',
-                        fontSize: '13px',
-                        fontFamily: 'DM Sans',
-                        textDecoration: 'none',
-                        transition: 'all 0.2s ease',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = 'rgba(242,102,74,0.4)';
-                        e.currentTarget.style.background = 'rgba(242,102,74,0.08)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-                        e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                      }}
-                    >
-                      {icon}
-                      {label}
-                    </a>
+                    <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50px', color: '#F0EDE8', fontSize: '13px', fontFamily: 'DM Sans', textDecoration: 'none', transition: 'all 0.2s ease' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(242,102,74,0.4)'; e.currentTarget.style.background = 'rgba(242,102,74,0.08)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+                    >{icon}{label}</a>
                   ))}
                 </div>
               </div>
 
-              {/* About left — fades IN phase 1, OUT phase 2, back IN phase 3 */}
-              <div ref={aboutLeftRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', opacity: 0, paddingTop: '40px' }}>
-                <p className="text-xs mb-4" style={{ fontFamily: 'var(--font-mono)', color: 'var(--coral)' }}>
+              {/* LAYER B: About text — fades IN beat 1, OUT beat 2 */}
+              <div ref={aboutTextRef} style={{
+                position: 'absolute', top: '50%', left: 0,
+                width: '100%', transform: 'translateY(-50%)',
+                opacity: 0,
+              }}>
+                <p style={{ fontFamily: 'var(--font-mono)', color: 'var(--coral)', fontSize: '12px', marginBottom: '16px', letterSpacing: '0.05em' }}>
                   // 01 · about
                 </p>
-                <h2 className="mb-6" style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-1px', fontSize: 'clamp(20px, 2.5vw, 32px)' }}>
-                  Software Engineer. Problem Solver. Product Minded.
+                <h2 style={{
+                  fontFamily: 'var(--font-heading)', fontWeight: 800,
+                  color: 'var(--text-primary)', letterSpacing: '-1px',
+                  fontSize: 'clamp(22px, 3vw, 40px)', lineHeight: 1.1, marginBottom: '20px',
+                }}>
+                  Software Engineer.<br />Problem Solver.<br />Product Minded.
                 </h2>
-                <p className="text-xl mb-6" style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#D0D0E0' }}>
+                <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#D0D0E0', fontSize: '18px', marginBottom: '24px' }}>
                   Full Stack Engineer who builds products people actually use.
                 </p>
-                <div className="mb-8 space-y-5">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   {[
-                    "Throughout my software development journey, I've shown a strong commitment to innovation and creative problem-solving — from building live platforms to integrating real APIs used by real users.",
-                    'My analytical approach helps me break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
-                    'I build full-stack applications end-to-end — designing REST APIs, structuring database schemas, and deploying to cloud infrastructure. Every project I ship is live, documented, and built with real users in mind.',
+                    "Throughout my journey I've shown a strong commitment to innovation and creative problem-solving — building live platforms with real APIs used by real users.",
+                    'I break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
+                    'I build full-stack apps end-to-end — REST APIs, database schemas, cloud infrastructure. Every project I ship is live and documented.',
                   ].map((text, i) => (
-                    <p key={i} className="flex gap-3 text-[15px]" style={{ color: '#A8A8B8', fontFamily: 'var(--font-body)', lineHeight: 1.8 }}>
-                      <span style={{ color: '#F2664A', flexShrink: 0 }}>→</span>
+                    <p key={i} style={{ display: 'flex', gap: '12px', color: '#A8A8B8', fontFamily: 'var(--font-body)', lineHeight: 1.75, fontSize: '15px' }}>
+                      <span style={{ color: '#F2664A', flexShrink: 0, marginTop: '2px' }}>→</span>
                       <span>{text}</span>
                     </p>
                   ))}
-                </div>
-                <div className="flex flex-wrap gap-4">
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('connect')}
-                    className="px-6 py-3 transition-all duration-200 hover:scale-105"
-                    style={{ background: '#F2664A', color: 'var(--bg-primary)', fontFamily: 'var(--font-body)', fontWeight: 500, borderRadius: '50px', border: 'none' }}
-                  >
-                    Contact Me
-                  </button>
-                  <button
-                    type="button"
-                    className="px-6 py-3 transition-all duration-200"
-                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#F0EDE8', fontFamily: 'var(--font-body)', borderRadius: '50px' }}
-                  >
-                    View Resume
-                  </button>
                 </div>
               </div>
             </div>
 
             {/* RIGHT COLUMN */}
-            <div style={{ flex: '0 0 42%', position: 'relative', height: '100vh', overflow: 'visible' }}>
-              {/* Travelling image */}
+            <div style={{ flex: '0 0 44%', position: 'relative', height: '100vh', overflow: 'visible' }}>
+              {/* Travelling image wrapper */}
               <div
                 ref={imgWrapperRef}
-                style={{ position: 'absolute', right: 0, bottom: 0, width: '100%', height: '90%', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', overflow: 'visible', zIndex: 10 }}
+                style={{
+                  position: 'absolute',
+                  right: 0,
+                  top: 0,
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  justifyContent: 'flex-end',
+                  overflow: 'visible',
+                  zIndex: 20,
+                  perspective: '1000px',
+                  transformStyle: 'preserve-3d',
+                }}
               >
                 <img
-                  ref={imgRef}
+                  ref={imgBackRef}
+                  src="/Image2.png.PNG"
+                  alt="Het Patel"
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    height: '88%',
+                    width: 'auto',
+                    maxHeight: '700px',
+                    objectFit: 'contain',
+                    objectPosition: 'bottom',
+                    filter: 'drop-shadow(0 0 60px rgba(242,102,74,0.25))',
+                    willChange: 'transform, opacity',
+                    display: 'block',
+                    transformStyle: 'preserve-3d',
+                  }}
+                />
+                <img
+                  ref={imgFrontRef}
                   src="/Me_Hero.png"
                   alt="Het Patel"
-                  style={{ height: '100%', width: 'auto', maxHeight: '700px', objectFit: 'contain', objectPosition: 'bottom', filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.15))', animation: 'heroFloat 3s ease-in-out infinite', willChange: 'transform, opacity' }}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    height: '88%',
+                    width: 'auto',
+                    maxHeight: '700px',
+                    objectFit: 'contain',
+                    objectPosition: 'bottom',
+                    filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.18))',
+                    animation: 'heroFloat 3s ease-in-out infinite',
+                    willChange: 'transform, opacity',
+                    display: 'block',
+                    transformStyle: 'preserve-3d',
+                  }}
                 />
               </div>
 
-              {/* About right: terminal + stats */}
+              {/* Terminal + stats — reveals beat 4 */}
               <div
-                ref={aboutRightRef}
-                style={{ position: 'absolute', top: '50%', right: 0, width: '100%', transform: 'translateY(-50%)', paddingRight: '24px', zIndex: 5, opacity: 0 }}
+                ref={terminalColRef}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  right: 0,
+                  width: '100%',
+                  transform: 'translateY(-50%)',
+                  paddingRight: '16px',
+                  zIndex: 5,
+                  opacity: 0,
+                }}
               >
-                <div
-                  ref={terminalRef}
-                  style={{ background: 'rgba(20,20,28,0.9)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '20px', fontFamily: 'JetBrains Mono, monospace', fontSize: '13px', marginBottom: '16px', opacity: 0 }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '16px' }}>
-                    {['#FF5F57', '#FEBC2E', '#28C840'].map((color) => (
-                      <div key={color} style={{ width: '10px', height: '10px', borderRadius: '50%', background: color }} />
+                <div style={{
+                  background: 'rgba(14,14,20,0.95)',
+                  backdropFilter: 'blur(24px)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '16px',
+                  padding: '20px',
+                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: '13px',
+                  marginBottom: '14px',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '14px' }}>
+                    {['#FF5F57', '#FEBC2E', '#28C840'].map((c) => (
+                      <div key={c} style={{ width: '10px', height: '10px', borderRadius: '50%', background: c }} />
                     ))}
-                    <span style={{ marginLeft: '8px', color: 'rgba(240,237,232,0.4)', fontSize: '11px' }}>het@portfolio ~ %</span>
+                    <span style={{ marginLeft: '8px', color: 'rgba(240,237,232,0.35)', fontSize: '11px' }}>het@portfolio ~ %</span>
                   </div>
-                  <div style={{ lineHeight: '1.8' }}>
-                    {[['name', '"Het Patel"'], ['role', '"Full Stack Engineer"'], ['location', '"Brampton, ON 🍁"'], ['stack', '["React","Node","TypeScript"]'], ['status', '"Available 2026 ✅"']].map(([k, v]) => (
+                  <div style={{ lineHeight: '1.85' }}>
+                    {[
+                      ['name', '"Het Patel"'],
+                      ['role', '"Full Stack Engineer"'],
+                      ['location', '"Brampton, ON 🍁"'],
+                      ['stack', '["React","Node","TypeScript"]'],
+                      ['status', '"Available 2026 ✅"'],
+                    ].map(([k, v]) => (
                       <div key={k}>
                         <span style={{ color: '#60A5FA' }}>const </span>
-                        <span style={{ color: '#F0EDE8' }}>{k} = </span>
+                        <span style={{ color: '#F0EDE8' }}>{k}</span>
+                        <span style={{ color: '#F0EDE8' }}> = </span>
                         <span style={{ color: '#C8F135' }}>{v}</span>
                       </div>
                     ))}
-                    <div style={{ marginTop: '8px' }}>
-                      <span style={{ color: 'rgba(240,237,232,0.4)' }}>// trilingual: English · Hindi · Gujarati</span>
-                    </div>
-                    <div>
-                      <span style={{ color: 'rgba(240,237,232,0.4)' }}>// top 150 canada · top 3 GTA</span>
-                    </div>
-                    <div style={{ marginTop: '4px' }}>
-                      <span style={{ color: '#F2664A' }}>█</span>
-                    </div>
+                    <div style={{ marginTop: '10px', color: 'rgba(240,237,232,0.35)' }}>// trilingual: English · Hindi · Gujarati</div>
+                    <div style={{ color: 'rgba(240,237,232,0.35)' }}>// top 150 canada · top 3 GTA</div>
+                    <div style={{ marginTop: '6px', color: '#F2664A' }}>█</div>
                   </div>
                 </div>
-                <div ref={statsRef} className="grid grid-cols-2 gap-4">
-                  {stats.map((stat, i) => (
-                    <div key={i} className={`about-stat-card about-stat-card--${stat.variant}`} style={{ opacity: 0 }}>
-                      <div className="about-stat-number">{stat.number}</div>
-                      <div className="about-stat-label">{stat.label}</div>
+
+                <div ref={statsGridRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  {stats.map((s, i) => (
+                    <div key={i} className={`about-stat-card about-stat-card--${s.variant}`}>
+                      <div className="about-stat-number">{s.number}</div>
+                      <div className="about-stat-label">{s.label}</div>
                     </div>
                   ))}
                 </div>
