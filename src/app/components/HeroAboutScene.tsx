@@ -17,6 +17,7 @@ export function HeroAboutScene() {
   const cycleWords = ['Software Engineer.', 'Problem Solver.', 'Product Minded.', 'Full Stack Dev.'];
 
   const sceneRef = useRef<HTMLDivElement>(null);
+  const leftColumnRef = useRef<HTMLDivElement>(null);
   const heroLeftRef = useRef<HTMLDivElement>(null);
   const aboutTextRef = useRef<HTMLDivElement>(null);
   const imgWrapperRef = useRef<HTMLDivElement>(null);
@@ -24,6 +25,7 @@ export function HeroAboutScene() {
   const imgBackRef = useRef<HTMLImageElement>(null);
   const terminalColRef = useRef<HTMLDivElement>(null);
   const statsGridRef = useRef<HTMLDivElement>(null);
+  const photoBadgeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,9 +40,11 @@ export function HeroAboutScene() {
   };
 
   useLayoutEffect(() => {
+    let cleanup = () => {};
     const refreshDelay = window.setTimeout(() => {
       const ctx = gsap.context(() => {
         const scene = sceneRef.current;
+        const leftColumn = leftColumnRef.current;
         const heroLeft = heroLeftRef.current;
         const aboutText = aboutTextRef.current;
         const imgWrapper = imgWrapperRef.current;
@@ -48,13 +52,15 @@ export function HeroAboutScene() {
         const imgBack = imgBackRef.current;
         const terminalCol = terminalColRef.current;
         const statsGrid = statsGridRef.current;
+        const photoBadge = photoBadgeRef.current;
 
-        if (!scene || !heroLeft || !aboutText || !imgWrapper || !imgFront || !imgBack || !terminalCol || !statsGrid) return;
+        if (!scene || !leftColumn || !heroLeft || !aboutText || !imgWrapper || !imgFront || !imgBack || !terminalCol || !statsGrid || !photoBadge) return;
 
         // Initial states
         gsap.set(aboutText, { autoAlpha: 0, y: 50 });
         gsap.set(terminalCol, { autoAlpha: 0, x: 60 });
         gsap.set(Array.from(statsGrid.children), { autoAlpha: 0, y: 60 });
+        gsap.set(photoBadge, { autoAlpha: 0, y: 20 });
         gsap.set(imgFront, { autoAlpha: 1, rotateY: 0, scale: 1, transformOrigin: '50% 50%' });
         gsap.set(imgBack, { autoAlpha: 0, rotateY: -90, scale: 0.9, transformOrigin: '50% 50%' });
 
@@ -65,16 +71,16 @@ export function HeroAboutScene() {
         const rightGap = window.innerWidth - rect.right;
 
         const toCenter = screenCx - imgCx;
-        const toLeft = -(rect.left - rightGap);
+        const toLeft = -(rect.left - rightGap * 0.5);
 
         const tl = gsap.timeline({
           defaults: { ease: 'power2.inOut' },
           scrollTrigger: {
             trigger: scene,
             start: 'top top',
-            end: '+=350%',
+            end: '+=280%',
             pin: true,
-            scrub: 0.8,
+            scrub: 0.6,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },
@@ -88,31 +94,38 @@ export function HeroAboutScene() {
           .to(aboutText, { autoAlpha: 0, y: -30, filter: 'blur(6px)', duration: 1 }, 2)
           .to(imgWrapper, { x: toCenter, duration: 1.2 }, 2)
 
-          // Beat 3: Card-like flip via cross-fade at center.
-          .to(imgFront, { autoAlpha: 0, rotateY: 90, scale: 0.9, duration: 0.8, ease: 'power2.in' }, 3)
-          .to(imgBack, { autoAlpha: 1, rotateY: 0, scale: 1, duration: 0.8, ease: 'power2.out' }, 3.6)
+        // Beat 3: instant pop-swap at center.
+        .to(leftColumn, { filter: 'blur(12px)', opacity: 0.3, duration: 0.4 }, 2.8)
+        .to(imgWrapper, { scale: 0, autoAlpha: 0, duration: 0.3, ease: 'power2.in' }, 3)
+        .set(imgFront, { autoAlpha: 0 }, 3.1)
+        .set(imgBack, { autoAlpha: 1 }, 3.1)
+        .fromTo(imgWrapper, { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4, ease: 'back.out(1.7)' }, 3.2)
+        .to(leftColumn, { filter: 'blur(0px)', opacity: 1, duration: 0.3 }, 3.5)
+        .to(terminalCol, { autoAlpha: 0.3, duration: 0.5 }, 3.0)
 
           // Beat 4: Real photo left, right-side credentials in.
           .to(imgWrapper, { x: toLeft, duration: 1.2 }, 4.5)
-          .to(terminalCol, { autoAlpha: 1, x: 0, duration: 1, ease: 'power2.out' }, 5)
+        .to(terminalCol, { autoAlpha: 1, x: 0, duration: 0.8, ease: 'power2.out' }, 4.2)
+        .to(photoBadge, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power2.out' }, 4.2)
           .to(Array.from(statsGrid.children), {
             autoAlpha: 1,
             y: 0,
             duration: 1,
             stagger: 0.12,
             ease: 'back.out(1.2)',
-          }, 5.1)
+        }, 4.4)
 
           // Beat 5: Hold final layout before release.
           .to({}, { duration: 1.5 }, 6);
       }, sceneRef);
 
       ScrollTrigger.refresh();
-      return () => ctx.revert();
+      cleanup = () => ctx.revert();
     }, 150);
 
     return () => {
       window.clearTimeout(refreshDelay);
+      cleanup();
     };
   }, []);
 
@@ -133,8 +146,9 @@ export function HeroAboutScene() {
         style={{
           minHeight: '100vh',
           display: 'flex',
-          alignItems: 'center',
-          paddingTop: '80px',
+          alignItems: 'flex-start',
+          paddingTop: '0',
+          marginTop: '0',
           paddingLeft: 'clamp(24px, 5vw, 80px)',
           paddingRight: '0',
           overflow: 'visible',
@@ -160,16 +174,18 @@ export function HeroAboutScene() {
             <div style={{
               flex: '1',
               position: 'relative',
-              minHeight: '580px',
+              minHeight: '100vh',
+              paddingRight: 'clamp(24px, 4vw, 60px)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               overflow: 'visible',
-            }}>
+            }} ref={leftColumnRef}>
               {/* LAYER A: Hero content — fades OUT beat 1 */}
               <div ref={heroLeftRef} style={{
-                position: 'absolute', top: '50%', left: 0,
-                width: '100%', transform: 'translateY(-50%)',
+                position: 'absolute', top: 0, left: 0,
+                width: '100%',
+                paddingTop: 'clamp(100px, 12vh, 140px)',
               }}>
                 <div
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
@@ -196,7 +212,7 @@ export function HeroAboutScene() {
                   Hi, I&apos;m
                 </p>
                 <h1 style={{
-                  fontSize: 'clamp(56px, 7vw, 96px)',
+                  fontSize: 'clamp(64px, 8vw, 108px)',
                   fontFamily: 'var(--font-heading)', fontWeight: 800,
                   color: 'var(--text-primary)', letterSpacing: '-3px',
                   lineHeight: 0.95, marginBottom: '16px',
@@ -252,8 +268,9 @@ export function HeroAboutScene() {
 
               {/* LAYER B: About text — fades IN beat 1, OUT beat 2 */}
               <div ref={aboutTextRef} style={{
-                position: 'absolute', top: '50%', left: 0,
-                width: '100%', transform: 'translateY(-50%)',
+                position: 'absolute', top: 0, left: 0,
+                width: '100%',
+                paddingTop: 'clamp(100px, 12vh, 140px)',
                 opacity: 0,
               }}>
                 <p style={{ fontFamily: 'var(--font-mono)', color: 'var(--coral)', fontSize: '12px', marginBottom: '16px', letterSpacing: '0.05em' }}>
@@ -262,14 +279,14 @@ export function HeroAboutScene() {
                 <h2 style={{
                   fontFamily: 'var(--font-heading)', fontWeight: 800,
                   color: 'var(--text-primary)', letterSpacing: '-1px',
-                  fontSize: 'clamp(22px, 3vw, 40px)', lineHeight: 1.1, marginBottom: '20px',
+                  fontSize: 'clamp(28px, 4vw, 52px)', lineHeight: 1.1, marginBottom: '20px',
                 }}>
                   Software Engineer.<br />Problem Solver.<br />Product Minded.
                 </h2>
-                <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#D0D0E0', fontSize: '18px', marginBottom: '24px' }}>
+                <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#D0D0E0', fontSize: '20px', marginBottom: '24px' }}>
                   Full Stack Engineer who builds products people actually use.
                 </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   {[
                     "Throughout my journey I've shown a strong commitment to innovation and creative problem-solving — building live platforms with real APIs used by real users.",
                     'I break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
@@ -291,10 +308,7 @@ export function HeroAboutScene() {
                 ref={imgWrapperRef}
                 style={{
                   position: 'absolute',
-                  right: 0,
-                  top: 0,
-                  width: '100%',
-                  height: '100%',
+                  inset: 0,
                   display: 'flex',
                   alignItems: 'flex-end',
                   justifyContent: 'flex-end',
@@ -306,14 +320,15 @@ export function HeroAboutScene() {
               >
                 <img
                   ref={imgBackRef}
-                  src="/Image2.png.PNG"
+                  src="/Image2.png"
                   alt="Het Patel"
                   style={{
                     position: 'absolute',
-                    inset: 0,
-                    height: '88%',
+                    bottom: 0,
+                    right: 0,
+                    height: '92vh',
                     width: 'auto',
-                    maxHeight: '700px',
+                    maxHeight: '800px',
                     objectFit: 'contain',
                     objectPosition: 'bottom',
                     filter: 'drop-shadow(0 0 60px rgba(242,102,74,0.25))',
@@ -328,10 +343,11 @@ export function HeroAboutScene() {
                   alt="Het Patel"
                   style={{
                     position: 'absolute',
-                    inset: 0,
-                    height: '88%',
+                    bottom: 0,
+                    right: 0,
+                    height: '92vh',
                     width: 'auto',
-                    maxHeight: '700px',
+                    maxHeight: '800px',
                     objectFit: 'contain',
                     objectPosition: 'bottom',
                     filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.18))',
@@ -341,6 +357,32 @@ export function HeroAboutScene() {
                     transformStyle: 'preserve-3d',
                   }}
                 />
+                <div
+                  ref={photoBadgeRef}
+                  style={{
+                    position: 'absolute',
+                    bottom: '20%',
+                    right: '-20px',
+                    background: 'rgba(20,20,28,0.9)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(242,102,74,0.3)',
+                    borderRadius: '12px',
+                    padding: '12px 16px',
+                    zIndex: 30,
+                    opacity: 0,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <div style={{ color: 'var(--coral)', fontFamily: 'var(--font-mono)', fontSize: '11px', marginBottom: '4px' }}>
+                    // currently
+                  </div>
+                  <div style={{ color: '#F0EDE8', fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500 }}>
+                    Open to work · 2026
+                  </div>
+                  <div style={{ color: 'rgba(240,237,232,0.5)', fontFamily: 'var(--font-body)', fontSize: '12px' }}>
+                    Brampton, ON · GTA
+                  </div>
+                </div>
               </div>
 
               {/* Terminal + stats — reveals beat 4 */}
