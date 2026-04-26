@@ -101,7 +101,7 @@ export function HeroAboutScene() {
         .to(imgWrapper, { scale: 0, autoAlpha: 0, duration: 0.3, ease: 'power2.in' }, 3)
         .set(imgFront, { autoAlpha: 0 }, 3.1)
         .set(imgBack, { autoAlpha: 1 }, 3.1)
-        .fromTo(imgWrapper, { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4, ease: 'back.out(1.7)' }, 3.2)
+        .to(imgWrapper, { scale: 1, autoAlpha: 1, duration: 0.4, ease: 'back.out(1.7)' }, 3.2)
         .to(leftColumn, { filter: 'blur(0px)', opacity: 1, duration: 0.3 }, 3.5)
         .to(terminalCol, { autoAlpha: 0.3, duration: 0.5 }, 3.0)
 
