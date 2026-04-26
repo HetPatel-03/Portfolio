@@ -62,7 +62,8 @@ export function HeroAboutScene() {
         gsap.set(Array.from(statsGrid.children), { autoAlpha: 0, y: 60 });
         gsap.set(photoBadge, { autoAlpha: 0, y: 20 });
         gsap.set(imgFront, { autoAlpha: 1, rotateY: 0, scale: 1, transformOrigin: '50% 50%' });
-        gsap.set(imgBack, { autoAlpha: 0, rotateY: -90, scale: 0.9, transformOrigin: '50% 50%' });
+        // Back image stays un-rotated; we reveal it via the pop-swap.
+        gsap.set(imgBack, { autoAlpha: 0, rotateY: 0, scale: 1, transformOrigin: '50% 50%' });
 
         // Measure once at rest to prevent scrub snapping.
         const rect = imgWrapper.getBoundingClientRect();
@@ -320,7 +321,7 @@ export function HeroAboutScene() {
               >
                 <img
                   ref={imgBackRef}
-                  src="/Image2.png"
+                  src="/Image2.png.PNG"
                   alt="Het Patel"
                   style={{
                     position: 'absolute',
