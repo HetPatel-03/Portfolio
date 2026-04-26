@@ -61,6 +61,7 @@ export function HeroAboutScene() {
         gsap.set(terminalCol, { autoAlpha: 0, x: 60 });
         gsap.set(Array.from(statsGrid.children), { autoAlpha: 0, y: 60 });
         gsap.set(photoBadge, { autoAlpha: 0, y: 20 });
+        gsap.set(imgWrapper, { x: 0, scale: 1, autoAlpha: 1, clearProps: 'filter' });
         gsap.set(imgFront, { autoAlpha: 1, rotateY: 0, scale: 1, transformOrigin: '50% 50%' });
         // Back image stays un-rotated; we reveal it via the pop-swap.
         gsap.set(imgBack, { autoAlpha: 0, rotateY: 0, scale: 1, transformOrigin: '50% 50%' });
@@ -335,6 +336,7 @@ export function HeroAboutScene() {
                     filter: 'drop-shadow(0 0 60px rgba(242,102,74,0.25))',
                     willChange: 'transform, opacity',
                     display: 'block',
+                    opacity: 0,
                     transformStyle: 'preserve-3d',
                   }}
                 />
@@ -355,6 +357,7 @@ export function HeroAboutScene() {
                     animation: 'heroFloat 3s ease-in-out infinite',
                     willChange: 'transform, opacity',
                     display: 'block',
+                    opacity: 1,
                     transformStyle: 'preserve-3d',
                   }}
                 />
