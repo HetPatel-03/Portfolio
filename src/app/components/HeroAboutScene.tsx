@@ -317,7 +317,7 @@ export function HeroAboutScene() {
               >
                 <img
                   ref={imgBackRef}
-                  src="/Image2.png.PNG"
+                  src="/Image2.png"
                   alt="Het Patel"
                   style={{
                     position: 'absolute',
@@ -332,7 +332,7 @@ export function HeroAboutScene() {
                     willChange: 'transform, opacity',
                     display: 'block',
                     opacity: 1,
-                    transform: 'rotateY(180deg) scale(3.7)',
+                    transform: 'rotateY(180deg) scale(1.3)',
                     backfaceVisibility: 'hidden',
                     transformStyle: 'preserve-3d',
                   }}
