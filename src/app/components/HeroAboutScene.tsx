@@ -25,7 +25,6 @@ export function HeroAboutScene() {
   const imgBackRef = useRef<HTMLImageElement>(null);
   const terminalColRef = useRef<HTMLDivElement>(null);
   const statsGridRef = useRef<HTMLDivElement>(null);
-  const photoBadgeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -52,15 +51,13 @@ export function HeroAboutScene() {
         const imgBack = imgBackRef.current;
         const terminalCol = terminalColRef.current;
         const statsGrid = statsGridRef.current;
-        const photoBadge = photoBadgeRef.current;
 
-        if (!scene || !leftColumn || !heroLeft || !aboutText || !imgWrapper || !imgFront || !imgBack || !terminalCol || !statsGrid || !photoBadge) return;
+        if (!scene || !leftColumn || !heroLeft || !aboutText || !imgWrapper || !imgFront || !imgBack || !terminalCol || !statsGrid) return;
 
         // Initial states
         gsap.set(aboutText, { autoAlpha: 0, y: 50 });
         gsap.set(terminalCol, { autoAlpha: 0, x: 60 });
         gsap.set(Array.from(statsGrid.children), { autoAlpha: 0, y: 60 });
-        gsap.set(photoBadge, { autoAlpha: 0, y: 20 });
         gsap.set(imgWrapper, {
           x: 0,
           rotationY: 0,
@@ -103,7 +100,6 @@ export function HeroAboutScene() {
           .to(leftColumn, { filter: 'blur(0px)', opacity: 1, duration: 0.45 }, 3.65)
           .to(terminalCol, { autoAlpha: 0.35, duration: 0.4 }, 3.15)
           .to(terminalCol, { autoAlpha: 1, x: 0, duration: 0.8, ease: 'power2.out' }, 4.0)
-          .to(photoBadge, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power2.out' }, 4.0)
           .to(Array.from(statsGrid.children), {
             autoAlpha: 1,
             y: 0,
@@ -359,34 +355,6 @@ export function HeroAboutScene() {
                     transformStyle: 'preserve-3d',
                   }}
                 />
-              </div>
-
-              <div
-                ref={photoBadgeRef}
-                style={{
-                  position: 'absolute',
-                  top: '25%',
-                  left: '58%',
-                  right: 'auto',
-                  background: 'rgba(20,20,28,0.9)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(242,102,74,0.3)',
-                  borderRadius: '12px',
-                  padding: '12px 16px',
-                  zIndex: 30,
-                  opacity: 0,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                <div style={{ color: 'var(--coral)', fontFamily: 'var(--font-mono)', fontSize: '11px', marginBottom: '4px' }}>
-                  // currently
-                </div>
-                <div style={{ color: '#F0EDE8', fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500 }}>
-                  Open to work · 2026
-                </div>
-                <div style={{ color: 'rgba(240,237,232,0.5)', fontFamily: 'var(--font-body)', fontSize: '12px' }}>
-                  Brampton, ON · GTA
-                </div>
               </div>
 
               {/* Terminal + stats — reveals beat 4 */}
