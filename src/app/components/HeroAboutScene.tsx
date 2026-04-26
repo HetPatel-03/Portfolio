@@ -332,7 +332,7 @@ export function HeroAboutScene() {
                     willChange: 'transform, opacity',
                     display: 'block',
                     opacity: 1,
-                    transform: 'rotateY(180deg) scale(1.85)',
+                    transform: 'rotateY(180deg) scale(2.25)',
                     backfaceVisibility: 'hidden',
                     transformStyle: 'preserve-3d',
                   }}
