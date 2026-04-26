@@ -23,6 +23,7 @@ export function HeroAboutScene() {
   const imgRef = useRef<HTMLImageElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const aboutRightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -42,147 +43,121 @@ export function HeroAboutScene() {
   };
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      const scene = sceneRef.current;
-      const heroLeft = heroLeftRef.current;
-      const aboutLeft = aboutLeftRef.current;
-      const imgWrapper = imgWrapperRef.current;
-      const img = imgRef.current;
-      const terminal = terminalRef.current;
-      const statsEl = statsRef.current;
+    const timer = setTimeout(() => {
+      const ctx = gsap.context(() => {
+        const scene = sceneRef.current;
+        const heroLeft = heroLeftRef.current;
+        const aboutLeft = aboutLeftRef.current;
+        const imgWrapper = imgWrapperRef.current;
+        const img = imgRef.current;
+        const terminal = terminalRef.current;
+        const statsEl = statsRef.current;
+        const aboutRight = aboutRightRef.current;
 
-      if (!scene || !heroLeft || !aboutLeft || !imgWrapper || !img || !terminal || !statsEl) return;
+        if (!scene || !heroLeft || !aboutLeft || !imgWrapper || !img || !terminal || !statsEl || !aboutRight) return;
 
-      // Initial hidden states
-      gsap.set(aboutLeft, { opacity: 0, y: 40 });
-      gsap.set(terminal, { opacity: 0, y: 60 });
-      gsap.set(statsEl.children, { opacity: 0, y: 60 });
+        // Initial states
+        gsap.set(aboutLeft, { opacity: 0, y: 30 });
+        gsap.set(aboutRight, { opacity: 0 });
+        gsap.set(terminal, { opacity: 0, y: 50 });
+        gsap.set(Array.from(statsEl.children), { opacity: 0, y: 50 });
 
-      let swapped = false;
-
-      // Offset helpers
-      const getCenterOffset = () => {
+        // Measure original positions (before any animation)
         const rect = imgWrapper.getBoundingClientRect();
-        const wrapperCenterX = rect.left + rect.width / 2;
-        const screenCenterX = window.innerWidth / 2;
-        return screenCenterX - wrapperCenterX;
-      };
+        const imgLeft = rect.left;
+        const imgRight = rect.right;
+        const imgW = rect.width;
 
-      const getLeftOffset = () => {
-        const rect = imgWrapper.getBoundingClientRect();
-        const rightGap = window.innerWidth - rect.right;
-        return -(window.innerWidth - rect.width - rightGap * 2);
-      };
+        // centerX: move image so its center = screen center
+        const centerX = window.innerWidth / 2 - (imgLeft + imgW / 2);
 
-      // Timeline
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: scene,
-          start: 'top top',
-          end: '+=450%',
-          pin: true,
-          scrub: 1.2,
-          anticipatePin: 1,
-        },
-      });
+        // leftX: mirror — same gap from left as currently from right
+        const rightGap = window.innerWidth - imgRight;
+        const leftX = -(imgLeft - rightGap);
 
-      // PHASE 1: Hero text out, About text in. Image stays still.
-      tl.to(heroLeft, { opacity: 0, y: -40, duration: 2, ease: 'power2.inOut' }, 0);
-      tl.to(aboutLeft, { opacity: 1, y: 0, duration: 2, ease: 'power2.out' }, 1);
+        // Create back-face image (cross-fade to avoid mirror artifacts)
+        const imgBack = document.createElement('img');
+        imgBack.src = '/Image2.png';
+        imgBack.alt = 'Het Patel';
+        Object.assign(imgBack.style, {
+          position: 'absolute',
+          inset: '0',
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          objectPosition: 'bottom center',
+          opacity: '0',
+          borderRadius: '12px',
+          filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.2))',
+        });
+        imgWrapper.style.position = 'relative';
+        imgWrapper.appendChild(imgBack);
 
-      // PHASE 2: Image slides to center
-      tl.to(
-        imgWrapper,
-        {
-          x: () => getCenterOffset(),
-          scale: 1.05,
-          duration: 3,
-          ease: 'power2.inOut',
-        },
-        4
-      );
+        // Front image stacks too
+        Object.assign(img.style, {
+          position: 'absolute',
+          inset: '0',
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          objectPosition: 'bottom center',
+        });
 
-      // PHASE 2B: 3D flip at center
-      tl.to(
-        img,
-        {
-          rotateY: 180,
-          duration: 3,
-          ease: 'power1.inOut',
-          onUpdate: function () {
-            if (!swapped) {
-              const angle = Math.abs(gsap.getProperty(img, 'rotateY') as number);
-              if (angle >= 88) {
-                img.src = '/Image2.png';
-                gsap.set(img, { scaleX: -1 });
-                swapped = true;
-              }
-            }
+        // Timeline
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: scene,
+            start: 'top top',
+            end: '+=550%',
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1,
           },
-        },
-        7
-      );
+        });
 
-      // PHASE 3: Photo moves left, right content reveals
-      tl.to(
-        imgWrapper,
-        {
-          x: () => getLeftOffset(),
-          scale: 1,
-          duration: 3,
-          ease: 'power2.inOut',
-        },
-        10
-      );
+        // PHASE 1: Hero text out -> about text in. Image stays still.
+        tl.to(heroLeft, { opacity: 0, y: -50, filter: 'blur(6px)', duration: 2, ease: 'power2.inOut' }, 0);
+        tl.to(aboutLeft, { opacity: 1, y: 0, duration: 2.5, ease: 'power2.out' }, 1.5);
 
-      tl.to(terminal, { opacity: 1, y: 0, duration: 2, ease: 'power2.out' }, 10.5);
+        // PHASE 2: About text blurs out. Image slides to CENTER.
+        tl.to(aboutLeft, { opacity: 0, filter: 'blur(8px)', y: -20, duration: 2, ease: 'power2.inOut' }, 4);
+        tl.to(imgWrapper, { x: centerX, duration: 3, ease: 'power2.inOut' }, 4.5);
 
-      tl.to(
-        statsEl.children,
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.5,
-          stagger: 0.15,
-          ease: 'back.out(1.2)',
-        },
-        11
-      );
+        // PHASE 2B: Cross-fade at center. Memoji out -> real photo in.
+        tl.to(img, { opacity: 0, scale: 0.95, duration: 2, ease: 'power2.inOut' }, 7.5);
+        tl.fromTo(imgBack, { opacity: 0, scale: 1.05 }, { opacity: 1, scale: 1, duration: 2, ease: 'power2.out' }, 8.5);
 
-      // PHASE 4: Hold — timeline ends, pin releases naturally
+        // PHASE 3: Real photo slides LEFT. Left text + right content reveals.
+        tl.to(imgWrapper, { x: leftX, duration: 3.5, ease: 'power2.inOut' }, 11);
+        tl.to(aboutLeft, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 2, ease: 'power2.out' }, 12);
+        tl.to(aboutRight, { opacity: 1, duration: 1.5, ease: 'power2.out' }, 12.5);
+        tl.to(terminal, { opacity: 1, y: 0, duration: 1.5, ease: 'power2.out' }, 13);
+        tl.to(Array.from(statsEl.children), { opacity: 1, y: 0, duration: 1.2, stagger: 0.12, ease: 'back.out(1.2)' }, 13.5);
 
-      setTimeout(() => ScrollTrigger.refresh(), 200);
-    }, sceneRef);
+        // PHASE 4: HOLD — user reads static about layout before Universe
+        tl.to({}, { duration: 5 }, 17);
 
-    return () => ctx.revert();
+        ScrollTrigger.refresh();
+      }, sceneRef);
+
+      return () => ctx.revert();
+    }, 150);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
     <div
       ref={sceneRef}
       id="hero-about-scene"
-      style={{
-        position: 'relative',
-        minHeight: '100vh',
-        overflow: 'visible',
-        background: 'var(--bg-primary)',
-      }}
+      style={{ position: 'relative', minHeight: '100vh', overflow: 'visible', background: 'var(--bg-primary)' }}
     >
       <section
         id="hero"
         className="section-bg-hero"
-        style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          position: 'relative',
-          paddingTop: '80px',
-          paddingLeft: 'clamp(24px, 5vw, 80px)',
-          paddingRight: '0',
-          overflow: 'visible',
-        }}
+        style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', paddingTop: '80px', paddingLeft: 'clamp(24px, 5vw, 80px)', paddingRight: '0', overflow: 'visible' }}
       >
-        {/* Noise texture */}
+        {/* Noise */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
           <svg width="100%" height="100%">
             <filter id="noise">
@@ -193,84 +168,32 @@ export function HeroAboutScene() {
         </div>
 
         <div className="w-full" style={{ position: 'relative' }}>
-          <div
-            className="flex flex-col md:flex-row gap-12 md:gap-16"
-            style={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}
-          >
-            {/* LEFT: Hero + About stacked */}
-            <div
-              style={{
-                flex: '1',
-                position: 'relative',
-                minHeight: '520px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-              }}
-            >
-              {/* Hero content — fades OUT in phase 1 */}
-              <div
-                ref={heroLeftRef}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
+          <div className="flex flex-col md:flex-row gap-12 md:gap-16" style={{ width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+            {/* LEFT COLUMN */}
+            <div style={{ flex: '1', position: 'relative', minHeight: '560px', display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'visible' }}>
+              {/* Hero content — fades OUT phase 1 */}
+              <div ref={heroLeftRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%' }}>
                 <div
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
-                  style={{
-                    background: 'rgba(44, 43, 48, 0.7)',
-                    border: '1px solid rgba(240, 237, 232, 0.08)',
-                    backdropFilter: 'blur(20px)',
-                    width: 'fit-content',
-                  }}
+                  style={{ background: 'rgba(44,43,48,0.7)', border: '1px solid rgba(240,237,232,0.08)', backdropFilter: 'blur(20px)', width: 'fit-content' }}
                 >
                   <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'var(--sage-green)' }} />
                   <span className="text-sm" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}>
                     Available for opportunities · Summer 2026
                   </span>
                 </div>
-
                 <div
                   className="absolute pointer-events-none select-none"
-                  style={{
-                    left: '-32px',
-                    top: '128px',
-                    fontSize: '280px',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    color: 'rgba(240, 237, 232, 0.02)',
-                    lineHeight: 1,
-                    zIndex: -1,
-                    filter: 'blur(2px)',
-                  }}
+                  style={{ left: '-32px', top: '128px', fontSize: '280px', fontFamily: 'var(--font-heading)', fontWeight: 800, color: 'rgba(240,237,232,0.02)', lineHeight: 1, zIndex: -1, filter: 'blur(2px)' }}
                 >
                   {'</>'}
                 </div>
-
-                <p className="text-[22px] mb-2" style={{ color: 'rgba(240, 237, 232, 0.4)', fontFamily: 'var(--font-body)', fontWeight: 400 }}>
+                <p className="text-[22px] mb-2" style={{ color: 'rgba(240,237,232,0.4)', fontFamily: 'var(--font-body)', fontWeight: 400 }}>
                   Hi, I&apos;m
                 </p>
-
-                <h1
-                  className="mb-4"
-                  style={{
-                    fontSize: '96px',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    color: 'var(--text-primary)',
-                    letterSpacing: '-3px',
-                    lineHeight: 0.95,
-                  }}
-                >
+                <h1 className="mb-4" style={{ fontSize: '96px', fontFamily: 'var(--font-heading)', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-3px', lineHeight: 0.95 }}>
                   Het Patel.
                 </h1>
-
                 <div className="relative mb-6 h-[52px] w-full overflow-hidden sm:h-[56px] md:h-[60px]">
                   {cycleWords.map((word, index) => (
                     <motion.span
@@ -279,25 +202,15 @@ export function HeroAboutScene() {
                       animate={{ opacity: index === cycleIndex ? 1 : 0, y: index === cycleIndex ? 0 : 10 }}
                       transition={{ duration: 0.5 }}
                       className="absolute inset-0 flex w-full items-center overflow-hidden"
-                      style={{
-                        fontSize: 'clamp(18px, 2.65vw + 0.4rem, 40px)',
-                        fontFamily: 'var(--font-heading)',
-                        fontWeight: 800,
-                        color: 'var(--coral)',
-                        letterSpacing: '-0.03em',
-                        lineHeight: 1,
-                        whiteSpace: 'nowrap',
-                      }}
+                      style={{ fontSize: 'clamp(18px, 2.65vw + 0.4rem, 40px)', fontFamily: 'var(--font-heading)', fontWeight: 800, color: 'var(--coral)', letterSpacing: '-0.03em', lineHeight: 1, whiteSpace: 'nowrap' }}
                     >
                       {word}
                     </motion.span>
                   ))}
                 </div>
-
                 <p className="text-base mb-8 max-w-xl" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}>
                   I build end-to-end products. Engineer. Product thinker. Top performer.
                 </p>
-
                 <div className="flex flex-wrap gap-4 mb-8">
                   <button
                     onClick={() => scrollToSection('connect')}
@@ -309,17 +222,16 @@ export function HeroAboutScene() {
                   <button
                     onClick={() => scrollToSection('projects')}
                     className="px-6 py-3 rounded-full transition-all duration-200"
-                    style={{ background: 'transparent', border: '1px solid rgba(240, 237, 232, 0.15)', color: 'var(--text-primary)', fontFamily: 'var(--font-body)', height: '48px' }}
+                    style={{ background: 'transparent', border: '1px solid rgba(240,237,232,0.15)', color: 'var(--text-primary)', fontFamily: 'var(--font-body)', height: '48px' }}
                   >
                     Explore My Work
                   </button>
                 </div>
-
                 <div className="flex flex-wrap gap-[10px]">
                   {[
                     {
                       label: 'GitHub',
-                      href: 'https://github.com/hetpatel',
+                      href: 'https://github.com/HetPatel-03',
                       icon: (
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
@@ -380,44 +292,25 @@ export function HeroAboutScene() {
                 </div>
               </div>
 
-              {/* About content — fades IN in phase 1 */}
-              <div
-                ref={aboutLeftRef}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  opacity: 0,
-                  paddingTop: '60px',
-                }}
-              >
+              {/* About left — fades IN phase 1, OUT phase 2, back IN phase 3 */}
+              <div ref={aboutLeftRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', opacity: 0, paddingTop: '40px' }}>
                 <p className="text-xs mb-4" style={{ fontFamily: 'var(--font-mono)', color: 'var(--coral)' }}>
                   // 01 · about
                 </p>
-                <h2
-                  className="mb-8"
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 800,
-                    color: 'var(--text-primary)',
-                    letterSpacing: '-1px',
-                    fontSize: 'clamp(20px, 2.5vw, 32px)',
-                  }}
-                >
+                <h2 className="mb-6" style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-1px', fontSize: 'clamp(20px, 2.5vw, 32px)' }}>
                   Software Engineer. Problem Solver. Product Minded.
                 </h2>
-                <p className="text-xl mb-8" style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#D0D0E0' }}>
+                <p className="text-xl mb-6" style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#D0D0E0' }}>
                   Full Stack Engineer who builds products people actually use.
                 </p>
-                <div className="mb-10 space-y-6">
+                <div className="mb-8 space-y-5">
                   {[
                     "Throughout my software development journey, I've shown a strong commitment to innovation and creative problem-solving — from building live platforms to integrating real APIs used by real users.",
                     'My analytical approach helps me break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
                     'I build full-stack applications end-to-end — designing REST APIs, structuring database schemas, and deploying to cloud infrastructure. Every project I ship is live, documented, and built with real users in mind.',
                   ].map((text, i) => (
                     <p key={i} className="flex gap-3 text-[15px]" style={{ color: '#A8A8B8', fontFamily: 'var(--font-body)', lineHeight: 1.8 }}>
-                      <span style={{ color: '#F2664A' }}>→</span>
+                      <span style={{ color: '#F2664A', flexShrink: 0 }}>→</span>
                       <span>{text}</span>
                     </p>
                   ))}
@@ -442,75 +335,29 @@ export function HeroAboutScene() {
               </div>
             </div>
 
-            {/* RIGHT: Image + About right content */}
-            <div
-              style={{
-                flex: '0 0 42%',
-                position: 'relative',
-                height: '100vh',
-                overflow: 'visible',
-              }}
-            >
-              {/* Travelling image — moves freely via GSAP */}
+            {/* RIGHT COLUMN */}
+            <div style={{ flex: '0 0 42%', position: 'relative', height: '100vh', overflow: 'visible' }}>
+              {/* Travelling image */}
               <div
                 ref={imgWrapperRef}
-                style={{
-                  position: 'absolute',
-                  right: 0,
-                  bottom: 0,
-                  width: '100%',
-                  height: '90%',
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  justifyContent: 'flex-end',
-                  perspective: '1000px',
-                  overflow: 'visible',
-                  zIndex: 10,
-                }}
+                style={{ position: 'absolute', right: 0, bottom: 0, width: '100%', height: '90%', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', overflow: 'visible', zIndex: 10 }}
               >
                 <img
                   ref={imgRef}
                   src="/Me_Hero.png"
                   alt="Het Patel"
-                  style={{
-                    height: '100%',
-                    width: 'auto',
-                    objectFit: 'contain',
-                    objectPosition: 'bottom',
-                    maxHeight: '700px',
-                    filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.15))',
-                    animation: 'heroFloat 3s ease-in-out infinite',
-                    transformStyle: 'preserve-3d',
-                    willChange: 'transform',
-                  }}
+                  style={{ height: '100%', width: 'auto', maxHeight: '700px', objectFit: 'contain', objectPosition: 'bottom', filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.15))', animation: 'heroFloat 3s ease-in-out infinite', willChange: 'transform, opacity' }}
                 />
               </div>
 
-              {/* About right: terminal + stats — hidden until phase 3 */}
+              {/* About right: terminal + stats */}
               <div
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: 0,
-                  width: '100%',
-                  transform: 'translateY(-50%)',
-                  paddingRight: '24px',
-                  zIndex: 5,
-                }}
+                ref={aboutRightRef}
+                style={{ position: 'absolute', top: '50%', right: 0, width: '100%', transform: 'translateY(-50%)', paddingRight: '24px', zIndex: 5, opacity: 0 }}
               >
                 <div
                   ref={terminalRef}
-                  style={{
-                    background: 'rgba(20, 20, 28, 0.9)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    borderRadius: '16px',
-                    padding: '20px',
-                    fontFamily: 'JetBrains Mono, monospace',
-                    fontSize: '13px',
-                    marginBottom: '16px',
-                    opacity: 0,
-                  }}
+                  style={{ background: 'rgba(20,20,28,0.9)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '20px', fontFamily: 'JetBrains Mono, monospace', fontSize: '13px', marginBottom: '16px', opacity: 0 }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '16px' }}>
                     {['#FF5F57', '#FEBC2E', '#28C840'].map((color) => (
@@ -519,17 +366,11 @@ export function HeroAboutScene() {
                     <span style={{ marginLeft: '8px', color: 'rgba(240,237,232,0.4)', fontSize: '11px' }}>het@portfolio ~ %</span>
                   </div>
                   <div style={{ lineHeight: '1.8' }}>
-                    {[
-                      ['name', '"Het Patel"'],
-                      ['role', '"Full Stack Engineer"'],
-                      ['location', '"Brampton, ON 🍁"'],
-                      ['stack', '["React","Node","TypeScript"]'],
-                      ['status', '"Available 2026 ✅"'],
-                    ].map(([key, val]) => (
-                      <div key={key}>
+                    {[['name', '"Het Patel"'], ['role', '"Full Stack Engineer"'], ['location', '"Brampton, ON 🍁"'], ['stack', '["React","Node","TypeScript"]'], ['status', '"Available 2026 ✅"']].map(([k, v]) => (
+                      <div key={k}>
                         <span style={{ color: '#60A5FA' }}>const </span>
-                        <span style={{ color: '#F0EDE8' }}>{key} =</span>
-                        <span style={{ color: '#C8F135' }}> {val}</span>
+                        <span style={{ color: '#F0EDE8' }}>{k} = </span>
+                        <span style={{ color: '#C8F135' }}>{v}</span>
                       </div>
                     ))}
                     <div style={{ marginTop: '8px' }}>
@@ -543,14 +384,9 @@ export function HeroAboutScene() {
                     </div>
                   </div>
                 </div>
-
                 <div ref={statsRef} className="grid grid-cols-2 gap-4">
-                  {stats.map((stat, index) => (
-                    <div
-                      key={index}
-                      className={`about-stat-card about-stat-card--${stat.variant}`}
-                      style={{ opacity: 0 }}
-                    >
+                  {stats.map((stat, i) => (
+                    <div key={i} className={`about-stat-card about-stat-card--${stat.variant}`} style={{ opacity: 0 }}>
                       <div className="about-stat-number">{stat.number}</div>
                       <div className="about-stat-label">{stat.label}</div>
                     </div>
