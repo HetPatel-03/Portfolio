@@ -76,7 +76,7 @@ export function HeroAboutScene() {
         // Measure once at rest to prevent scrub snapping.
         const rect = imgWrapper.getBoundingClientRect();
         const rightGap = window.innerWidth - rect.right;
-        const toLeft = -(rect.left - rightGap * 0.5);
+        const toLeft = -(rect.left - rightGap * 0.5) + 130;
 
         const tl = gsap.timeline({
           defaults: { ease: 'power2.inOut' },
@@ -365,8 +365,8 @@ export function HeroAboutScene() {
                 ref={photoBadgeRef}
                 style={{
                   position: 'absolute',
-                  bottom: '20%',
-                  left: '-8%',
+                  bottom: '38%',
+                  left: '-14%',
                   background: 'rgba(20,20,28,0.9)',
                   backdropFilter: 'blur(20px)',
                   border: '1px solid rgba(242,102,74,0.3)',
@@ -394,7 +394,7 @@ export function HeroAboutScene() {
                 style={{
                   position: 'absolute',
                   top: '50%',
-                  right: 0,
+                  right: '36px',
                   width: '100%',
                   transform: 'translateY(-50%)',
                   paddingRight: '16px',
