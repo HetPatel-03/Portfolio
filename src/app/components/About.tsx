@@ -73,7 +73,7 @@ export function About() {
 
             {/* Heading */}
             <h2
-              data-about-reveal
+              data-about-heading
               className="mb-8"
               style={{
                 fontFamily: 'var(--font-heading)',
@@ -81,22 +81,18 @@ export function About() {
                 color: 'var(--text-primary)',
                 letterSpacing: '-1px',
                 fontSize: 'clamp(20px, 2.5vw, 32px)',
-                opacity: 0,
-                transform: 'translateX(-40px)',
               }}
             >
               Software Engineer. Problem Solver. Product Minded.
             </h2>
 
             <p
-              data-about-reveal
+              data-about-heading
               className="text-xl mb-8"
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 700,
                 color: '#D0D0E0',
-                opacity: 0,
-                transform: 'translateX(-40px)',
               }}
             >
               Full Stack Engineer who builds products people actually use.
@@ -116,8 +112,6 @@ export function About() {
                     color: '#A8A8B8',
                     fontFamily: 'var(--font-body)',
                     lineHeight: 1.8,
-                    opacity: 0,
-                    transform: 'translateY(40px)',
                   }}
                 >
                   <span style={{ color: '#F2664A' }}>→</span>
@@ -128,9 +122,8 @@ export function About() {
 
             {/* CTAs */}
             <div
-              data-about-reveal
+              data-about-cta
               className="relative z-[1] flex flex-wrap gap-4"
-              style={{ opacity: 0, transform: 'translateX(-40px)' }}
             >
               <button
                 type="button"
@@ -178,8 +171,6 @@ export function About() {
                 fontFamily: 'JetBrains Mono, monospace',
                 fontSize: '13px',
                 marginBottom: '16px',
-                opacity: 0,
-                transform: 'translateY(60px)',
               }}
             >
               <div
@@ -282,7 +273,6 @@ export function About() {
                   data-about-stat
                   key={index}
                   className={`about-stat-card about-stat-card--${stat.variant} relative z-[1]`}
-                  style={{ opacity: 0, transform: 'translateY(60px)' }}
                 >
                   <div className="about-stat-number relative z-[1]">{stat.number}</div>
                   <div className="about-stat-label relative z-[1]">{stat.label}</div>

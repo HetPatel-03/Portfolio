@@ -2,17 +2,15 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import meHero from '../../assets/Me_Hero.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function Hero() {
   const [cycleIndex, setCycleIndex] = useState(0);
-  const [heroImageSrc, setHeroImageSrc] = useState(meHero);
   const cycleWords = ['Software Engineer.', 'Problem Solver.', 'Product Minded.', 'Full Stack Dev.'];
   const heroSectionRef = useRef<HTMLElement | null>(null);
   const heroLeftRef = useRef<HTMLDivElement | null>(null);
-  const heroImageShellRef = useRef<HTMLDivElement | null>(null);
+  const imageWrapperRef = useRef<HTMLDivElement | null>(null);
   const heroImageRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
@@ -23,143 +21,119 @@ export function Hero() {
   }, []);
 
   useLayoutEffect(() => {
-    const scene = document.getElementById('hero-about-scene');
-    if (!scene || !heroImageShellRef.current || !heroImageRef.current) return;
+    if (!imageWrapperRef.current || !heroImageRef.current) return;
 
     const ctx = gsap.context(() => {
+      const aboutHeading = gsap.utils.toArray<HTMLElement>('[data-about-heading]');
       const aboutLines = gsap.utils.toArray<HTMLElement>('[data-about-line]');
-      const aboutReveal = gsap.utils.toArray<HTMLElement>('[data-about-reveal]');
+      const aboutCta = gsap.utils.toArray<HTMLElement>('[data-about-cta]');
       const aboutTerminal = document.querySelector<HTMLElement>('[data-about-terminal]');
       const aboutStats = gsap.utils.toArray<HTMLElement>('[data-about-stat]');
 
-      gsap.set(heroImageRef.current, { rotateY: 0, transformOrigin: 'center center' });
-      gsap.set(heroImageShellRef.current, { x: 0, y: 0, scale: 1 });
-      gsap.set(heroLeftRef.current, { opacity: 1 });
+      if (!heroLeftRef.current || !aboutTerminal) return;
 
-      const flipState = { angle: 0, swapped: false };
-      const getToAboutRightX = () => window.innerWidth * 0.05;
-      const getToCenterX = () => -window.innerWidth * 0.16;
-      const getToFinalLeftX = () => -window.innerWidth * 0.43;
-      const getToAboutY = () => window.innerHeight * 0.9;
+      let swapped = false;
+
+      function getCenterOffset() {
+        const wrapper = imageWrapperRef.current;
+        if (!wrapper) return 0;
+        const rect = wrapper.getBoundingClientRect();
+        const wrapperCenter = rect.left + rect.width / 2;
+        const screenCenter = window.innerWidth / 2;
+        return wrapperCenter - screenCenter;
+      }
+
+      function getLeftOffset() {
+        const wrapper = imageWrapperRef.current;
+        if (!wrapper) return 0;
+        const rect = wrapper.getBoundingClientRect();
+        return -(window.innerWidth - rect.width - 40);
+      }
+
+      gsap.set(heroImageRef.current, { clearProps: 'all' });
+      heroImageRef.current.src = '/Me_Hero.png';
+      gsap.set(heroImageRef.current, { rotateY: 0, transformOrigin: 'center center' });
+      gsap.set(imageWrapperRef.current, { x: 0, y: 0, scale: 1 });
+      gsap.set(heroLeftRef.current, { opacity: 1, y: 0 });
+      gsap.set(aboutHeading, { opacity: 0, x: -40 });
+      gsap.set(aboutLines, { opacity: 0, y: 40 });
+      gsap.set(aboutCta, { opacity: 0, y: 30 });
+      gsap.set(aboutTerminal, { opacity: 0, y: 60 });
+      gsap.set(aboutStats, { opacity: 0, y: 60 });
+
+      const PHASE_1_START = 0;
+      const PHASE_1_END = 3;
+      const PHASE_2_START = 3;
+      const PHASE_2_END = 5;
+      const PHASE_2B_START = 5;
+      const PHASE_2B_END = 6.5;
+      const PHASE_3_START = 6.5;
+      const PHASE_3_END = 8.5;
+      const PHASE_4_END = 10;
 
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: scene,
+          trigger: '#hero-about-scene',
           start: 'top top',
           end: '+=400%',
           scrub: 1,
           pin: true,
           anticipatePin: 1,
-          invalidateOnRefresh: true,
         },
       });
 
-      tl.to(
-        heroLeftRef.current,
-        { opacity: 0, duration: 15, ease: 'none' },
-        0
-      )
+      // Phase 1: Left content swap while image stays fixed on right
+      tl.to(heroLeftRef.current, { opacity: 0, y: -30, duration: 1.3 }, PHASE_1_START)
+        .to(aboutHeading, { opacity: 1, x: 0, duration: 1.1, stagger: 0.1 }, PHASE_1_START + 0.6)
+        .to(aboutLines, { opacity: 1, y: 0, duration: 1.1, stagger: 0.1 }, PHASE_1_START + 0.9)
+        .to(aboutCta, { opacity: 1, y: 0, duration: 0.9 }, PHASE_1_START + 1.3)
+        // Phase 2: image moves right -> center
         .to(
-          heroImageShellRef.current,
+          imageWrapperRef.current,
           {
-            x: getToAboutRightX,
-            y: getToAboutY,
-            duration: 30,
-            ease: 'none',
-          },
-          0
-        )
-        .to(
-          aboutLines,
-          {
-            y: 0,
-            opacity: 1,
-            stagger: 0.1,
-            duration: 8,
-            ease: 'power2.out',
-          },
-          4
-        )
-        .to(
-          aboutReveal,
-          {
-            x: 0,
-            opacity: 1,
-            stagger: 0.1,
-            duration: 8,
-            ease: 'power2.out',
-          },
-          6
-        )
-        .to(
-          heroImageShellRef.current,
-          {
-            x: getToCenterX,
+            x: () => -getCenterOffset(),
             scale: 1.05,
-            duration: 20,
-            ease: 'power2.inOut',
+            duration: PHASE_2_END - PHASE_2_START,
           },
-          30
+          PHASE_2_START
         )
+        // Phase 2B: 3D flip and source swap at edge-on
         .to(
-          flipState,
+          heroImageRef.current,
           {
-            angle: 180,
-            duration: 15,
-            ease: 'none',
+            rotateY: 180,
+            duration: PHASE_2B_END - PHASE_2B_START,
             onUpdate: () => {
-              const shadow = 12 + (flipState.angle / 180) * 18;
-              gsap.set(heroImageRef.current, {
-                rotateY: flipState.angle,
-                boxShadow: `0 ${shadow}px ${shadow * 1.8}px rgba(0,0,0,0.28)`,
-              });
-              if (flipState.angle >= 90 && !flipState.swapped) {
-                setHeroImageSrc('/Image2.png');
-                flipState.swapped = true;
-              } else if (flipState.angle < 90 && flipState.swapped) {
-                setHeroImageSrc(meHero);
-                flipState.swapped = false;
+              const angle = Math.abs(Number(gsap.getProperty(heroImageRef.current, 'rotateY')));
+              if (angle >= 90 && !swapped) {
+                heroImageRef.current!.src = '/Image2.png';
+                swapped = true;
               }
             },
           },
-          50
+          PHASE_2B_START
         )
+        // Phase 3: photo to left, right terminal/stats reveal
         .to(
-          heroImageShellRef.current,
+          imageWrapperRef.current,
           {
-            x: getToFinalLeftX,
-            y: getToAboutY,
+            x: () => getLeftOffset(),
             scale: 1,
-            duration: 20,
-            ease: 'power2.inOut',
+            duration: PHASE_3_END - PHASE_3_START,
           },
-          65
+          PHASE_3_START
         )
-        .to(
-          aboutTerminal,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 8,
-            ease: 'power2.out',
-          },
-          68
-        )
-        .to(
-          aboutStats,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 8,
-            stagger: 0.12,
-            ease: 'back.out(1.2)',
-          },
-          70
-        );
+        .to(aboutTerminal, { opacity: 1, y: 0, duration: 1 }, PHASE_3_START + 0.25)
+        .to(aboutStats, { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'back.out(1.2)' }, PHASE_3_START + 0.45)
+        // Phase 4 hold from 0.85 -> 1.0
+        .to({}, { duration: PHASE_4_END - PHASE_3_END }, PHASE_3_END);
     }, heroSectionRef);
 
-    ScrollTrigger.refresh();
-    return () => ctx.revert();
+    const refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 100);
+    return () => {
+      window.clearTimeout(refreshTimer);
+      ctx.revert();
+    };
   }, []);
 
   const scrollToSection = (sectionId: string) => {
@@ -447,40 +421,44 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right Side - Hero image */}
+          {/* Right side spacer keeps initial hero layout balance */}
           <div
             className="relative w-full h-[420px] md:h-[600px]"
-            style={{ flex: '0 0 42%', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', alignSelf: 'stretch', padding: 0 }}
+            style={{ flex: '0 0 42%', alignSelf: 'stretch' }}
           >
-            <div
-              ref={heroImageShellRef}
-              style={{
-                display: 'flex',
-                alignItems: 'flex-end',
-                justifyContent: 'flex-end',
-                width: '100%',
-                height: '100%',
-                perspective: '1000px',
-              }}
-            >
-              <img
-                ref={heroImageRef}
-                src={heroImageSrc}
-                alt="Het Patel"
-                style={{
-                  height: '90%',
-                  width: 'auto',
-                  objectFit: 'contain',
-                  objectPosition: 'bottom',
-                  maxHeight: '700px',
-                  filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.15))',
-                  transformStyle: 'preserve-3d',
-                  willChange: 'transform',
-                }}
-              />
-            </div>
           </div>
         </div>
+      </div>
+
+      <div
+        ref={imageWrapperRef}
+        style={{
+          perspective: '1000px',
+          position: 'absolute',
+          right: '0',
+          top: '0',
+          height: '100%',
+          width: '42%',
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'flex-end',
+        }}
+      >
+        <img
+          ref={heroImageRef}
+          src="/Me_Hero.png"
+          alt="Het Patel"
+          style={{
+            transformStyle: 'preserve-3d',
+            willChange: 'transform',
+            height: '90%',
+            width: 'auto',
+            objectFit: 'contain',
+            objectPosition: 'bottom',
+            maxHeight: '700px',
+            filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.15))',
+          }}
+        />
       </div>
     </section>
   );
