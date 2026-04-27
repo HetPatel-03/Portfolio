@@ -216,7 +216,7 @@ export function Footer() {
 
       <img
         ref={skylineRef}
-        src="/toronto-skyline3.png"
+        src="/toronto-skyline.png"
         alt="Toronto skyline"
         style={{
           width: '100%',
