@@ -463,7 +463,7 @@ export function Contact() {
             className="w-full md:w-auto h-[360px] md:h-[480px]"
           >
             <img
-              src="/Image2.png.PNG"
+              src="/Footer_Image.png"
               alt="Het Patel - Toronto Waterfront"
               style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%', display: 'block' }}
             />
