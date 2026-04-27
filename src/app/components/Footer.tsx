@@ -117,6 +117,7 @@ export function Footer() {
               objectFit: 'contain',
               objectPosition: 'bottom left',
               display: 'block',
+              mixBlendMode: 'luminosity',
               filter: 'drop-shadow(0 20px 40px rgba(242,102,74,0.15))',
               opacity: 0,
             }}
