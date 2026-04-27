@@ -50,12 +50,6 @@ export function Contact() {
     }
   ];
 
-  const socialLinks = [
-    { icon: Github, href: 'https://github.com/hetpatel', label: 'GitHub' },
-    { icon: Linkedin, href: 'https://linkedin.com/in/hetpatel', label: 'LinkedIn' },
-    { icon: Twitter, href: 'https://twitter.com/hetpatel', label: 'X' },
-  ];
-
   return (
     <section id="connect" className="section-bg-connect relative py-32 px-8">
       <div className="max-w-7xl mx-auto">
@@ -481,37 +475,6 @@ export function Contact() {
           </div>
         </div>
 
-        <div
-          className="mt-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
-        >
-          <div style={{ fontFamily: 'Clash Display, sans-serif', fontSize: '14px', color: '#F2664A' }}>
-            hetppatel.dev
-          </div>
-          <div style={{ color: '#A8A8B8', fontSize: '12px', fontFamily: 'DM Sans', textAlign: 'center' }}>
-            © 2025 Het Patel. Built with React + TypeScript.
-          </div>
-          <div className="flex items-center gap-2">
-            {socialLinks.map(({ icon: Icon, href, label }) => (
-              <a
-                key={href}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:border-[var(--coral)]"
-                style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  backdropFilter: 'blur(10px)',
-                  WebkitBackdropFilter: 'blur(10px)',
-                }}
-              >
-                <Icon size={15} style={{ color: '#F0EDE8' }} />
-              </a>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );
