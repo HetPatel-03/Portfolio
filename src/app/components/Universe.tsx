@@ -1424,14 +1424,14 @@ export function Universe() {
   }, [nodes]);
 
   return (
-    <section id="universe" className="section-bg-universe relative py-32 px-8">
+    <section id="universe" className="section-bg-universe relative py-20 md:py-32 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
         <p className="text-xs mb-4" style={{ fontFamily: 'var(--font-mono)', color: 'var(--coral)' }}>
           // 02 · universe
         </p>
 
         <h2
-          className="text-[52px] mb-2"
+          className="text-[clamp(34px,8vw,52px)] mb-2"
           style={{
             fontFamily: 'var(--font-heading)',
             fontWeight: 800,
@@ -1442,7 +1442,7 @@ export function Universe() {
           The full picture.
         </h2>
 
-        <p className="text-[13px] mb-12" style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+        <p className="text-[13px] mb-8 md:mb-12" style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
           Click any node to explore · Drag to rearrange.
         </p>
 
@@ -1450,7 +1450,7 @@ export function Universe() {
           ref={containerRef}
           style={{
             width: '100%',
-            height: '700px',
+            height: 'clamp(420px, 70vh, 700px)',
             borderRadius: '20px',
             overflow: 'hidden',
             background: '#0C0C10',
@@ -1509,7 +1509,7 @@ export function Universe() {
                 position: 'absolute',
                 left: detailPanel.x,
                 top: detailPanel.y,
-                width: 280,
+                width: 'min(280px, calc(100vw - 32px))',
                 zIndex: 10,
                 background: 'rgba(12,12,16,0.92)',
                 backdropFilter: 'blur(20px)',

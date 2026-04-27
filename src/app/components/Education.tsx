@@ -137,7 +137,7 @@ export function Education() {
   ];
 
   return (
-    <section id="education" className="section-bg-education relative py-32 px-8">
+    <section id="education" className="section-bg-education relative py-20 md:py-32 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
         <p
           className="text-xs mb-4"
@@ -147,7 +147,7 @@ export function Education() {
         </p>
 
         <h2
-          className="text-[52px] mb-12"
+          className="text-[clamp(34px,8vw,52px)] mb-10 md:mb-12"
           style={{
             fontFamily: 'var(--font-heading)',
             fontWeight: 800,
@@ -158,7 +158,7 @@ export function Education() {
           Academic Foundation.
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {/* Algoma University — flip card */}
           <div className="flip-container" style={{ height: flipHeight }}>
             <div
@@ -356,7 +356,7 @@ export function Education() {
           </div>
 
           {/* Certifications Card */}
-          <div className="education-liquid-card p-8">
+          <div className="education-liquid-card p-6 md:p-8">
             <h3
               className="text-2xl mb-6"
               style={{

@@ -179,7 +179,7 @@ const STACK_AUTO_SCROLL_DELTA_PX = 1;
 /** Resume auto-scroll after this much idle time following user interaction */
 const STACK_RESUME_AFTER_IDLE_MS = 10_000;
 
-const SECTION_PAD_X = 'clamp(40px, 8vw, 120px)';
+const SECTION_PAD_X = 'clamp(16px, 6vw, 120px)';
 
 const CARD_LOOP = [...STACK_ITEMS, ...STACK_ITEMS];
 const TICKER_SEQUENCE = [...STACK_ITEMS, ...STACK_ITEMS];
@@ -314,7 +314,7 @@ export function TechStack() {
   return (
     <section
       id="stack"
-      className="stack-section relative overflow-hidden py-32"
+      className="stack-section relative overflow-hidden py-20 md:py-32"
       style={{
         paddingLeft: SECTION_PAD_X,
         paddingRight: SECTION_PAD_X,
@@ -334,7 +334,7 @@ export function TechStack() {
               // 06 · stack
             </p>
             <h2
-              className="text-[52px] leading-none"
+              className="text-[clamp(34px,8vw,52px)] leading-none"
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 800,

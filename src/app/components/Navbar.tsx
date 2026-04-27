@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('hero');
   const [bubbleStyle, setBubbleStyle] = useState({
     left: 0,
@@ -18,6 +19,13 @@ export function Navbar() {
     handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 900);
+    onResize();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
   }, []);
 
   useEffect(() => {
@@ -116,11 +124,12 @@ export function Navbar() {
     { label: 'Stack', id: 'stack' },
     { label: 'Connect', id: 'connect' },
   ];
+  const visibleLinks = isMobile ? navLinks.filter((l) => ['about', 'projects', 'connect'].includes(l.id)) : navLinks;
 
   return (
     <nav className="fixed top-5 left-1/2 z-[100] max-w-[calc(100vw-2rem)] w-max -translate-x-1/2 transition-all duration-300">
       <div
-        className={`flex items-center gap-8 px-6 py-3 ${
+        className={`flex items-center ${isMobile ? 'gap-4 px-4 py-2.5' : 'gap-8 px-6 py-3'} ${
           scrolled ? 'shadow-[0_8px_32px_rgba(0,0,0,0.4)]' : ''
         }`}
         style={{
@@ -141,7 +150,7 @@ export function Navbar() {
           className="flex items-center gap-2"
         >
           <span
-            className="text-lg tracking-tight"
+            className={`${isMobile ? 'text-base' : 'text-lg'} tracking-tight`}
             style={{
               fontFamily: 'var(--font-heading)',
               fontWeight: 800,
@@ -163,7 +172,7 @@ export function Navbar() {
           </span>
         </button>
 
-        <div className="nav-links-container relative flex items-center gap-6">
+        <div className={`nav-links-container relative flex items-center ${isMobile ? 'gap-4' : 'gap-6'}`}>
           <div
             style={{
               position: 'absolute',
@@ -183,7 +192,7 @@ export function Navbar() {
             }}
             aria-hidden
           />
-          {navLinks.map((item) => {
+          {visibleLinks.map((item) => {
             const isActive =
               activeSection === item.id || (activeSection === 'hero' && item.id === 'about');
             return (
@@ -216,7 +225,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => scrollToSection('connect')}
-          className="px-5 py-2 rounded-full transition-all duration-200 hover:scale-105"
+          className={`${isMobile ? 'px-4 py-1.5 text-sm' : 'px-5 py-2'} rounded-full transition-all duration-200 hover:scale-105`}
           style={{
             background: 'var(--coral)',
             color: 'var(--bg-primary)',

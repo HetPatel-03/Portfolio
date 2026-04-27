@@ -51,9 +51,9 @@ export function Contact() {
   ];
 
   return (
-    <section id="connect" className="section-bg-connect relative py-32 px-8">
+    <section id="connect" className="section-bg-connect relative py-20 md:py-32 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-start mb-12">
+        <div className="flex flex-col md:flex-row justify-between md:items-start mb-10 md:mb-12 gap-3">
           <div>
             <p 
               className="text-xs mb-4"
@@ -62,7 +62,7 @@ export function Contact() {
               // 08 · connect
             </p>
             <h2 
-              className="text-[52px]"
+              className="text-[clamp(34px,8vw,52px)]"
               style={{ 
                 fontFamily: 'var(--font-heading)', 
                 fontWeight: 800,
@@ -74,7 +74,7 @@ export function Contact() {
             </h2>
           </div>
           <p 
-            className="text-xs pt-12"
+            className="text-xs pt-0 md:pt-12"
             style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
           >
             // replies within 24h
@@ -84,7 +84,7 @@ export function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Contact Form */}
           <div
-            className="rounded-[20px] p-10"
+            className="rounded-[20px] p-6 md:p-10"
             style={{
               background: 'rgba(255,255,255,0.03)',
               backdropFilter: 'blur(12px) saturate(120%)',
@@ -241,7 +241,7 @@ export function Contact() {
           {/* Contact Methods */}
           <div>
             <div
-              className="rounded-[20px] p-8"
+              className="rounded-[20px] p-6 md:p-8"
               style={{
                 background: 'rgba(255,255,255,0.03)',
                 backdropFilter: 'blur(12px) saturate(120%)',
@@ -354,7 +354,7 @@ export function Contact() {
           </div>
         </div>
 
-        <div className="w-full mt-[60px] flex flex-col md:flex-row items-stretch gap-6">
+        <div className="w-full mt-10 md:mt-[60px] flex flex-col md:flex-row items-stretch gap-4 md:gap-6">
           <div
             style={{ flex: '0 0 60%', height: '480px', borderRadius: '20px', overflow: 'hidden', position: 'relative' }}
             className="w-full md:w-auto h-[280px] md:h-[480px]"

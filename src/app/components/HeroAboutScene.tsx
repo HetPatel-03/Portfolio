@@ -14,6 +14,7 @@ const stats = [
 
 export function HeroAboutScene() {
   const [cycleIndex, setCycleIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 900);
   const cycleWords = ['Software Engineer.', 'Problem Solver.', 'Product Minded.', 'Full Stack Dev.'];
 
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -33,12 +34,19 @@ export function HeroAboutScene() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 900);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
   };
 
   useLayoutEffect(() => {
+    if (isMobile) return;
     let cleanup = () => {};
     const refreshDelay = window.setTimeout(() => {
       const ctx = gsap.context(() => {
@@ -120,7 +128,7 @@ export function HeroAboutScene() {
       window.clearTimeout(refreshDelay);
       cleanup();
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <div
@@ -137,13 +145,13 @@ export function HeroAboutScene() {
         id="hero"
         className="section-bg-hero"
         style={{
-          minHeight: '100vh',
+          minHeight: isMobile ? 'auto' : '100vh',
           display: 'flex',
           alignItems: 'flex-start',
           paddingTop: '0',
           marginTop: '0',
-          paddingLeft: 'clamp(24px, 5vw, 80px)',
-          paddingRight: '0',
+          paddingLeft: 'clamp(16px, 5vw, 80px)',
+          paddingRight: isMobile ? 'clamp(16px, 5vw, 24px)' : '0',
           overflow: 'visible',
           position: 'relative',
         }}
@@ -167,8 +175,8 @@ export function HeroAboutScene() {
             <div style={{
               flex: '1',
               position: 'relative',
-              minHeight: '100vh',
-              paddingRight: 'clamp(24px, 4vw, 60px)',
+              minHeight: isMobile ? 'auto' : '100vh',
+              paddingRight: isMobile ? '0' : 'clamp(24px, 4vw, 60px)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
@@ -176,9 +184,11 @@ export function HeroAboutScene() {
             }} ref={leftColumnRef}>
               {/* LAYER A: Hero content — fades OUT beat 1 */}
               <div ref={heroLeftRef} style={{
-                position: 'absolute', top: 0, left: 0,
+                position: isMobile ? 'relative' : 'absolute',
+                top: isMobile ? 'auto' : 0,
+                left: 0,
                 width: '100%',
-                paddingTop: 'clamp(100px, 12vh, 140px)',
+                paddingTop: isMobile ? 'clamp(88px, 10vh, 120px)' : 'clamp(100px, 12vh, 140px)',
               }}>
                 <div
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
@@ -261,10 +271,13 @@ export function HeroAboutScene() {
 
               {/* LAYER B: About text — fades IN beat 1, OUT beat 2 */}
               <div ref={aboutTextRef} style={{
-                position: 'absolute', top: 0, left: 0,
+                position: isMobile ? 'relative' : 'absolute',
+                top: isMobile ? 'auto' : 0,
+                left: 0,
                 width: '100%',
-                paddingTop: 'clamp(100px, 12vh, 140px)',
-                opacity: 0,
+                paddingTop: isMobile ? '24px' : 'clamp(100px, 12vh, 140px)',
+                opacity: isMobile ? 1 : 0,
+                marginTop: isMobile ? '20px' : '0',
               }}>
                 <p style={{ fontFamily: 'var(--font-mono)', color: 'var(--coral)', fontSize: '12px', marginBottom: '16px', letterSpacing: '0.05em' }}>
                   // 01 · about
@@ -295,16 +308,17 @@ export function HeroAboutScene() {
             </div>
 
             {/* RIGHT COLUMN */}
-            <div style={{ flex: '0 0 44%', position: 'relative', height: '100vh', overflow: 'visible' }}>
+            <div style={{ flex: isMobile ? '1 1 100%' : '0 0 44%', position: 'relative', height: isMobile ? 'auto' : '100vh', overflow: 'visible' }}>
               {/* Travelling image wrapper */}
               <div
                 ref={imgWrapperRef}
                 style={{
-                  position: 'absolute',
-                  inset: 0,
+                  position: isMobile ? 'relative' : 'absolute',
+                  inset: isMobile ? 'auto' : 0,
                   display: 'flex',
                   alignItems: 'flex-end',
-                  justifyContent: 'flex-end',
+                  justifyContent: isMobile ? 'center' : 'flex-end',
+                  height: isMobile ? 'clamp(320px, 56vh, 520px)' : '100%',
                   overflow: 'visible',
                   zIndex: 20,
                   perspective: '1000px',
@@ -318,17 +332,17 @@ export function HeroAboutScene() {
                   style={{
                     position: 'absolute',
                     bottom: 0,
-                    right: 0,
-                    height: '86vh',
+                    right: isMobile ? '50%' : 0,
+                    height: isMobile ? '100%' : '86vh',
                     width: 'auto',
-                    maxHeight: '740px',
+                    maxHeight: isMobile ? '520px' : '740px',
                     objectFit: 'contain',
                     objectPosition: 'bottom',
                     filter: 'drop-shadow(0 0 60px rgba(242,102,74,0.25))',
                     willChange: 'transform, opacity',
                     display: 'block',
-                    opacity: 1,
-                    transform: 'rotateY(180deg) scale(1.3)',
+                    opacity: isMobile ? 0 : 1,
+                    transform: isMobile ? 'translateX(50%) rotateY(180deg) scale(1.3)' : 'rotateY(180deg) scale(1.3)',
                     backfaceVisibility: 'hidden',
                     transformStyle: 'preserve-3d',
                   }}
@@ -340,10 +354,10 @@ export function HeroAboutScene() {
                   style={{
                     position: 'absolute',
                     bottom: 0,
-                    right: 0,
-                    height: '86vh',
+                    right: isMobile ? '50%' : 0,
+                    height: isMobile ? '100%' : '86vh',
                     width: 'auto',
-                    maxHeight: '740px',
+                    maxHeight: isMobile ? '520px' : '740px',
                     objectFit: 'contain',
                     objectPosition: 'bottom',
                     filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.18))',
@@ -351,6 +365,7 @@ export function HeroAboutScene() {
                     willChange: 'transform, opacity',
                     display: 'block',
                     opacity: 1,
+                    transform: isMobile ? 'translateX(50%)' : undefined,
                     backfaceVisibility: 'hidden',
                     transformStyle: 'preserve-3d',
                   }}
@@ -361,14 +376,15 @@ export function HeroAboutScene() {
               <div
                 ref={terminalColRef}
                 style={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: '36px',
+                  position: isMobile ? 'relative' : 'absolute',
+                  top: isMobile ? 'auto' : '50%',
+                  right: isMobile ? 'auto' : '36px',
                   width: '100%',
-                  transform: 'translateY(-50%)',
-                  paddingRight: '16px',
+                  transform: isMobile ? 'none' : 'translateY(-50%)',
+                  paddingRight: isMobile ? '0' : '16px',
                   zIndex: 5,
-                  opacity: 0,
+                  opacity: isMobile ? 1 : 0,
+                  marginTop: isMobile ? '8px' : '0',
                 }}
               >
                 <div style={{
@@ -409,7 +425,7 @@ export function HeroAboutScene() {
                   </div>
                 </div>
 
-                <div ref={statsGridRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div ref={statsGridRef} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '12px' }}>
                   {stats.map((s, i) => (
                     <div key={i} className={`about-stat-card about-stat-card--${s.variant}`}>
                       <div className="about-stat-number">{s.number}</div>

@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 export function Footer() {
+  const [isMobile, setIsMobile] = React.useState(false);
   const footerRef = useRef<HTMLElement>(null);
   const portraitRef = useRef<HTMLImageElement>(null);
   const rightColRef = useRef<HTMLDivElement>(null);
@@ -88,6 +89,13 @@ export function Footer() {
     return () => ctx.revert();
   }, []);
 
+  React.useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 900);
+    onResize();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   return (
     <footer
       ref={footerRef}
@@ -103,10 +111,11 @@ export function Footer() {
         style={{
           display: 'flex',
           alignItems: 'center',
+          flexDirection: isMobile ? 'column' : 'row',
           width: '100%',
         }}
       >
-        <div style={{ flex: '0 0 40%', display: 'flex', alignItems: 'flex-end' }}>
+        <div style={{ flex: isMobile ? '1 1 100%' : '0 0 40%', width: isMobile ? '100%' : undefined, display: 'flex', alignItems: 'flex-end', justifyContent: isMobile ? 'center' : 'flex-start' }}>
           <img
             ref={portraitRef}
             src="/sketch-potrait.PNG"
@@ -115,7 +124,7 @@ export function Footer() {
               height: 'clamp(280px, 35vh, 420px)',
               width: 'auto',
               objectFit: 'contain',
-              objectPosition: 'bottom left',
+              objectPosition: isMobile ? 'bottom center' : 'bottom left',
               display: 'block',
               mixBlendMode: 'luminosity',
               filter: 'drop-shadow(0 20px 40px rgba(242,102,74,0.15))',
@@ -127,9 +136,11 @@ export function Footer() {
         <div
           ref={rightColRef}
           style={{
-            flex: '0 0 60%',
-            paddingLeft: 'clamp(32px, 5vw, 80px)',
+            flex: isMobile ? '1 1 100%' : '0 0 60%',
+            paddingLeft: isMobile ? '0px' : 'clamp(32px, 5vw, 80px)',
             opacity: 0,
+            textAlign: isMobile ? 'center' : 'left',
+            marginTop: isMobile ? '20px' : '0',
           }}
         >
           <p
@@ -206,6 +217,7 @@ export function Footer() {
               cursor: 'pointer',
               width: 'fit-content',
               transition: 'opacity 0.2s ease',
+              margin: isMobile ? '0 auto' : '0',
             }}
             onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85'; }}
             onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
@@ -241,6 +253,7 @@ export function Footer() {
           justifyContent: 'space-between',
           gap: '16px',
           opacity: 0,
+          textAlign: isMobile ? 'center' : 'left',
         }}
       >
         <div

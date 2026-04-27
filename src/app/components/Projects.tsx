@@ -35,9 +35,9 @@ export function Projects() {
   ];
 
   return (
-    <section id="projects" className="section-bg-projects relative py-32 px-8">
+    <section id="projects" className="section-bg-projects relative py-20 md:py-32 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-start mb-12">
+        <div className="flex flex-col md:flex-row justify-between md:items-start mb-10 md:mb-12 gap-3">
           <div>
             <p 
               className="text-xs mb-4"
@@ -46,7 +46,7 @@ export function Projects() {
               // 03 · projects
             </p>
             <h2 
-              className="text-[52px]"
+              className="text-[clamp(34px,8vw,52px)]"
               style={{ 
                 fontFamily: 'var(--font-heading)', 
                 fontWeight: 800,
@@ -58,14 +58,14 @@ export function Projects() {
             </h2>
           </div>
           <p 
-            className="text-xs pt-12"
+            className="text-xs pt-0 md:pt-12"
             style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
           >
             // 3 of 3
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           {projects.map((project) => (
             <div key={project.id} className="project-card group">
               {/* Visual Area */}
@@ -103,7 +103,7 @@ export function Projects() {
               </div>
 
               {/* Card Body — liquid glass (gradient block above unchanged) */}
-              <div className="project-card__body p-6">
+              <div className="project-card__body p-5 md:p-6">
                 {/* Top Row */}
                 <div className="flex justify-between items-center mb-3">
                   <span 
@@ -131,7 +131,7 @@ export function Projects() {
 
                 {/* Project Name */}
                 <h3 
-                  className="text-[22px] mb-3"
+                  className="text-[20px] md:text-[22px] mb-3"
                   style={{
                     fontFamily: 'var(--font-heading)',
                     fontWeight: 800,

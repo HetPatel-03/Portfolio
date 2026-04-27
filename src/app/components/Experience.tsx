@@ -99,7 +99,7 @@ export function Experience() {
   ];
 
   return (
-    <section id="experience" className="section-bg-experience relative py-32 px-8">
+    <section id="experience" className="section-bg-experience relative py-20 md:py-32 px-4 md:px-8">
       <div className="max-w-5xl mx-auto">
         <p 
           className="text-xs mb-4"
@@ -109,7 +109,7 @@ export function Experience() {
         </p>
 
         <h2 
-          className="text-[52px] mb-20"
+          className="text-[clamp(34px,8vw,52px)] mb-12 md:mb-20"
           style={{ 
             fontFamily: 'var(--font-heading)', 
             fontWeight: 800,
@@ -130,11 +130,11 @@ export function Experience() {
             }}
           />
 
-          <div className="space-y-12">
+          <div className="space-y-8 md:space-y-12">
             {experiences.map((exp, index) => (
               <div 
                 key={index}
-                className="relative pl-16"
+                className="relative pl-10 md:pl-16"
               >
                 {/* Timeline Node */}
                 <div 
@@ -175,7 +175,7 @@ export function Experience() {
                   }}
                 >
                   {/* Header */}
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="flex flex-col sm:flex-row justify-between sm:items-start mb-4 gap-3">
                     <div>
                       <div className="flex items-center gap-3 mb-2">
                         <span
@@ -204,7 +204,7 @@ export function Experience() {
                         )}
                       </div>
                       <h3 
-                        className="text-xl mb-1"
+                        className="text-lg md:text-xl mb-1"
                         style={{
                           fontFamily: 'var(--font-heading)',
                           fontWeight: 800,
