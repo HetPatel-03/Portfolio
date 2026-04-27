@@ -59,7 +59,7 @@ export function Footer() {
       gsap.fromTo(skylineRef.current,
         { y: 30, opacity: 0 },
         {
-          y: 0, opacity: 0.08,
+          y: 0, opacity: 0.13,
           duration: 1.4,
           ease: 'power2.out',
           scrollTrigger: {
@@ -223,7 +223,7 @@ export function Footer() {
           height: 'auto',
           display: 'block',
           marginTop: '-60px',
-          opacity: 0.08,
+          opacity: 0.13,
           filter: 'invert(1)',
           pointerEvents: 'none',
         }}
