@@ -18,13 +18,6 @@ export default function StudenzBitDetail() {
   const heroSublineRef = useRef(null);
   const heroButtonsRef = useRef(null);
 
-  const section2LineRef = useRef(null);
-  const section2LabelRef = useRef(null);
-  const section2HeadlineLine1Ref = useRef(null);
-  const section2HeadlineLine2Ref = useRef(null);
-  const section2BodyRef = useRef(null);
-  const pillRefs = useRef([]);
-
   useLayoutEffect(() => {
     if (!rootRef.current || !heroRef.current || !section2Ref.current) return undefined;
 
@@ -46,17 +39,8 @@ export default function StudenzBitDetail() {
         { opacity: 0 }
       );
 
-      gsap.set(section2LineRef.current, { scaleX: 0, transformOrigin: 'left center' });
-      gsap.set(
-        [
-          section2LabelRef.current,
-          section2HeadlineLine1Ref.current,
-          section2HeadlineLine2Ref.current,
-          section2BodyRef.current,
-          ...pillRefs.current,
-        ].filter(Boolean),
-        { opacity: 0 }
-      );
+      gsap.set('.s2-line', { scaleX: 0, transformOrigin: 'left center' });
+      gsap.set(['.s2-label', '.s2-headline span', '.s2-body', '.s2-pill'], { opacity: 0 });
 
       const intro = gsap.timeline({ defaults: { duration: 0.8, ease: 'power2.out' } });
 
@@ -124,7 +108,7 @@ export default function StudenzBitDetail() {
       }
 
       gsap.fromTo(
-        section2LineRef.current,
+        '.s2-line',
         { scaleX: 0 },
         {
           scaleX: 1,
@@ -139,64 +123,30 @@ export default function StudenzBitDetail() {
       );
 
       gsap.fromTo(
-        section2LabelRef.current,
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'power2.out',
-          delay: 0.6,
-          scrollTrigger: {
-            trigger: section2Ref.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-
-      gsap.fromTo(
-        section2HeadlineLine1Ref.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: section2Ref.current,
-            start: 'top 75%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-
-      gsap.fromTo(
-        section2HeadlineLine2Ref.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-          delay: 0.15,
-          scrollTrigger: {
-            trigger: section2Ref.current,
-            start: 'top 75%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-
-      gsap.fromTo(
-        section2BodyRef.current,
+        '.s2-label',
         { opacity: 0, y: 20 },
         {
           opacity: 1,
           y: 0,
           duration: 0.7,
           ease: 'power2.out',
-          delay: 0.2,
+          scrollTrigger: {
+            trigger: section2Ref.current,
+            start: 'top 75%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        '.s2-headline span',
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          stagger: 0.15,
           scrollTrigger: {
             trigger: section2Ref.current,
             start: 'top 70%',
@@ -206,17 +156,34 @@ export default function StudenzBitDetail() {
       );
 
       gsap.fromTo(
-        pillRefs.current,
-        { opacity: 0, y: 15 },
+        '.s2-body',
+        { opacity: 0, y: 20 },
         {
           opacity: 1,
           y: 0,
           duration: 0.7,
           ease: 'power2.out',
-          stagger: 0.1,
+          delay: 0.2,
           scrollTrigger: {
             trigger: section2Ref.current,
             start: 'top 65%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        '.s2-pill',
+        { opacity: 0, y: 15 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: section2Ref.current,
+            start: 'top 60%',
             toggleActions: 'play none none none',
           },
         }
@@ -248,7 +215,7 @@ export default function StudenzBitDetail() {
           marginTop: 0,
           height: '100vh',
           backgroundImage:
-            "linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('/Studenzbit_3.jpeg')",
+            "linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('/studenzbit_1.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'scroll',
@@ -290,12 +257,12 @@ export default function StudenzBitDetail() {
             <p
               style={{
                 margin: 0,
-                fontFamily: 'DM Sans, sans-serif',
-                fontWeight: 700,
-                fontSize: '0.75rem',
-                letterSpacing: '0.2em',
-                color: 'rgba(255,255,255,0.9)',
-                marginBottom: '0.3rem',
+                fontFamily: 'Unbounded, sans-serif',
+                fontWeight: 800,
+                fontSize: '1.1rem',
+                letterSpacing: '0.05em',
+                color: '#fff',
+                marginBottom: '0.4rem',
               }}
             >
               TECHNICAL DEEP DIVE · 2024
@@ -304,10 +271,10 @@ export default function StudenzBitDetail() {
               style={{
                 margin: '0 0 2rem 0',
                 fontFamily: 'DM Sans, sans-serif',
-                fontWeight: 300,
-                fontSize: '0.65rem',
+                fontWeight: 400,
+                fontSize: '0.8rem',
                 letterSpacing: '0.12em',
-                color: 'rgba(255,255,255,0.45)',
+                color: 'rgba(255,255,255,0.6)',
               }}
             >
               Web · Affiliate · SEO · Content
@@ -364,24 +331,6 @@ export default function StudenzBitDetail() {
               </div>
             ))}
           </div>
-        </div>
-
-        <div
-          style={{
-            position: 'absolute',
-            left: '1.5rem',
-            top: '50%',
-            transform: 'rotate(-90deg)',
-            transformOrigin: 'left top',
-            fontFamily: 'DM Sans, sans-serif',
-            fontWeight: 400,
-            fontSize: '0.5rem',
-            letterSpacing: '0.25em',
-            color: 'rgba(255,255,255,0.4)',
-            zIndex: 2,
-          }}
-        >
-          SCROLL DOWN
         </div>
 
         <div
@@ -527,7 +476,7 @@ export default function StudenzBitDetail() {
           position: 'relative',
           height: '100vh',
           backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0.15)), url('/Studenzbit_2.png')",
+            "linear-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0.15)), url('/studenzbit_1_sun.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           overflow: 'hidden',
@@ -536,70 +485,70 @@ export default function StudenzBitDetail() {
         <div
           style={{
             position: 'absolute',
-            right: '4rem',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            maxWidth: '480px',
+            top: '3rem',
+            left: '3rem',
+            zIndex: 10,
           }}
         >
-          <div style={{ position: 'relative', zIndex: 10 }}>
           <div
-            ref={section2LineRef}
+            className="s2-line"
             style={{
-              width: '40px',
+              width: '50px',
               height: '1px',
-              background: 'rgba(45,26,14,0.3)',
+              background: 'rgba(45,26,14,0.35)',
               marginBottom: '1rem',
             }}
           />
 
           <p
-            ref={section2LabelRef}
+            className="s2-label"
             style={{
-              margin: '0 0 1rem 0',
+              margin: '0 0 0.8rem 0',
               fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 400,
+              fontWeight: 700,
               fontSize: '0.65rem',
               letterSpacing: '0.25em',
-              color: 'rgba(80,40,20,0.7)',
+              color: 'rgba(45,26,14,0.5)',
+              textTransform: 'uppercase',
             }}
           >
-            THE PROBLEM
+            OVERVIEW
           </p>
 
           <h2
+            className="s2-headline"
             style={{
               margin: '0 0 1.5rem 0',
               fontFamily: 'Unbounded, sans-serif',
-              fontWeight: 900,
-              fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
+              fontWeight: 800,
+              fontSize: 'clamp(2rem, 4vw, 3.2rem)',
               color: '#2d1a0e',
-              lineHeight: 1.1,
+              lineHeight: 1.05,
             }}
           >
-            <span
-              ref={section2HeadlineLine1Ref}
-              style={{ display: 'block', whiteSpace: 'pre-line' }}
-            >
-              10,000km from home.
-            </span>
-            <span
-              ref={section2HeadlineLine2Ref}
-              style={{ display: 'block', whiteSpace: 'pre-line' }}
-            >
-              Googgling everything.
-            </span>
+            <span style={{ display: 'block' }}>The Problem</span>
+            <span style={{ display: 'block' }}>We Solved.</span>
           </h2>
+        </div>
 
+        <div
+          style={{
+            position: 'absolute',
+            right: '3rem',
+            top: '55%',
+            maxWidth: '420px',
+            zIndex: 10,
+          }}
+        >
           <p
-            ref={section2BodyRef}
+            className="s2-body"
             style={{
               margin: '0 0 2rem 0',
               fontFamily: 'DM Sans, sans-serif',
               fontWeight: 300,
               fontSize: '0.9rem',
               color: 'rgba(45,26,14,0.75)',
-              lineHeight: 1.8,
+              lineHeight: 1.85,
             }}
           >
             Every year, thousands of international students land in Canada with no playbook. No one tells you how
@@ -607,27 +556,26 @@ export default function StudenzBitDetail() {
             at 2am after a 20-hour flight. StudenzBit is the guide that should have existed.
           </p>
 
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            {statPills.map((pill, idx) => (
+          <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+            {statPills.map((pill) => (
               <span
                 key={pill}
-                ref={(el) => {
-                  pillRefs.current[idx] = el;
-                }}
+                className="s2-pill"
                 style={{
                   border: '1px solid rgba(45,26,14,0.2)',
-                  padding: '0.4rem 0.9rem',
+                  padding: '0.4rem 1rem',
                   borderRadius: '20px',
                   fontFamily: 'DM Sans, sans-serif',
                   fontWeight: 400,
                   fontSize: '0.72rem',
                   color: 'rgba(45,26,14,0.6)',
+                  background: 'rgba(255,255,255,0.3)',
+                  backdropFilter: 'blur(8px)',
                 }}
               >
                 {pill}
               </span>
             ))}
-          </div>
           </div>
         </div>
       </section>
