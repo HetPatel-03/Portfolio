@@ -818,7 +818,7 @@ export default function StudenzBitDetail() {
               display: 'block',
             }}
           >
-            SECTION 03
+            DECISION LOG
           </span>
           <div
             style={{
@@ -836,10 +836,10 @@ export default function StudenzBitDetail() {
               fontSize: 'clamp(2.2rem, 4.5vw, 4rem)',
               color: '#1a0a00',
               lineHeight: 1.05,
+              textTransform: 'lowercase',
             }}
           >
-            <span style={{ display: 'block' }}>Every Choice</span>
-            <span style={{ display: 'block' }}>Had a Reason.</span>
+            why I built it this way
           </h2>
           <p
             style={{
@@ -852,7 +852,9 @@ export default function StudenzBitDetail() {
               margin: '0 auto',
             }}
           >
-            No decision was default. Every tool, every approach, every tradeoff was deliberate.
+            Every decision had a reason — sometimes obvious,
+            <br />
+            sometimes learned the hard way.
           </p>
         </div>
 
@@ -1072,7 +1074,9 @@ export default function StudenzBitDetail() {
               lineHeight: 1.8,
             }}
           >
-            Building solo means every decision is yours — that&apos;s equally freeing and humbling.
+            Honestly? I got some of these wrong the first time.
+            <br />
+            That&apos;s kind of the point.
           </p>
           <p
             style={{
@@ -1084,7 +1088,7 @@ export default function StudenzBitDetail() {
               letterSpacing: '0.1em',
             }}
           >
-            — Het, Builder of StudenzBit
+            — Het
           </p>
         </div>
       </section>
