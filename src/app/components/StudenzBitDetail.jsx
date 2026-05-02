@@ -1,14 +1,155 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const ARCH_NODES = [
+  { id: 'google', x: 150, y: 60, label: 'Google Search', sub: 'SEO · Schema', color: '#7C3AED', bg: '#EDE9FE' },
+  { id: 'ai', x: 400, y: 60, label: 'AI Search', sub: 'llms.txt', color: '#7C3AED', bg: '#EDE9FE' },
+  { id: 'social', x: 650, y: 60, label: 'Social', sub: 'Instagram · Word', color: '#7C3AED', bg: '#EDE9FE' },
+  { id: 'landing', x: 400, y: 180, label: 'Landing Page', sub: 'HTML · GSAP', color: '#0D9488', bg: '#CCFBF1' },
+  { id: 'housing', x: 100, y: 300, label: 'Housing', sub: 'Category Page', color: '#0369A1', bg: '#E0F2FE' },
+  { id: 'banking', x: 300, y: 300, label: 'Banking', sub: 'Category Page', color: '#0369A1', bg: '#E0F2FE' },
+  { id: 'sim', x: 500, y: 300, label: 'SIM Cards', sub: 'Category Page', color: '#0369A1', bg: '#E0F2FE' },
+  { id: 'ohip', x: 700, y: 300, label: 'OHIP', sub: 'Category Page', color: '#0369A1', bg: '#E0F2FE' },
+  { id: 'map', x: 900, y: 300, label: 'D3.js Map', sub: 'Interactive SVG', color: '#0369A1', bg: '#E0F2FE' },
+  { id: 'blog', x: 400, y: 420, label: 'Arjun & Priya', sub: 'Blog System', color: '#B45309', bg: '#FEF3C7' },
+  { id: 'schema', x: 150, y: 420, label: 'Schema Markup', sub: 'JSON-LD · OG', color: '#7C3AED', bg: '#EDE9FE' },
+  { id: 'amazon', x: 250, y: 540, label: 'Amazon.ca', sub: 'Affiliate', color: '#B45309', bg: '#FEF3C7' },
+  { id: 'ga4', x: 550, y: 540, label: 'GA4', sub: 'Analytics', color: '#0369A1', bg: '#E0F2FE' },
+  { id: 'supabase', x: 750, y: 540, label: 'Supabase', sub: 'Future · Auth', color: '#9CA3AF', bg: '#F3F4F6', dashed: true },
+  { id: 'community', x: 900, y: 540, label: 'Community', sub: 'Future · Q&A', color: '#9CA3AF', bg: '#F3F4F6', dashed: true },
+  { id: 'settled', x: 400, y: 660, label: 'Student Settled ✓', sub: 'Goal achieved', color: '#0D9488', bg: '#CCFBF1' },
+];
+
+const ARCH_EDGES = [
+  { from: 'google', to: 'landing' },
+  { from: 'ai', to: 'landing' },
+  { from: 'social', to: 'landing' },
+  { from: 'landing', to: 'housing' },
+  { from: 'landing', to: 'banking' },
+  { from: 'landing', to: 'sim' },
+  { from: 'landing', to: 'ohip' },
+  { from: 'landing', to: 'map' },
+  { from: 'housing', to: 'blog' },
+  { from: 'banking', to: 'blog' },
+  { from: 'sim', to: 'blog' },
+  { from: 'ohip', to: 'blog' },
+  { from: 'schema', to: 'google' },
+  { from: 'schema', to: 'ai' },
+  { from: 'blog', to: 'schema' },
+  { from: 'blog', to: 'amazon' },
+  { from: 'amazon', to: 'settled' },
+  { from: 'ga4', to: 'blog' },
+  { from: 'supabase', to: 'community', dashed: true },
+  { from: 'community', to: 'settled', dashed: true },
+];
+
+const ARCH_LEGEND = [
+  { color: '#7C3AED', bg: '#EDE9FE', label: 'Discovery' },
+  { color: '#0D9488', bg: '#CCFBF1', label: 'Frontend' },
+  { color: '#0369A1', bg: '#E0F2FE', label: 'Content' },
+  { color: '#B45309', bg: '#FEF3C7', label: 'Monetization' },
+  { color: '#9CA3AF', bg: '#F3F4F6', label: 'Future Roadmap' },
+];
+
+const WHAT_BROKE_CARDS = [
+  {
+    number: '01',
+    problem: 'D3.js map not rendering on mobile',
+    cause:
+      "SVG viewport wasn't respecting device width. The map was rendering off-screen on anything below 768px.",
+    fix: 'Added viewport detection. Below 768px switches to a static image fallback. Above 768px loads the full D3 interactive map.',
+    tag: 'Frontend Bug',
+  },
+  {
+    number: '02',
+    problem: 'Affiliate links flagged by Google',
+    cause: "Raw affiliate links without proper attribution were being treated as manipulative by Google's crawler.",
+    fix: "Added rel='sponsored' and rel='nofollow' to all affiliate links. Cleaned up anchor text to be descriptive not clickbait.",
+    tag: 'SEO Fix',
+  },
+  {
+    number: '03',
+    problem: 'AI crawlers ignoring blog content',
+    cause: 'Blog posts had inconsistent heading hierarchy. H1 → H4 jumps confused AI parsers.',
+    fix: 'Restructured all headings H1 → H2 → H3 strictly. Added llms.txt with explicit content map and blog index.',
+    tag: 'AI Visibility',
+  },
+];
+
+const PASTEL_SWATCHES = [
+  { hex: '#0D9488', name: 'Teal', role: 'Primary · Trust · Navigation' },
+  { hex: '#F9A8D4', name: 'Blush', role: 'Warmth · Approachability' },
+  { hex: '#FDE68A', name: 'Gold', role: 'Optimism · Highlights' },
+  { hex: '#E9D5FF', name: 'Lavender', role: 'Calm · Secondary BG' },
+  { hex: '#FFF7ED', name: 'Cream', role: 'Base · Breathing Room' },
+];
+
+const RESULTS_METRICS = [
+  { number: '95+', label: 'Lighthouse Score', sub: 'Performance · SEO · Accessibility' },
+  { number: '30+', label: 'Pages Engineered', sub: 'All hand-coded, no CMS' },
+  { number: '10+', label: 'Blog Posts', sub: 'Arjun & Priya series' },
+  { number: '2026', label: 'Year Launched', sub: 'Shipped and live' },
+];
+
+const RETRO_ITEMS = [
+  {
+    number: '01',
+    title: 'Start with Supabase from day one',
+    body: 'Adding authentication and user accounts after the fact is painful. The database schema needs to inform the content structure, not the other way around.',
+  },
+  {
+    number: '02',
+    title: 'Build the blog system before the static pages',
+    body: 'Content should drive structure. I built the shell first and retrofitted the blog — it created inconsistencies in the heading hierarchy that hurt SEO early on.',
+  },
+  {
+    number: '03',
+    title: 'Add analytics on day one, not after launch',
+    body: "I lost the first week of traffic data. That's the most valuable data — first visitors, first searches, first clicks. Never again.",
+  },
+];
+
+const ROADMAP_ITEMS = [
+  {
+    tag: 'PHASE 2',
+    title: 'User Accounts',
+    body: 'Supabase Auth + Postgres. Students save checklists, track progress, resume where they left off.',
+    color: '#0D9488',
+  },
+  {
+    tag: 'PHASE 2',
+    title: 'Document Marketplace',
+    body: 'Student-created guides for sale. Supabase Storage + payment integration. Community monetization.',
+    color: '#0D9488',
+  },
+  {
+    tag: 'PHASE 3',
+    title: 'Peer Q&A Community',
+    body: 'Students helping students. Upvoting, verified answers, city-specific channels.',
+    color: '#7C3AED',
+  },
+  {
+    tag: 'PHASE 3',
+    title: 'Affiliate Expansion',
+    body: 'Canadian banks, telcos, housing platforms. Higher commission rates, sponsored placements.',
+    color: '#7C3AED',
+  },
+];
+
+const archNodeById = ARCH_NODES.reduce((acc, n) => {
+  acc[n.id] = n;
+  return acc;
+}, {});
 
 export default function StudenzBitDetail() {
   const rootRef = useRef(null);
   const heroRef = useRef(null);
   const section2Ref = useRef(null);
   const heroTextRef = useRef(null);
+  const [archTooltip, setArchTooltip] = useState({ visible: false, label: '', x: 0, y: 0 });
 
   const portfolioLinkRef = useRef(null);
   const heroStampRef = useRef(null);
@@ -1089,6 +1230,1059 @@ export default function StudenzBitDetail() {
             }}
           >
             — Het
+          </p>
+        </div>
+      </section>
+
+      <style>{`
+        @media (max-width: 767px) {
+          .sb-s4-pad, .sb-s5-pad, .sb-s6-pad, .sb-s7-pad, .sb-s8-pad, .sb-s9-pad, .sb-s10-pad {
+            padding: 4rem 1.5rem !important;
+          }
+          .sb-s6-two-col { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+          .sb-s7-metrics { grid-template-columns: 1fr !important; max-width: 100% !important; }
+          .sb-s9-roadmap { grid-template-columns: 1fr !important; }
+          .sb-s5-cause-fix { grid-template-columns: 1fr !important; }
+          .sb-s10-btns { flex-direction: column !important; align-items: stretch !important; }
+        }
+      `}</style>
+
+      {/* Section 4 — Architecture */}
+      <section
+        className="sb-s4-pad"
+        style={{
+          background: '#F0EBFF',
+          minHeight: '100vh',
+          padding: '6rem 4rem',
+          position: 'relative',
+          opacity: 1,
+        }}
+      >
+        <div style={{ position: 'relative', zIndex: 10 }}>
+          <span
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 400,
+              fontSize: '0.65rem',
+              letterSpacing: '0.25em',
+              color: 'rgba(88,28,220,0.5)',
+              textTransform: 'uppercase',
+              marginBottom: '0.8rem',
+              display: 'block',
+            }}
+          >
+            ARCHITECTURE
+          </span>
+          <div
+            style={{
+              width: '40px',
+              height: '1px',
+              background: 'rgba(88,28,220,0.2)',
+              marginBottom: '1.2rem',
+            }}
+          />
+          <h2
+            style={{
+              margin: '0 0 0.5rem 0',
+              fontFamily: 'Unbounded, sans-serif',
+              fontWeight: 800,
+              fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+              color: '#1a0a3d',
+            }}
+          >
+            how it all connects
+          </h2>
+          <p
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 300,
+              fontSize: '0.88rem',
+              color: 'rgba(26,10,61,0.55)',
+              margin: '0 0 3rem 0',
+              maxWidth: '520px',
+            }}
+          >
+            From a student&apos;s first Google search
+            <br />
+            to becoming settled in Canada.
+          </p>
+
+          <svg
+            width="100%"
+            viewBox="0 0 1050 740"
+            style={{ display: 'block', margin: '0 auto', overflow: 'visible' }}
+            aria-label="StudenzBit architecture diagram"
+          >
+            <defs>
+              <marker id="arrow-pastel" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="rgba(13,148,136,0.4)" />
+              </marker>
+            </defs>
+            {ARCH_EDGES.map((edge) => {
+              const from = archNodeById[edge.from];
+              const to = archNodeById[edge.to];
+              if (!from || !to) return null;
+              const d = `M${from.x},${from.y} C${from.x},${(from.y + to.y) / 2} ${to.x},${(from.y + to.y) / 2} ${to.x},${to.y}`;
+              const isDashed = edge.dashed;
+              return (
+                <path
+                  key={`${edge.from}-${edge.to}`}
+                  d={d}
+                  fill="none"
+                  stroke={isDashed ? 'rgba(156,163,175,0.4)' : 'rgba(13,148,136,0.25)'}
+                  strokeWidth="1.5"
+                  strokeDasharray={isDashed ? '5 4' : undefined}
+                  markerEnd={isDashed ? undefined : 'url(#arrow-pastel)'}
+                />
+              );
+            })}
+            {ARCH_NODES.map((node) => (
+              <g
+                key={node.id}
+                transform={`translate(${node.x},${node.y})`}
+                style={{ cursor: 'default' }}
+                onMouseEnter={(e) => {
+                  setArchTooltip({ visible: true, label: node.label, x: e.clientX, y: e.clientY });
+                }}
+                onMouseMove={(e) => {
+                  setArchTooltip((prev) =>
+                    prev.visible ? { ...prev, x: e.clientX, y: e.clientY } : prev
+                  );
+                }}
+                onMouseLeave={() => setArchTooltip({ visible: false, label: '', x: 0, y: 0 })}
+              >
+                <rect
+                  x={-55}
+                  y={-22}
+                  width={110}
+                  height={44}
+                  rx={8}
+                  fill={node.bg}
+                  stroke={node.color}
+                  strokeWidth={node.dashed ? 1 : 1.5}
+                  strokeDasharray={node.dashed ? '4 3' : undefined}
+                />
+                <text
+                  y={-4}
+                  fontFamily="Syne, sans-serif"
+                  fontSize="10"
+                  fontWeight="700"
+                  fill={node.color}
+                  textAnchor="middle"
+                >
+                  {node.label}
+                </text>
+                <text
+                  y={9}
+                  fontFamily="DM Sans, sans-serif"
+                  fontSize="8"
+                  fill={node.color}
+                  opacity="0.6"
+                  textAnchor="middle"
+                >
+                  {node.sub}
+                </text>
+              </g>
+            ))}
+          </svg>
+
+          <div
+            style={{
+              marginTop: '2rem',
+              display: 'flex',
+              gap: '1.5rem',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
+            {ARCH_LEGEND.map((item) => (
+              <div
+                key={item.label}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+              >
+                <span
+                  style={{
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '50%',
+                    background: item.bg,
+                    border: `1.5px solid ${item.color}`,
+                    flexShrink: 0,
+                  }}
+                />
+                <span
+                  style={{
+                    fontFamily: 'DM Sans, sans-serif',
+                    fontWeight: 400,
+                    fontSize: '0.7rem',
+                    color: 'rgba(26,10,0,0.5)',
+                  }}
+                >
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+        {archTooltip.visible ? (
+          <div
+            style={{
+              position: 'fixed',
+              left: archTooltip.x + 12,
+              top: archTooltip.y + 12,
+              background: 'white',
+              border: '1px solid rgba(13,148,136,0.2)',
+              borderRadius: '8px',
+              padding: '0.5rem 0.8rem',
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 400,
+              fontSize: '0.72rem',
+              color: '#1a0a00',
+              pointerEvents: 'none',
+              zIndex: 100,
+            }}
+          >
+            {archTooltip.label}
+          </div>
+        ) : null}
+      </section>
+
+      {/* Section 5 — What broke */}
+      <section
+        className="sb-s5-pad"
+        style={{
+          background: '#F0FDF9',
+          minHeight: '100vh',
+          padding: '6rem 4rem',
+          position: 'relative',
+          opacity: 1,
+        }}
+      >
+        <div style={{ position: 'relative', zIndex: 10 }}>
+          <span
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 400,
+              fontSize: '0.65rem',
+              letterSpacing: '0.25em',
+              color: 'rgba(13,148,136,0.7)',
+              textTransform: 'uppercase',
+              marginBottom: '0.8rem',
+              display: 'block',
+            }}
+          >
+            REAL TALK
+          </span>
+          <div
+            style={{
+              width: '40px',
+              height: '1px',
+              background: 'rgba(13,148,136,0.4)',
+              marginBottom: '1.2rem',
+            }}
+          />
+          <h2
+            style={{
+              margin: '0 0 0.5rem 0',
+              fontFamily: 'Unbounded, sans-serif',
+              fontWeight: 800,
+              fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+              color: '#0a2620',
+            }}
+          >
+            what broke along the way
+          </h2>
+          <p
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 300,
+              fontSize: '0.92rem',
+              color: 'rgba(10,38,32,0.55)',
+              lineHeight: 1.8,
+              maxWidth: '520px',
+              margin: 0,
+            }}
+          >
+            Shipping solo means debugging solo.
+            <br />
+            Here&apos;s what actually went wrong.
+          </p>
+
+          <div style={{ maxWidth: '800px', margin: '3rem auto 0' }}>
+            {WHAT_BROKE_CARDS.map((card) => (
+              <div
+                key={card.number}
+                style={{
+                  background: 'white',
+                  borderRadius: '12px',
+                  padding: '1.8rem 2rem',
+                  marginBottom: '1.2rem',
+                  borderLeft: '3px solid #0D9488',
+                  boxShadow: '0 2px 16px rgba(13,148,136,0.06)',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: '0.75rem',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: 'Unbounded, sans-serif',
+                      fontWeight: 700,
+                      fontSize: '0.7rem',
+                      background: '#CCFBF1',
+                      color: '#0D9488',
+                      borderRadius: '4px',
+                      padding: '0.2rem 0.5rem',
+                    }}
+                  >
+                    {card.number}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: 'DM Sans, sans-serif',
+                      fontWeight: 700,
+                      fontSize: '1rem',
+                      color: '#0a2620',
+                      flex: '1',
+                      margin: '0 1rem',
+                      minWidth: '200px',
+                    }}
+                  >
+                    {card.problem}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: 'DM Sans, sans-serif',
+                      fontWeight: 400,
+                      fontSize: '0.65rem',
+                      background: 'rgba(13,148,136,0.08)',
+                      border: '1px solid rgba(13,148,136,0.2)',
+                      color: '#0D9488',
+                      borderRadius: '20px',
+                      padding: '0.2rem 0.7rem',
+                    }}
+                  >
+                    {card.tag}
+                  </span>
+                </div>
+                <div
+                  style={{
+                    marginTop: '1.2rem',
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '1.5rem',
+                  }}
+                  className="sb-s5-cause-fix"
+                >
+                  <div>
+                    <div
+                      style={{
+                        fontFamily: 'DM Sans, sans-serif',
+                        fontWeight: 700,
+                        fontSize: '0.6rem',
+                        letterSpacing: '0.15em',
+                        color: 'rgba(10,38,32,0.4)',
+                        textTransform: 'uppercase',
+                        marginBottom: '0.4rem',
+                      }}
+                    >
+                      WHAT HAPPENED
+                    </div>
+                    <p
+                      style={{
+                        fontFamily: 'DM Sans, sans-serif',
+                        fontWeight: 300,
+                        fontSize: '0.82rem',
+                        color: 'rgba(10,38,32,0.65)',
+                        lineHeight: 1.7,
+                        margin: 0,
+                      }}
+                    >
+                      {card.cause}
+                    </p>
+                  </div>
+                  <div>
+                    <div
+                      style={{
+                        fontFamily: 'DM Sans, sans-serif',
+                        fontWeight: 700,
+                        fontSize: '0.6rem',
+                        letterSpacing: '0.15em',
+                        color: 'rgba(13,148,136,0.7)',
+                        textTransform: 'uppercase',
+                        marginBottom: '0.4rem',
+                      }}
+                    >
+                      HOW I FIXED IT
+                    </div>
+                    <p
+                      style={{
+                        fontFamily: 'DM Sans, sans-serif',
+                        fontWeight: 300,
+                        fontSize: '0.82rem',
+                        color: 'rgba(10,38,32,0.65)',
+                        lineHeight: 1.7,
+                        margin: 0,
+                      }}
+                    >
+                      {card.fix}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 6 — Why pastel */}
+      <section
+        className="sb-s6-pad"
+        style={{
+          background: '#FFF0F5',
+          minHeight: '100vh',
+          padding: '6rem 4rem',
+          position: 'relative',
+          opacity: 1,
+        }}
+      >
+        <div style={{ position: 'relative', zIndex: 10 }}>
+          <span
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 400,
+              fontSize: '0.65rem',
+              letterSpacing: '0.25em',
+              color: 'rgba(190,24,93,0.5)',
+              textTransform: 'uppercase',
+              marginBottom: '0.8rem',
+              display: 'block',
+            }}
+          >
+            DESIGN THINKING
+          </span>
+          <div
+            style={{
+              width: '40px',
+              height: '1px',
+              background: 'rgba(190,24,93,0.25)',
+              marginBottom: '1.2rem',
+            }}
+          />
+          <h2
+            style={{
+              margin: '0 0 0.5rem 0',
+              fontFamily: 'Unbounded, sans-serif',
+              fontWeight: 800,
+              fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+              color: '#3d0a1a',
+            }}
+          >
+            why pastel?
+          </h2>
+          <p
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 300,
+              fontSize: '0.92rem',
+              color: 'rgba(61,10,26,0.55)',
+              lineHeight: 1.8,
+              maxWidth: '520px',
+              margin: 0,
+            }}
+          >
+            Design decisions aren&apos;t aesthetic —
+            <br />
+            they&apos;re product decisions.
+          </p>
+
+          <div
+            className="sb-s6-two-col"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '4rem',
+              marginTop: '3rem',
+              alignItems: 'start',
+            }}
+          >
+            <div>
+              <p
+                style={{
+                  fontFamily: 'DM Sans, sans-serif',
+                  fontWeight: 300,
+                  fontSize: '0.9rem',
+                  color: 'rgba(61,10,26,0.7)',
+                  lineHeight: 1.85,
+                  margin: '0 0 1.5rem 0',
+                }}
+              >
+                International students are overwhelmed — new country, new systems, new everything. Most
+                platforms respond with information overload. StudenzBit responded with calm.
+              </p>
+              <p
+                style={{
+                  fontFamily: 'DM Sans, sans-serif',
+                  fontWeight: 300,
+                  fontSize: '0.9rem',
+                  color: 'rgba(61,10,26,0.7)',
+                  lineHeight: 1.85,
+                  margin: 0,
+                }}
+              >
+                GenZ doesn&apos;t separate aesthetics from function. For this generation, how something
+                looks is how it feels to use. A cold interface signals a cold experience. Pastel
+                signals safety, approachability, and warmth — exactly what someone 10,000km from home
+                needs.
+              </p>
+              <p
+                style={{
+                  fontFamily: 'Unbounded, sans-serif',
+                  fontWeight: 600,
+                  fontSize: '1rem',
+                  color: '#BE185D',
+                  fontStyle: 'italic',
+                  margin: '2rem 0 0 0',
+                  paddingLeft: '1.2rem',
+                  borderLeft: '3px solid #F9A8D4',
+                }}
+              >
+                Calm and warm — because Canada is cold enough.
+              </p>
+            </div>
+            <div>
+              <div
+                style={{
+                  fontFamily: 'DM Sans, sans-serif',
+                  fontWeight: 700,
+                  fontSize: '0.65rem',
+                  letterSpacing: '0.2em',
+                  color: 'rgba(61,10,26,0.4)',
+                  textTransform: 'uppercase',
+                  marginBottom: '1.5rem',
+                }}
+              >
+                THE COLOUR SYSTEM
+              </div>
+              {PASTEL_SWATCHES.map((sw) => (
+                <div
+                  key={sw.hex}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    marginBottom: '1rem',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '8px',
+                      background: sw.hex,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                      flexShrink: 0,
+                    }}
+                  />
+                  <div>
+                    <div
+                      style={{
+                        fontFamily: 'JetBrains Mono, monospace',
+                        fontSize: '0.75rem',
+                        color: 'rgba(61,10,26,0.5)',
+                        marginBottom: '0.1rem',
+                      }}
+                    >
+                      {sw.hex}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'DM Sans, sans-serif',
+                        fontWeight: 700,
+                        fontSize: '0.82rem',
+                        color: '#3d0a1a',
+                      }}
+                    >
+                      {sw.name}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'DM Sans, sans-serif',
+                        fontWeight: 300,
+                        fontSize: '0.72rem',
+                        color: 'rgba(61,10,26,0.45)',
+                      }}
+                    >
+                      {sw.role}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 7 — Results */}
+      <section
+        className="sb-s7-pad"
+        style={{
+          background: '#FFF8EE',
+          minHeight: '60vh',
+          padding: '6rem 4rem',
+          position: 'relative',
+          opacity: 1,
+        }}
+      >
+        <div style={{ position: 'relative', zIndex: 10 }}>
+          <span
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 400,
+              fontSize: '0.65rem',
+              letterSpacing: '0.25em',
+              color: 'rgba(180,83,9,0.6)',
+              textTransform: 'uppercase',
+              marginBottom: '0.8rem',
+              display: 'block',
+            }}
+          >
+            BY THE NUMBERS
+          </span>
+          <div
+            style={{
+              width: '40px',
+              height: '1px',
+              background: 'rgba(180,83,9,0.25)',
+              marginBottom: '1.2rem',
+            }}
+          />
+          <h2
+            style={{
+              margin: 0,
+              fontFamily: 'Unbounded, sans-serif',
+              fontWeight: 800,
+              fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+              color: '#1a0a00',
+            }}
+          >
+            what shipped
+          </h2>
+
+          <div
+            className="sb-s7-metrics"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '2rem',
+              marginTop: '3rem',
+              maxWidth: '900px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+          >
+            {RESULTS_METRICS.map((m) => (
+              <div
+                key={m.label}
+                style={{
+                  borderTop: '2px solid rgba(180,83,9,0.2)',
+                  paddingTop: '1.2rem',
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: 'Unbounded, sans-serif',
+                    fontWeight: 800,
+                    fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+                    color: '#B45309',
+                  }}
+                >
+                  {m.number}
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'DM Sans, sans-serif',
+                    fontWeight: 700,
+                    fontSize: '0.8rem',
+                    color: '#1a0a00',
+                    marginTop: '0.3rem',
+                  }}
+                >
+                  {m.label}
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'DM Sans, sans-serif',
+                    fontWeight: 300,
+                    fontSize: '0.7rem',
+                    color: 'rgba(26,10,0,0.45)',
+                    marginTop: '0.2rem',
+                  }}
+                >
+                  {m.sub}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 8 — Retrospective */}
+      <section
+        className="sb-s8-pad"
+        style={{
+          background: '#F0EBFF',
+          minHeight: '80vh',
+          padding: '6rem 4rem',
+          position: 'relative',
+          opacity: 1,
+        }}
+      >
+        <div style={{ position: 'relative', zIndex: 10 }}>
+          <span
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 400,
+              fontSize: '0.65rem',
+              letterSpacing: '0.25em',
+              color: 'rgba(109,40,217,0.5)',
+              textTransform: 'uppercase',
+              marginBottom: '0.8rem',
+              display: 'block',
+            }}
+          >
+            RETROSPECTIVE
+          </span>
+          <div
+            style={{
+              width: '40px',
+              height: '1px',
+              background: 'rgba(109,40,217,0.2)',
+              marginBottom: '1.2rem',
+            }}
+          />
+          <h2
+            style={{
+              margin: '0 0 0.5rem 0',
+              fontFamily: 'Unbounded, sans-serif',
+              fontWeight: 800,
+              fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+              color: '#1a0a3d',
+            }}
+          >
+            if I built it again
+          </h2>
+          <p
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 300,
+              fontSize: '0.92rem',
+              color: 'rgba(26,10,61,0.5)',
+              margin: 0,
+            }}
+          >
+            Honest reflections. Not regrets.
+          </p>
+
+          <div style={{ maxWidth: '700px', margin: '3rem auto 0' }}>
+            {RETRO_ITEMS.map((item) => (
+              <div
+                key={item.number}
+                style={{
+                  display: 'flex',
+                  gap: '1.5rem',
+                  padding: '1.5rem 0',
+                  borderBottom: '1px solid rgba(109,40,217,0.1)',
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: 'Unbounded, sans-serif',
+                    fontWeight: 700,
+                    fontSize: '1rem',
+                    color: 'rgba(109,40,217,0.3)',
+                    flexShrink: 0,
+                    width: '2rem',
+                  }}
+                >
+                  {item.number}
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontFamily: 'DM Sans, sans-serif',
+                      fontWeight: 700,
+                      fontSize: '0.95rem',
+                      color: '#1a0a3d',
+                      marginBottom: '0.5rem',
+                    }}
+                  >
+                    {item.title}
+                  </div>
+                  <p
+                    style={{
+                      fontFamily: 'DM Sans, sans-serif',
+                      fontWeight: 300,
+                      fontSize: '0.85rem',
+                      color: 'rgba(26,10,61,0.6)',
+                      lineHeight: 1.8,
+                      margin: 0,
+                    }}
+                  >
+                    {item.body}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 9 — Roadmap */}
+      <section
+        className="sb-s9-pad"
+        style={{
+          background: '#F0FDF9',
+          minHeight: '60vh',
+          padding: '6rem 4rem',
+          position: 'relative',
+          opacity: 1,
+        }}
+      >
+        <div style={{ position: 'relative', zIndex: 10 }}>
+          <span
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 400,
+              fontSize: '0.65rem',
+              letterSpacing: '0.25em',
+              color: 'rgba(13,148,136,0.6)',
+              textTransform: 'uppercase',
+              marginBottom: '0.8rem',
+              display: 'block',
+            }}
+          >
+            WHAT&apos;S NEXT
+          </span>
+          <div
+            style={{
+              width: '40px',
+              height: '1px',
+              background: 'rgba(13,148,136,0.3)',
+              marginBottom: '1.2rem',
+            }}
+          />
+          <h2
+            style={{
+              margin: 0,
+              fontFamily: 'Unbounded, sans-serif',
+              fontWeight: 800,
+              fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+              color: '#0a2620',
+            }}
+          >
+            the roadmap
+          </h2>
+
+          <div
+            className="sb-s9-roadmap"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '1.5rem',
+              marginTop: '3rem',
+              maxWidth: '800px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+          >
+            {ROADMAP_ITEMS.map((item) => (
+              <div
+                key={item.title}
+                style={{
+                  background: 'white',
+                  borderRadius: '12px',
+                  padding: '1.5rem',
+                  boxShadow: '0 2px 12px rgba(13,148,136,0.06)',
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: 'DM Sans, sans-serif',
+                    fontWeight: 700,
+                    fontSize: '0.6rem',
+                    letterSpacing: '0.15em',
+                    background: 'rgba(13,148,136,0.08)',
+                    color: item.color,
+                    borderRadius: '20px',
+                    padding: '0.2rem 0.6rem',
+                    display: 'inline-block',
+                    marginBottom: '0.8rem',
+                  }}
+                >
+                  {item.tag}
+                </span>
+                <div
+                  style={{
+                    fontFamily: 'DM Sans, sans-serif',
+                    fontWeight: 700,
+                    fontSize: '0.9rem',
+                    color: '#0a2620',
+                    marginBottom: '0.5rem',
+                  }}
+                >
+                  {item.title}
+                </div>
+                <p
+                  style={{
+                    fontFamily: 'DM Sans, sans-serif',
+                    fontWeight: 300,
+                    fontSize: '0.8rem',
+                    color: 'rgba(10,38,32,0.6)',
+                    lineHeight: 1.7,
+                    margin: 0,
+                  }}
+                >
+                  {item.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 10 — Next project */}
+      <section
+        className="sb-s10-pad"
+        style={{
+          background: '#FFF0F5',
+          minHeight: '50vh',
+          padding: '6rem 4rem',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          position: 'relative',
+          opacity: 1,
+        }}
+      >
+        <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '640px' }}>
+          <span
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 400,
+              fontSize: '0.65rem',
+              letterSpacing: '0.25em',
+              color: 'rgba(190,24,93,0.5)',
+              textTransform: 'uppercase',
+              marginBottom: '1rem',
+              display: 'block',
+            }}
+          >
+            THANKS FOR READING
+          </span>
+          <h2
+            style={{
+              margin: '0 0 0.5rem 0',
+              fontFamily: 'Unbounded, sans-serif',
+              fontWeight: 800,
+              fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+              color: '#3d0a1a',
+            }}
+          >
+            want to see more?
+          </h2>
+          <p
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 300,
+              fontSize: '0.9rem',
+              color: 'rgba(61,10,26,0.5)',
+              margin: '0 0 2.5rem 0',
+            }}
+          >
+            There&apos;s more where this came from.
+          </p>
+          <div
+            className="sb-s10-btns"
+            style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}
+          >
+            <a
+              href="https://portfolio-gules-kappa-5g75m34zuy.vercel.app/#"
+              style={{
+                background: 'transparent',
+                border: '1px solid rgba(61,10,26,0.2)',
+                borderRadius: '50px',
+                padding: '0.85rem 2rem',
+                fontFamily: 'DM Sans, sans-serif',
+                fontWeight: 400,
+                fontSize: '0.82rem',
+                color: '#3d0a1a',
+                textDecoration: 'none',
+                display: 'inline-block',
+                transition: 'background 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(61,10,26,0.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              ← Back to Portfolio
+            </a>
+            <a
+              href="#"
+              style={{
+                background: '#0D9488',
+                border: 'none',
+                borderRadius: '50px',
+                padding: '0.85rem 2rem',
+                fontFamily: 'DM Sans, sans-serif',
+                fontWeight: 400,
+                fontSize: '0.82rem',
+                color: 'white',
+                textDecoration: 'none',
+                display: 'inline-block',
+                boxShadow: '0 0 20px rgba(13,148,136,0.3)',
+                transition: 'background 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#0a7a70';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#0D9488';
+              }}
+            >
+              Next Project →
+            </a>
+          </div>
+          <div
+            style={{
+              marginTop: '3rem',
+              width: '60px',
+              height: '1px',
+              background: 'rgba(61,10,26,0.15)',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+          />
+          <p
+            style={{
+              margin: '1rem 0 0 0',
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 300,
+              fontSize: '0.7rem',
+              color: 'rgba(61,10,26,0.35)',
+            }}
+          >
+            Built by Het Patel · 2026
           </p>
         </div>
       </section>
