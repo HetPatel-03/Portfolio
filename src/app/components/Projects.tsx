@@ -1,6 +1,10 @@
 import { getTechTagPillStyle } from '../lib/techTagPill';
 
-export function Projects() {
+type ProjectsProps = {
+  onOpenProjectDetail?: (projectName: string) => void;
+};
+
+export function Projects({ onOpenProjectDetail }: ProjectsProps) {
   const projects = [
     {
       id: 'PROJ / 01',
@@ -158,12 +162,25 @@ export function Projects() {
 
                 {/* Footer */}
                 <div className="flex justify-between items-center">
-                  <span 
+                  <button
+                    type="button"
                     className="text-sm group-hover:translate-x-1 transition-transform duration-200"
-                    style={{ color: 'var(--coral)', fontFamily: 'var(--font-body)' }}
+                    style={{
+                      color: 'var(--coral)',
+                      fontFamily: 'var(--font-body)',
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      cursor: project.name === 'StudenzBit' ? 'pointer' : 'default',
+                    }}
+                    onClick={() => {
+                      if (project.name === 'StudenzBit') {
+                        onOpenProjectDetail?.(project.name);
+                      }
+                    }}
                   >
                     inspect →
-                  </span>
+                  </button>
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--sage-green)' }} />
                     <span 
