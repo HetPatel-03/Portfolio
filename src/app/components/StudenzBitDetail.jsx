@@ -109,12 +109,18 @@ export default function StudenzBitDetail() {
     return () => ctx.revert();
   }, []);
 
-  const statPills = ['16+ Pages', '4 Blog Posts', 'Amazon Affiliate', 'Launched 2024'];
+  const techCards = [
+    { tech: 'Vanilla JS', desc: 'No framework overhead. Ships faster, Lighthouse scores higher.' },
+    { tech: 'D3.js', desc: 'Interactive map rendering. Full SVG control over visualizations.' },
+    { tech: 'Schema Markup', desc: 'JSON-LD + OpenGraph. Built for AI and search discoverability.' },
+    { tech: 'Amazon Affiliate', desc: 'Monetization layer via Associates program. Revenue from day one.' },
+    { tech: 'llms.txt', desc: 'AI search visibility. Structured for AI crawlers.' },
+  ];
 
   return (
     <div ref={rootRef} style={{ position: 'relative', background: '#000', margin: 0, padding: 0, overflowX: 'hidden' }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@900&family=DM+Sans:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;800;900&family=DM+Sans:wght@300;400;700&display=swap');
         html, body, #root {
           margin: 0;
           padding: 0;
@@ -141,6 +147,16 @@ export default function StudenzBitDetail() {
         <div
           style={{
             position: 'absolute',
+            inset: 0,
+            background: 'rgba(0,0,0,0.38)',
+            zIndex: 1,
+            pointerEvents: 'none',
+          }}
+        />
+
+        <div
+          style={{
+            position: 'absolute',
             top: '2.5rem',
             left: '2.5rem',
             zIndex: 10,
@@ -148,20 +164,15 @@ export default function StudenzBitDetail() {
         >
           <a
             ref={portfolioLinkRef}
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              window.location.hash = '';
-            }}
+            href="https://portfolio-gules-kappa-5g75m34zuy.vercel.app/#"
             style={{
               display: 'inline-block',
-              marginBottom: '1.5rem',
+              marginBottom: '1.2rem',
               fontFamily: 'DM Sans, sans-serif',
               fontWeight: 400,
               fontSize: '0.72rem',
               color: 'rgba(255,255,255,0.45)',
               textDecoration: 'none',
-              letterSpacing: '0.05em',
             }}
             onMouseEnter={(e) => { e.currentTarget.style.color = '#fff'; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; }}
@@ -175,64 +186,64 @@ export default function StudenzBitDetail() {
                 margin: 0,
                 fontFamily: 'Unbounded, sans-serif',
                 fontWeight: 800,
-                fontSize: '1.1rem',
+                fontSize: '0.9rem',
                 letterSpacing: '0.05em',
                 color: '#fff',
-                marginBottom: '0.4rem',
+                marginBottom: '0.3rem',
               }}
             >
-              TECHNICAL DEEP DIVE · 2024
+              TECHNICAL DEEP DIVE
             </p>
             <p
               style={{
                 margin: '0 0 2rem 0',
                 fontFamily: 'DM Sans, sans-serif',
                 fontWeight: 400,
-                fontSize: '0.8rem',
-                letterSpacing: '0.12em',
-                color: 'rgba(255,255,255,0.6)',
+                fontSize: '0.68rem',
+                letterSpacing: '0.1em',
+                color: 'rgba(255,255,255,0.45)',
               }}
             >
-              Web · Affiliate · SEO · Content
+              HTML · CSS · JS · D3.js · GSAP · Supabase
             </p>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {[
-              { value: '16+', label: 'Pages Built' },
-              { value: '4', label: 'Blog Posts' },
-              { value: '2024', label: 'Year Launched' },
+              { value: '95+', label: 'Lighthouse Score' },
+              { value: '30+', label: 'Pages Engineered' },
+              { value: '2', label: 'Monetization Streams' },
             ].map((s, idx) => (
-              <div
-                key={s.label}
-                ref={(el) => {
-                  statRowRefs.current[idx] = el;
-                }}
-                style={{ marginBottom: idx === 2 ? 0 : '1.2rem' }}
-              >
+              <div key={s.label}>
                 <div
-                  style={{
-                    fontFamily: 'Unbounded, sans-serif',
-                    fontWeight: 700,
-                    fontSize: '1.4rem',
-                    color: '#fff',
-                    lineHeight: 1.1,
+                  ref={(el) => {
+                    statRowRefs.current[idx] = el;
                   }}
                 >
-                  {s.value}
-                </div>
-                <div
-                  style={{
-                    fontFamily: 'DM Sans, sans-serif',
-                    fontWeight: 300,
-                    fontSize: '0.6rem',
-                    letterSpacing: '0.1em',
-                    color: 'rgba(255,255,255,0.4)',
-                    textTransform: 'uppercase',
-                    marginTop: '0.25rem',
-                  }}
-                >
-                  {s.label}
+                  <div
+                    style={{
+                      fontFamily: 'Unbounded, sans-serif',
+                      fontWeight: 700,
+                      fontSize: '1.4rem',
+                      color: '#fff',
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {s.value}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: 'DM Sans, sans-serif',
+                      fontWeight: 300,
+                      fontSize: '0.6rem',
+                      letterSpacing: '0.1em',
+                      color: 'rgba(255,255,255,0.4)',
+                      textTransform: 'uppercase',
+                      marginTop: '0.25rem',
+                    }}
+                  >
+                    {s.label}
+                  </div>
                 </div>
                 {idx < 2 ? (
                   <div
@@ -240,7 +251,7 @@ export default function StudenzBitDetail() {
                       width: '40px',
                       height: '1px',
                       background: 'rgba(255,255,255,0.15)',
-                      marginTop: '1.2rem',
+                      margin: '0.8rem 0',
                     }}
                   />
                 ) : null}
@@ -255,8 +266,8 @@ export default function StudenzBitDetail() {
             position: 'absolute',
             bottom: '6rem',
             right: '2.5rem',
-            zIndex: 3,
-            textAlign: 'right',
+            zIndex: 10,
+            textAlign: 'left',
           }}
         >
           <span
@@ -264,13 +275,16 @@ export default function StudenzBitDetail() {
             style={{
               display: 'block',
               fontFamily: 'Unbounded, sans-serif',
-              fontWeight: 900,
-              fontSize: 'clamp(3rem, 7vw, 6rem)',
-              color: '#fff',
-              lineHeight: 0.95,
+              fontWeight: 400,
+              fontSize: 'clamp(1.2rem, 2.5vw, 1.8rem)',
+              color: 'rgba(255,255,255,0.7)',
+              marginBottom: '-1.2rem',
+              letterSpacing: '0.02em',
+              position: 'relative',
+              zIndex: 2,
             }}
           >
-            into the
+            into the unknown
           </span>
           <span
             ref={heroLineUnknownRef}
@@ -278,27 +292,33 @@ export default function StudenzBitDetail() {
               display: 'block',
               fontFamily: 'Unbounded, sans-serif',
               fontWeight: 900,
-              fontSize: 'clamp(3rem, 7vw, 6rem)',
+              fontSize: 'clamp(3.5rem, 8vw, 7.5rem)',
               color: '#fff',
-              lineHeight: 0.95,
+              letterSpacing: '-0.02em',
+              lineHeight: 1,
+              position: 'relative',
+              zIndex: 1,
             }}
           >
-            unknown
+            STUDENZBIT
           </span>
           <p
             ref={heroSublineRef}
             style={{
-              margin: '1rem 0 0 auto',
-              maxWidth: '300px',
-              textAlign: 'right',
+              display: 'block',
+              marginTop: '1rem',
+              maxWidth: '320px',
               fontFamily: 'DM Sans, sans-serif',
               fontWeight: 300,
               fontSize: '0.85rem',
               lineHeight: 1.7,
-              color: 'rgba(255,255,255,0.6)',
+              color: 'rgba(255,255,255,0.55)',
+              zIndex: 10,
             }}
           >
-            A survival guide for international students landing in Canada
+            A survival guide for international students
+            <br />
+            landing in Canada
           </p>
         </div>
 
@@ -310,7 +330,7 @@ export default function StudenzBitDetail() {
             left: '2.5rem',
             display: 'flex',
             gap: '1rem',
-            zIndex: 3,
+            zIndex: 10,
           }}
         >
           <button
@@ -381,7 +401,7 @@ export default function StudenzBitDetail() {
             height: '40px',
             background: 'rgba(255,255,255,0.3)',
             transform: 'translateX(-50%)',
-            zIndex: 2,
+            zIndex: 10,
           }}
         />
 
@@ -391,9 +411,9 @@ export default function StudenzBitDetail() {
             bottom: 0,
             left: 0,
             right: 0,
-            height: '200px',
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 60%, #1a0f2e 100%)',
-            zIndex: 5,
+            height: '150px',
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(15,10,30,0.6) 70%, rgba(15,10,30,0.85) 100%)',
+            zIndex: 3,
             pointerEvents: 'none',
           }}
         />
@@ -415,12 +435,22 @@ export default function StudenzBitDetail() {
         <div
           style={{
             position: 'absolute',
+            inset: 0,
+            background: 'rgba(255,255,255,0.18)',
+            zIndex: 1,
+            pointerEvents: 'none',
+          }}
+        />
+
+        <div
+          style={{
+            position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
-            height: '200px',
-            background: 'linear-gradient(to bottom, #1a0f2e 0%, transparent 100%)',
-            zIndex: 5,
+            height: '150px',
+            background: 'linear-gradient(to bottom, rgba(15,10,30,0.85) 0%, transparent 100%)',
+            zIndex: 2,
             pointerEvents: 'none',
           }}
         />
@@ -430,23 +460,21 @@ export default function StudenzBitDetail() {
             position: 'absolute',
             top: '3rem',
             left: '3rem',
-            zIndex: 20,
+            zIndex: 10,
             opacity: 1,
           }}
         >
           <div
-            className="s2-line"
             style={{
               width: '50px',
               height: '1px',
-              background: 'rgba(45,26,14,0.4)',
+              background: 'rgba(45,26,14,0.35)',
               marginBottom: '0.8rem',
               opacity: 1,
             }}
           />
 
           <p
-            className="s2-label"
             style={{
               margin: '0 0 0.8rem 0',
               fontFamily: 'DM Sans, sans-serif',
@@ -455,18 +483,16 @@ export default function StudenzBitDetail() {
               letterSpacing: '0.25em',
               color: 'rgba(45,26,14,0.55)',
               textTransform: 'uppercase',
-              marginBottom: '0.8rem',
               display: 'block',
               opacity: 1,
             }}
           >
-            OVERVIEW
+            PROBLEM STATEMENT
           </p>
 
           <h2
-            className="s2-headline"
             style={{
-              margin: '0 0 1.5rem 0',
+              margin: 0,
               fontFamily: 'Unbounded, sans-serif',
               fontWeight: 800,
               fontSize: 'clamp(2rem, 4vw, 3.2rem)',
@@ -476,7 +502,7 @@ export default function StudenzBitDetail() {
             }}
           >
             <span style={{ display: 'block', opacity: 1 }}>The Problem</span>
-            <span style={{ display: 'block', opacity: 1 }}>We Solved.</span>
+            <span style={{ display: 'block', opacity: 1 }}>I Solved.</span>
           </h2>
         </div>
 
@@ -485,13 +511,13 @@ export default function StudenzBitDetail() {
             position: 'absolute',
             right: '3rem',
             top: '52%',
-            maxWidth: '400px',
-            zIndex: 20,
+            maxWidth: '420px',
+            zIndex: 10,
             opacity: 1,
+            transform: 'translateY(-50%)',
           }}
         >
           <p
-            className="s2-body"
             style={{
               margin: '0 0 2rem 0',
               fontFamily: 'DM Sans, sans-serif',
@@ -502,31 +528,62 @@ export default function StudenzBitDetail() {
               opacity: 1,
             }}
           >
-            Every year, thousands of international students land in Canada with no playbook. No one tells you how
-            to open a bank account without a credit history, find housing before you have a job, or get a SIM card
-            at 2am after a 20-hour flight. StudenzBit is the guide that should have existed.
+            International students arriving in Canada face a fragmented information problem — SIM cards, banking,
+            housing, and OHIP each require separate research across unreliable sources. No single platform existed
+            targeting Canada-bound international students specifically.
+            <br />
+            <br />
+            StudenzBit consolidates this into one curated platform: structured guides, character-driven blog content,
+            and affiliate-monetized resource pages — built for discoverability from day one.
           </p>
 
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            {statPills.map((pill) => (
-              <span
-                key={pill}
-                className="s2-pill"
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+            {techCards.map((card, idx) => (
+              <div
+                key={card.tech}
                 style={{
-                  border: '1px solid rgba(45,26,14,0.2)',
-                  padding: '0.4rem 1rem',
-                  borderRadius: '20px',
-                  fontFamily: 'DM Sans, sans-serif',
-                  fontWeight: 400,
-                  fontSize: '0.72rem',
-                  color: 'rgba(45,26,14,0.65)',
-                  background: 'rgba(255,255,255,0.35)',
-                  backdropFilter: 'blur(8px)',
-                  opacity: 1,
+                  width: idx === techCards.length - 1 ? '100%' : 'calc(50% - 0.75rem)',
+                  boxSizing: 'border-box',
+                  background: 'rgba(255,255,255,0.25)',
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(45,26,14,0.15)',
+                  borderRadius: '10px',
+                  padding: '0.9rem 1rem',
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.45)';
+                  e.currentTarget.style.borderColor = 'rgba(45,26,14,0.25)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.25)';
+                  e.currentTarget.style.borderColor = 'rgba(45,26,14,0.15)';
                 }}
               >
-                {pill}
-              </span>
+                <div
+                  style={{
+                    fontFamily: 'Unbounded, sans-serif',
+                    fontWeight: 700,
+                    fontSize: '0.75rem',
+                    color: '#2d1a0e',
+                    marginBottom: '0.3rem',
+                  }}
+                >
+                  {card.tech}
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'DM Sans, sans-serif',
+                    fontWeight: 300,
+                    fontSize: '0.72rem',
+                    color: 'rgba(45,26,14,0.6)',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {card.desc}
+                </div>
+              </div>
             ))}
           </div>
         </div>
