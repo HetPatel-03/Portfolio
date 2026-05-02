@@ -208,55 +208,91 @@ export default function StudenzBitDetail() {
             </p>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {[
-              { value: '95+', label: 'Lighthouse Score' },
-              { value: '30+', label: 'Pages Engineered' },
-              { value: '2', label: 'Monetization Streams' },
-            ].map((s, idx) => (
-              <div key={s.label}>
-                <div
-                  ref={(el) => {
-                    statRowRefs.current[idx] = el;
-                  }}
-                >
+          <div style={{ position: 'relative' }}>
+            <div
+              style={{
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: '1px',
+                background: 'linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%)',
+              }}
+            />
+            <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: '1rem' }}>
+              {[
+                {
+                  value: '95+',
+                  label: 'Lighthouse Score',
+                  descriptor: '↳ No framework, zero bloat',
+                },
+                {
+                  value: '30+',
+                  label: 'Pages Engineered',
+                  descriptor: '↳ All hand-coded, no CMS',
+                },
+                {
+                  value: '2',
+                  label: 'Monetization Streams',
+                  descriptor: '↳ Affiliate + Digital Products',
+                },
+              ].map((s, idx) => (
+                <div key={s.label}>
                   <div
-                    style={{
-                      fontFamily: 'Unbounded, sans-serif',
-                      fontWeight: 700,
-                      fontSize: '1.4rem',
-                      color: '#fff',
-                      lineHeight: 1.1,
+                    ref={(el) => {
+                      statRowRefs.current[idx] = el;
                     }}
                   >
-                    {s.value}
+                    <div
+                      style={{
+                        fontFamily: 'Unbounded, sans-serif',
+                        fontWeight: 700,
+                        fontSize: '1.4rem',
+                        color: '#fff',
+                        lineHeight: 1.1,
+                      }}
+                    >
+                      {s.value}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'DM Sans, sans-serif',
+                        fontWeight: 300,
+                        fontSize: '0.6rem',
+                        letterSpacing: '0.1em',
+                        color: 'rgba(255,255,255,0.4)',
+                        textTransform: 'uppercase',
+                        marginBottom: '0.2rem',
+                      }}
+                    >
+                      {s.label}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: 'DM Sans, sans-serif',
+                        fontWeight: 300,
+                        fontSize: '0.65rem',
+                        color: 'rgba(255,255,255,0.35)',
+                        fontStyle: 'italic',
+                        marginBottom: 0,
+                      }}
+                    >
+                      {s.descriptor}
+                    </div>
                   </div>
-                  <div
-                    style={{
-                      fontFamily: 'DM Sans, sans-serif',
-                      fontWeight: 300,
-                      fontSize: '0.6rem',
-                      letterSpacing: '0.1em',
-                      color: 'rgba(255,255,255,0.4)',
-                      textTransform: 'uppercase',
-                      marginTop: '0.25rem',
-                    }}
-                  >
-                    {s.label}
-                  </div>
+                  {idx < 2 ? (
+                    <div
+                      style={{
+                        width: '40px',
+                        height: '1px',
+                        background: 'rgba(255,255,255,0.1)',
+                        margin: '0.8rem 0',
+                      }}
+                    />
+                  ) : null}
                 </div>
-                {idx < 2 ? (
-                  <div
-                    style={{
-                      width: '40px',
-                      height: '1px',
-                      background: 'rgba(255,255,255,0.15)',
-                      margin: '0.8rem 0',
-                    }}
-                  />
-                ) : null}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
@@ -518,7 +554,7 @@ export default function StudenzBitDetail() {
               gridColumn: 2,
               gridRow: 1,
               paddingLeft: '2rem',
-              paddingTop: '5rem',
+              paddingTop: '6rem',
             }}
           >
             <p
@@ -599,6 +635,89 @@ export default function StudenzBitDetail() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div
+              style={{
+                marginTop: '2rem',
+                width: '100%',
+                height: '1px',
+                background:
+                  'linear-gradient(to right, transparent 0%, rgba(45,26,14,0.25) 20%, rgba(45,26,14,0.25) 80%, transparent 100%)',
+              }}
+            />
+
+            <div
+              style={{
+                marginTop: '1.5rem',
+                display: 'flex',
+                gap: '1rem',
+                alignItems: 'center',
+              }}
+            >
+              <a
+                href="https://github.com/studenzbit/studenzbit.git"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: 'rgba(45,26,14,0.08)',
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(45,26,14,0.2)',
+                  borderRadius: '50px',
+                  padding: '0.75rem 1.5rem',
+                  fontFamily: 'DM Sans, sans-serif',
+                  fontWeight: 400,
+                  fontSize: '0.78rem',
+                  letterSpacing: '0.08em',
+                  color: '#2d1a0e',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  textDecoration: 'none',
+                  display: 'inline-block',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(45,26,14,0.15)';
+                  e.currentTarget.style.borderColor = 'rgba(45,26,14,0.35)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(45,26,14,0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(45,26,14,0.2)';
+                }}
+              >
+                View Source on GitHub ↗
+              </a>
+              <a
+                href="https://studenzbit.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: '#0D9488',
+                  border: 'none',
+                  borderRadius: '50px',
+                  padding: '0.75rem 1.5rem',
+                  fontFamily: 'DM Sans, sans-serif',
+                  fontWeight: 400,
+                  fontSize: '0.78rem',
+                  letterSpacing: '0.08em',
+                  color: 'white',
+                  cursor: 'pointer',
+                  boxShadow: '0 0 20px rgba(13,148,136,0.35)',
+                  transition: 'all 0.2s ease',
+                  textDecoration: 'none',
+                  display: 'inline-block',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#0f9e92';
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(13,148,136,0.55)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#0D9488';
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(13,148,136,0.35)';
+                }}
+              >
+                Visit Live Site ↗
+              </a>
             </div>
           </div>
         </div>
