@@ -104,6 +104,68 @@ export default function StudenzBitDetail() {
         });
       }
 
+      gsap.set('.s3-header', { opacity: 0, y: 30 });
+      gsap.set('.s3-tag', { opacity: 0, y: 10 });
+      gsap.set('.s3-card', { opacity: 0, y: 40 });
+      gsap.set('.s3-quote', { opacity: 0, y: 20 });
+
+      gsap.fromTo(
+        '.s3-header',
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: '.s3-header',
+            start: 'top 80%',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        '.s3-tag',
+        { opacity: 0, y: 10 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.4,
+          stagger: 0.05,
+          scrollTrigger: {
+            trigger: '.s3-tags',
+            start: 'top 80%',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        '.s3-card',
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          stagger: 0.15,
+          scrollTrigger: {
+            trigger: '.s3-cards',
+            start: 'top 75%',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        '.s3-quote',
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: '.s3-quote',
+            start: 'top 85%',
+          },
+        }
+      );
     }, rootRef);
 
     return () => ctx.revert();
@@ -115,6 +177,70 @@ export default function StudenzBitDetail() {
     { tech: 'Schema Markup', desc: 'JSON-LD + OpenGraph. Built for AI and search discoverability.' },
     { tech: 'Amazon Affiliate', desc: 'Monetization layer via Associates program. Revenue from day one.' },
     { tech: 'llms.txt', desc: 'AI search visibility. Structured for AI crawlers.' },
+  ];
+
+  const s3TechTags = [
+    'Static HTML',
+    'Tailwind CDN',
+    'Vanilla JS',
+    'GA4',
+    'JSON-LD',
+    'llms.txt',
+    'Google Fonts',
+    'D3.js',
+    'GSAP',
+    'Supabase (planned)',
+  ];
+
+  const decisionLogCards = [
+    {
+      number: '01',
+      title: 'Build Approach',
+      rejected: [
+        { name: 'React / Next.js', reason: 'Overkill. Build pipeline unnecessary for content site.' },
+        { name: 'WordPress CMS', reason: 'Too heavy, slow, costs money solo.' },
+      ],
+      chosen: {
+        name: 'Static HTML',
+        reason: 'Zero overhead, full control, ships instantly. Lighthouse 95+ out of the box.',
+      },
+    },
+    {
+      number: '02',
+      title: 'Styling Strategy',
+      rejected: [
+        { name: 'Custom CSS only', reason: 'Too slow to build at scale across 30+ pages.' },
+        { name: 'Full Tailwind npm', reason: 'Unnecessary build step for a no-pipeline project.' },
+      ],
+      chosen: {
+        name: 'Tailwind CDN',
+        reason: 'Rapid utility-first styling with zero build configuration.',
+      },
+    },
+    {
+      number: '03',
+      title: 'Content Strategy',
+      rejected: [
+        { name: 'Generic guides', reason: 'No differentiation. Every competitor does this.' },
+        { name: 'Video content', reason: 'High production cost for a solo build.' },
+      ],
+      chosen: {
+        name: 'Arjun & Priya Blog',
+        reason: 'Character-driven content creates emotional connection and drives SEO long-tail keywords.',
+      },
+    },
+    {
+      number: '04',
+      title: 'Discoverability',
+      rejected: [
+        { name: 'SEO only', reason: 'Misses the growing AI search market entirely.' },
+        { name: 'Social only', reason: 'Algorithm dependent, zero ownership.' },
+      ],
+      chosen: {
+        name: 'JSON-LD + llms.txt',
+        reason: 'Dual strategy. Schema markup feeds Google rich results. llms.txt feeds AI crawlers.',
+      },
+    },
   ];
 
   return (
@@ -720,6 +846,301 @@ export default function StudenzBitDetail() {
               </a>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section
+        style={{
+          background: '#FFF8EE',
+          minHeight: '100vh',
+          width: '100%',
+          position: 'relative',
+          padding: '6rem 4rem',
+        }}
+      >
+        <div
+          className="s3-header"
+          style={{
+            maxWidth: '800px',
+            margin: '0 auto 4rem auto',
+            textAlign: 'center',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 400,
+              fontSize: '0.65rem',
+              letterSpacing: '0.25em',
+              color: 'rgba(13,148,136,0.7)',
+              textTransform: 'uppercase',
+              marginBottom: '0.8rem',
+              display: 'block',
+            }}
+          >
+            SECTION 03
+          </span>
+          <div
+            style={{
+              width: '40px',
+              height: '1px',
+              background: 'rgba(13,148,136,0.4)',
+              margin: '0 auto 1.2rem auto',
+            }}
+          />
+          <h2
+            style={{
+              margin: '0 0 1rem 0',
+              fontFamily: 'Unbounded, sans-serif',
+              fontWeight: 800,
+              fontSize: 'clamp(2.2rem, 4.5vw, 4rem)',
+              color: '#1a0a00',
+              lineHeight: 1.05,
+            }}
+          >
+            <span style={{ display: 'block' }}>Every Choice</span>
+            <span style={{ display: 'block' }}>Had a Reason.</span>
+          </h2>
+          <p
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 300,
+              fontSize: '0.92rem',
+              color: 'rgba(26,10,0,0.55)',
+              lineHeight: 1.8,
+              maxWidth: '480px',
+              margin: '0 auto',
+            }}
+          >
+            No decision was default. Every tool, every approach, every tradeoff was deliberate.
+          </p>
+        </div>
+
+        <div
+          className="s3-tags"
+          style={{
+            marginBottom: '3rem',
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '0.5rem',
+          }}
+        >
+          {s3TechTags.map((tag) => (
+            <span
+              key={tag}
+              className="s3-tag"
+              style={{
+                background: 'rgba(13,148,136,0.08)',
+                border: '1px solid rgba(13,148,136,0.2)',
+                borderRadius: '50px',
+                padding: '0.35rem 0.9rem',
+                fontFamily: 'DM Sans, sans-serif',
+                fontWeight: 400,
+                fontSize: '0.72rem',
+                color: '#0D9488',
+                letterSpacing: '0.05em',
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <div
+          className="s3-cards"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '1.5rem',
+            maxWidth: '1000px',
+            margin: '0 auto',
+          }}
+        >
+          {decisionLogCards.map((card) => (
+            <div
+              key={card.number}
+              className="s3-card"
+              style={{
+                background: '#ffffff',
+                border: '1px solid rgba(26,10,0,0.08)',
+                borderRadius: '14px',
+                padding: '1.8rem',
+                boxShadow: '0 2px 20px rgba(26,10,0,0.05)',
+                borderLeft: '3px solid #0D9488',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 8px 32px rgba(26,10,0,0.1)';
+                e.currentTarget.style.borderLeftColor = '#0a7a70';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = '';
+                e.currentTarget.style.boxShadow = '0 2px 20px rgba(26,10,0,0.05)';
+                e.currentTarget.style.borderLeftColor = '#0D9488';
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  marginBottom: '1.4rem',
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: 'Unbounded, sans-serif',
+                    fontWeight: 700,
+                    fontSize: '0.7rem',
+                    color: '#0D9488',
+                    background: 'rgba(13,148,136,0.1)',
+                    borderRadius: '4px',
+                    padding: '0.2rem 0.5rem',
+                  }}
+                >
+                  {card.number}
+                </span>
+                <span
+                  style={{
+                    fontFamily: 'Unbounded, sans-serif',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    color: '#1a0a00',
+                    letterSpacing: '0.02em',
+                  }}
+                >
+                  {card.title}
+                </span>
+              </div>
+
+              <div style={{ marginBottom: '1rem' }}>
+                {card.rejected.map((item) => (
+                  <div
+                    key={item.name}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '0.5rem',
+                      marginBottom: '0.6rem',
+                    }}
+                  >
+                    <span style={{ fontSize: '0.7rem', marginTop: '2px', flexShrink: 0 }}>❌</span>
+                    <div>
+                      <span
+                        style={{
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 600,
+                          fontSize: '0.78rem',
+                          color: 'rgba(26,10,0,0.5)',
+                          textDecoration: 'line-through',
+                          marginRight: '0.3rem',
+                        }}
+                      >
+                        {item.name}
+                      </span>
+                      <div
+                        style={{
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 300,
+                          fontSize: '0.72rem',
+                          color: 'rgba(26,10,0,0.4)',
+                          lineHeight: 1.5,
+                          marginTop: '0.15rem',
+                        }}
+                      >
+                        {item.reason}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                style={{
+                  width: '100%',
+                  height: '1px',
+                  background: 'rgba(13,148,136,0.15)',
+                  margin: '1rem 0',
+                }}
+              />
+
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                <span style={{ fontSize: '0.7rem', marginTop: '2px', flexShrink: 0 }}>✅</span>
+                <div>
+                  <div
+                    style={{
+                      fontFamily: 'DM Sans, sans-serif',
+                      fontWeight: 700,
+                      fontSize: '0.82rem',
+                      color: '#0D9488',
+                    }}
+                  >
+                    {card.chosen.name}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: 'DM Sans, sans-serif',
+                      fontWeight: 300,
+                      fontSize: '0.78rem',
+                      color: 'rgba(26,10,0,0.6)',
+                      lineHeight: 1.6,
+                      fontStyle: 'italic',
+                      marginTop: '0.25rem',
+                    }}
+                  >
+                    {card.chosen.reason}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div
+          className="s3-quote"
+          style={{
+            marginTop: '3rem',
+            textAlign: 'center',
+            maxWidth: '600px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}
+        >
+          <div
+            style={{
+              width: '60px',
+              height: '1px',
+              background: 'rgba(13,148,136,0.3)',
+              margin: '0 auto 1.5rem auto',
+            }}
+          />
+          <p
+            style={{
+              margin: 0,
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 300,
+              fontSize: '1rem',
+              fontStyle: 'italic',
+              color: 'rgba(26,10,0,0.5)',
+              lineHeight: 1.8,
+            }}
+          >
+            Building solo means every decision is yours — that&apos;s equally freeing and humbling.
+          </p>
+          <p
+            style={{
+              margin: '0.5rem 0 0 0',
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 400,
+              fontSize: '0.72rem',
+              color: 'rgba(13,148,136,0.7)',
+              letterSpacing: '0.1em',
+            }}
+          >
+            — Het, Builder of StudenzBit
+          </p>
         </div>
       </section>
     </div>
