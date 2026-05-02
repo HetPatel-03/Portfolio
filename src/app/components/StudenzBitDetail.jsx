@@ -13,19 +13,50 @@ export default function StudenzBitDetail() {
   useEffect(() => {
     if (!moonRef.current || !section2Ref.current || !heroRef.current || !heroTextRef.current) return undefined;
 
-    gsap.to(moonRef.current, {
+    const moonTl = gsap.timeline({
       scrollTrigger: {
-        trigger: section2Ref.current,
-        start: 'top bottom',
-        end: 'top top',
-        scrub: 1.5,
+        trigger: heroRef.current,
+        start: 'top top',
+        end: '+=220%',
+        scrub: 2,
+        pin: moonRef.current,
+        pinSpacing: false,
       },
-      top: '8vh',
-      right: '6vw',
-      boxShadow: '0 0 80px rgba(252,211,77,0.7), 0 0 160px rgba(252,211,77,0.3)',
-      background: 'radial-gradient(circle, #fff9e6 0%, #FCD34D 40%, rgba(252,180,50,0.6) 70%, transparent 100%)',
-      ease: 'none',
     });
+
+    moonTl
+      // Stage 1: gentle pulse + wobble
+      .to(moonRef.current, {
+        scale: 1.15,
+        rotation: 5,
+        boxShadow:
+          '0 0 44px rgba(200,220,255,0.45), 0 0 92px rgba(150,180,255,0.22), 0 0 145px rgba(100,140,255,0.14)',
+        duration: 4,
+        ease: 'none',
+      }, 0)
+      // Stage 2: diagonal travel + brighter trails
+      .to(moonRef.current, {
+        top: '34vh',
+        right: '34vw',
+        rotation: 15,
+        boxShadow:
+          '0 0 65px rgba(210,230,255,0.55), 0 0 120px rgba(170,200,255,0.35), 0 0 180px rgba(120,160,255,0.2)',
+        duration: 3,
+        ease: 'none',
+      }, 4)
+      // Stage 3: settle + morph into warm sun
+      .to(moonRef.current, {
+        top: '8vh',
+        right: '6vw',
+        scale: 1,
+        rotation: 0,
+        background:
+          'radial-gradient(circle at 35% 35%, #fff9e6 0%, #FCD34D 40%, rgba(252,180,50,0.6) 70%, rgba(252,140,40,0.25) 100%)',
+        boxShadow:
+          '0 0 80px rgba(252,211,77,0.8), 0 0 160px rgba(252,211,77,0.35), 0 0 220px rgba(252,180,50,0.2)',
+        duration: 3,
+        ease: 'none',
+      }, 7);
 
     gsap.to(heroTextRef.current, {
       scrollTrigger: {
@@ -60,16 +91,64 @@ export default function StudenzBitDetail() {
           position: 'fixed',
           top: '6vh',
           right: '6vw',
-          width: '180px',
-          height: '180px',
+          width: '200px',
+          height: '200px',
           borderRadius: '50%',
+          overflow: 'hidden',
           background:
-            'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(13,148,136,0.95) 45%, rgba(13,148,136,0.8) 68%, rgba(13,148,136,0.1) 100%)',
-          boxShadow: '0 0 60px rgba(13,148,136,0.6), 0 0 120px rgba(13,148,136,0.3)',
+            'radial-gradient(circle at 35% 35%, #e8e8e0 0%, #c8c8b8 25%, #a0a090 50%, #787868 75%, #505040 100%)',
+          boxShadow:
+            '0 0 40px rgba(200,220,255,0.4), 0 0 80px rgba(150,180,255,0.2), 0 0 120px rgba(100,140,255,0.1)',
           zIndex: 100,
           pointerEvents: 'none',
         }}
-      />
+      >
+        <div
+          style={{
+            position: 'absolute',
+            top: '20%',
+            left: '25%',
+            width: '30px',
+            height: '30px',
+            borderRadius: '50%',
+            background: 'rgba(0,0,0,0.15)',
+            boxShadow: 'inset 2px 2px 4px rgba(0,0,0,0.3)',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: '55%',
+            left: '40%',
+            width: '20px',
+            height: '20px',
+            borderRadius: '50%',
+            background: 'rgba(0,0,0,0.15)',
+            boxShadow: 'inset 2px 2px 4px rgba(0,0,0,0.3)',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: '30%',
+            left: '60%',
+            width: '15px',
+            height: '15px',
+            borderRadius: '50%',
+            background: 'rgba(0,0,0,0.15)',
+            boxShadow: 'inset 2px 2px 4px rgba(0,0,0,0.3)',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            borderRadius: '50%',
+            background:
+              'radial-gradient(circle at 70% 50%, transparent 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.8) 100%)',
+          }}
+        />
+      </div>
 
       <section
         ref={heroRef}
@@ -83,40 +162,6 @@ export default function StudenzBitDetail() {
           overflow: 'hidden',
         }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            top: '2.5rem',
-            left: '2.5rem',
-            zIndex: 3,
-          }}
-        >
-          <p
-            style={{
-              margin: 0,
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 400,
-              fontSize: '0.65rem',
-              letterSpacing: '0.2em',
-              color: 'rgba(255,255,255,0.6)',
-            }}
-          >
-            TECHNICAL DEEP DIVE · 2024
-          </p>
-          <p
-            style={{
-              margin: '0.45rem 0 0 0',
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 300,
-              fontSize: '0.6rem',
-              letterSpacing: '0.15em',
-              color: 'rgba(255,255,255,0.4)',
-            }}
-          >
-            Web · Affiliate · SEO · Content
-          </p>
-        </div>
-
         <a
           href="#"
           onClick={(e) => {
@@ -126,16 +171,56 @@ export default function StudenzBitDetail() {
           style={{
             position: 'absolute',
             top: '2.5rem',
-            right: '2.5rem',
+            left: '2.5rem',
             zIndex: 2,
             fontFamily: 'DM Sans, sans-serif',
+            fontWeight: 400,
             fontSize: '0.75rem',
+            letterSpacing: '0.05em',
             textDecoration: 'none',
             color: 'rgba(255,255,255,0.5)',
+            border: 'none',
+            background: 'none',
           }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = '#fff'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
         >
           ← Portfolio
         </a>
+
+        <div
+          style={{
+            position: 'absolute',
+            top: '5rem',
+            left: '2.5rem',
+            zIndex: 3,
+          }}
+        >
+          <p
+            style={{
+              margin: 0,
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 600,
+              fontSize: '0.85rem',
+              letterSpacing: '0.08em',
+              color: 'rgba(255,255,255,0.95)',
+            }}
+          >
+            TECHNICAL DEEP DIVE · 2024
+          </p>
+          <p
+            style={{
+              margin: '0.45rem 0 0 0',
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 300,
+              fontSize: '0.65rem',
+              letterSpacing: '0.15em',
+              color: 'rgba(255,255,255,0.45)',
+            }}
+          >
+            Web · Affiliate · SEO · Content
+          </p>
+        </div>
 
         <div
           style={{
@@ -169,7 +254,7 @@ export default function StudenzBitDetail() {
               display: 'block',
               fontFamily: 'Unbounded, sans-serif',
               fontWeight: 900,
-              fontSize: 'clamp(3.5rem, 8vw, 7rem)',
+              fontSize: 'clamp(2.8rem, 6vw, 5.5rem)',
               color: '#fff',
               lineHeight: 0.95,
             }}
@@ -181,55 +266,64 @@ export default function StudenzBitDetail() {
               display: 'block',
               fontFamily: 'Unbounded, sans-serif',
               fontWeight: 900,
-              fontSize: 'clamp(3.5rem, 8vw, 7rem)',
+              fontSize: 'clamp(2.8rem, 6vw, 5.5rem)',
               color: '#fff',
               lineHeight: 0.95,
             }}
           >
             unknown
           </span>
-          <p
-            style={{
-              margin: '1rem 0 0 0',
-              maxWidth: '320px',
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 300,
-              fontSize: '0.95rem',
-              lineHeight: 1.7,
-              color: 'rgba(255,255,255,0.65)',
-            }}
-          >
-            A survival guide for international students landing in Canada
-          </p>
         </div>
+
+        <p
+          style={{
+            position: 'absolute',
+            bottom: '4rem',
+            right: '2.5rem',
+            margin: 0,
+            maxWidth: '280px',
+            textAlign: 'right',
+            fontFamily: 'DM Sans, sans-serif',
+            fontWeight: 300,
+            fontSize: '0.85rem',
+            lineHeight: 1.7,
+            color: 'rgba(255,255,255,0.65)',
+            zIndex: 3,
+          }}
+        >
+          A survival guide for international students landing in Canada
+        </p>
 
         <button
           type="button"
           onClick={() => window.open('https://studenzbit.com', '_blank')}
           style={{
             position: 'absolute',
-            bottom: '4rem',
+            bottom: '8.2rem',
             right: '2.5rem',
             zIndex: 3,
-            border: '1px solid rgba(255,255,255,0.4)',
-            padding: '0.75rem 1.5rem',
-            borderRadius: '2px',
-            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.25)',
+            padding: '0.85rem 2rem',
+            borderRadius: '50px',
+            background: 'rgba(255,255,255,0.08)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 24px rgba(0,0,0,0.2)',
             color: '#fff',
             fontFamily: 'DM Sans, sans-serif',
             fontWeight: 400,
-            fontSize: '0.8rem',
-            letterSpacing: '0.1em',
+            fontSize: '0.82rem',
+            letterSpacing: '0.08em',
             cursor: 'pointer',
             transition: 'all 0.2s ease',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-            e.currentTarget.style.borderColor = '#fff';
+            e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'transparent';
-            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)';
+            e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)';
           }}
         >
           Visit StudenzBit ↗
