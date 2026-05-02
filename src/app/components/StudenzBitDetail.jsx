@@ -131,7 +131,7 @@ export default function StudenzBitDetail() {
           marginTop: 0,
           height: '100vh',
           backgroundImage:
-            "linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('/studenzbit_1.png')",
+            "linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('/Studenzbit_1.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'scroll',
@@ -393,7 +393,7 @@ export default function StudenzBitDetail() {
           height: '100vh',
           width: '100%',
           backgroundImage:
-            "url('/studenzbit_2.png')",
+            "url('/Studenzbit_2.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           overflow: 'hidden',
