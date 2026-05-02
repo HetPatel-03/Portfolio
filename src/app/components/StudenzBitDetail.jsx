@@ -8,48 +8,46 @@ export default function StudenzBitDetail() {
   const heroRef = useRef(null);
   const section2Ref = useRef(null);
   const moonRef = useRef(null);
-  const terminatorRef = useRef(null);
   const heroTextRef = useRef(null);
 
   useEffect(() => {
-    if (!moonRef.current || !section2Ref.current || !heroRef.current || !heroTextRef.current || !terminatorRef.current) return undefined;
+    if (!moonRef.current || !section2Ref.current || !heroRef.current || !heroTextRef.current) return undefined;
 
     gsap.registerPlugin(ScrollTrigger);
+
+    const startRight = window.innerWidth * 0.04;
+    const moonWidth = 180;
+    const endLeft = window.innerWidth * 0.04;
+    const totalX = -(window.innerWidth - startRight - moonWidth - endLeft);
 
     gsap.set(moonRef.current, {
       position: 'fixed',
       top: '5vh',
       right: '4vw',
       left: 'auto',
-      xPercent: 0,
-      yPercent: 0,
+      x: 0,
+      y: 0,
     });
 
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section2Ref.current,
-        start: 'top bottom',
-        end: 'center center',
-        scrub: 2.5,
-        onEnter: () => gsap.set(moonRef.current, { zIndex: 5 }),
+        start: 'top 90%',
+        end: 'top 10%',
+        scrub: 2,
+        onEnter: () => gsap.set(moonRef.current, { zIndex: 3 }),
         onLeaveBack: () => gsap.set(moonRef.current, { zIndex: 100 }),
       },
     });
 
     tl.to(moonRef.current, {
-      x: -(window.innerWidth * 0.82),
-      y: 20,
-      rotation: 180,
-      duration: 1,
-      ease: 'none',
-    });
-
-    tl.to(moonRef.current, {
+      x: totalX,
+      y: 30,
+      rotation: 120,
       background: 'radial-gradient(circle at 40% 40%, #fffde7 0%, #FDE68A 25%, #FCD34D 55%, rgba(252,180,50,0.7) 75%, transparent 100%)',
       boxShadow: '0 0 0 1px rgba(252,211,77,0.4), 0 0 50px rgba(252,211,77,0.8), 0 0 100px rgba(252,180,50,0.5), 0 0 180px rgba(252,150,30,0.25)',
-      duration: 1,
       ease: 'none',
-    }, '<');
+    });
 
     const terminator = moonRef.current.querySelector('.terminator');
     if (terminator) {
@@ -74,9 +72,6 @@ export default function StudenzBitDetail() {
 
     return () => {
       ScrollTrigger.getAll().forEach((t) => t.kill());
-      gsap.killTweensOf(moonRef.current);
-      gsap.killTweensOf(heroTextRef.current);
-      gsap.killTweensOf(terminatorRef.current);
     };
   }, []);
 
@@ -108,7 +103,7 @@ export default function StudenzBitDetail() {
           background:
             'radial-gradient(circle at 35% 35%, #e8e8e0 0%, #c8c8b8 25%, #a0a090 50%, #787868 75%, #505040 100%)',
           boxShadow:
-            '0 0 0 1px rgba(200,220,255,0.3), 0 0 40px rgba(180,200,255,0.5), 0 0 80px rgba(150,180,255,0.3), 0 0 140px rgba(120,160,255,0.15)',
+            '0 0 0 1px rgba(200,220,255,0.2), 0 0 40px rgba(180,200,255,0.5), 0 0 80px rgba(150,180,255,0.3), 0 0 140px rgba(120,160,255,0.15)',
           zIndex: 100,
           pointerEvents: 'none',
         }}
@@ -150,7 +145,6 @@ export default function StudenzBitDetail() {
           }}
         />
         <div
-          ref={terminatorRef}
           className="terminator"
           style={{
             position: 'absolute',
