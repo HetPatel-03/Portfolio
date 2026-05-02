@@ -14,34 +14,51 @@ export default function StudenzBitDetail() {
   useEffect(() => {
     if (!moonRef.current || !section2Ref.current || !heroRef.current || !heroTextRef.current || !terminatorRef.current) return undefined;
 
-    const moonTrigger = {
-      trigger: section2Ref.current,
-      start: 'top bottom',
-      end: 'top 20%',
-      scrub: 2,
-    };
+    gsap.registerPlugin(ScrollTrigger);
 
-    gsap.to(moonRef.current, {
-      scrollTrigger: moonTrigger,
-      left: '4vw',
-      right: 'auto',
-      top: '8vh',
-      background: 'radial-gradient(circle at 40% 40%, #fff9e6 0%, #FDE68A 30%, #FCD34D 60%, rgba(252,180,50,0.5) 80%, transparent 100%)',
-      boxShadow: '0 0 60px rgba(252,211,77,0.8), 0 0 120px rgba(252,211,77,0.4), 0 0 200px rgba(252,180,50,0.2)',
+    gsap.set(moonRef.current, {
+      position: 'fixed',
+      top: '5vh',
+      right: '4vw',
+      left: 'auto',
+      xPercent: 0,
+      yPercent: 0,
+    });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section2Ref.current,
+        start: 'top bottom',
+        end: 'center center',
+        scrub: 2.5,
+        onEnter: () => gsap.set(moonRef.current, { zIndex: 5 }),
+        onLeaveBack: () => gsap.set(moonRef.current, { zIndex: 100 }),
+      },
+    });
+
+    tl.to(moonRef.current, {
+      x: -(window.innerWidth * 0.82),
+      y: 20,
+      rotation: 180,
+      duration: 1,
       ease: 'none',
     });
 
-    gsap.to(moonRef.current, {
-      scrollTrigger: moonTrigger,
-      rotation: 360,
+    tl.to(moonRef.current, {
+      background: 'radial-gradient(circle at 40% 40%, #fffde7 0%, #FDE68A 25%, #FCD34D 55%, rgba(252,180,50,0.7) 75%, transparent 100%)',
+      boxShadow: '0 0 0 1px rgba(252,211,77,0.4), 0 0 50px rgba(252,211,77,0.8), 0 0 100px rgba(252,180,50,0.5), 0 0 180px rgba(252,150,30,0.25)',
+      duration: 1,
       ease: 'none',
-    });
+    }, '<');
 
-    gsap.to(terminatorRef.current, {
-      scrollTrigger: moonTrigger,
-      opacity: 0,
-      ease: 'none',
-    });
+    const terminator = moonRef.current.querySelector('.terminator');
+    if (terminator) {
+      tl.to(terminator, {
+        opacity: 0,
+        duration: 1,
+        ease: 'none',
+      }, '<');
+    }
 
     gsap.to(heroTextRef.current, {
       scrollTrigger: {
@@ -91,7 +108,7 @@ export default function StudenzBitDetail() {
           background:
             'radial-gradient(circle at 35% 35%, #e8e8e0 0%, #c8c8b8 25%, #a0a090 50%, #787868 75%, #505040 100%)',
           boxShadow:
-            '0 0 40px rgba(200,220,255,0.4), 0 0 80px rgba(150,180,255,0.2), 0 0 120px rgba(100,140,255,0.1)',
+            '0 0 0 1px rgba(200,220,255,0.3), 0 0 40px rgba(180,200,255,0.5), 0 0 80px rgba(150,180,255,0.3), 0 0 140px rgba(120,160,255,0.15)',
           zIndex: 100,
           pointerEvents: 'none',
         }}
@@ -134,6 +151,7 @@ export default function StudenzBitDetail() {
         />
         <div
           ref={terminatorRef}
+          className="terminator"
           style={{
             position: 'absolute',
             inset: 0,
@@ -427,6 +445,7 @@ export default function StudenzBitDetail() {
         <div
           style={{
             position: 'absolute',
+            zIndex: 10,
             right: '4rem',
             top: '50%',
             transform: 'translateY(-50%)',
