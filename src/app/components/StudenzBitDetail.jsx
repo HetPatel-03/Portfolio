@@ -384,6 +384,19 @@ export default function StudenzBitDetail() {
             zIndex: 2,
           }}
         />
+
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '200px',
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 60%, #1a0f2e 100%)',
+            zIndex: 5,
+            pointerEvents: 'none',
+          }}
+        />
       </section>
 
       <section
@@ -399,6 +412,19 @@ export default function StudenzBitDetail() {
           overflow: 'hidden',
         }}
       >
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '200px',
+            background: 'linear-gradient(to bottom, #1a0f2e 0%, transparent 100%)',
+            zIndex: 5,
+            pointerEvents: 'none',
+          }}
+        />
+
         <div
           style={{
             position: 'absolute',
