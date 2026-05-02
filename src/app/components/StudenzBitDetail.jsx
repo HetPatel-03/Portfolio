@@ -276,9 +276,9 @@ export default function StudenzBitDetail() {
               display: 'block',
               fontFamily: 'Unbounded, sans-serif',
               fontWeight: 400,
-              fontSize: 'clamp(1.2rem, 2.5vw, 1.8rem)',
+              fontSize: 'clamp(0.9rem, 1.8vw, 1.4rem)',
               color: 'rgba(255,255,255,0.7)',
-              marginBottom: '-1.2rem',
+              marginBottom: '-0.8rem',
               letterSpacing: '0.02em',
               position: 'relative',
               zIndex: 2,
@@ -292,7 +292,7 @@ export default function StudenzBitDetail() {
               display: 'block',
               fontFamily: 'Unbounded, sans-serif',
               fontWeight: 900,
-              fontSize: 'clamp(3.5rem, 8vw, 7.5rem)',
+              fontSize: 'clamp(2.2rem, 4.5vw, 4.5rem)',
               color: '#fff',
               letterSpacing: '-0.02em',
               lineHeight: 1,
@@ -306,11 +306,11 @@ export default function StudenzBitDetail() {
             ref={heroSublineRef}
             style={{
               display: 'block',
-              marginTop: '1rem',
-              maxWidth: '320px',
+              marginTop: '0.8rem',
+              maxWidth: '280px',
               fontFamily: 'DM Sans, sans-serif',
               fontWeight: 300,
-              fontSize: '0.85rem',
+              fontSize: '0.82rem',
               lineHeight: 1.7,
               color: 'rgba(255,255,255,0.55)',
               zIndex: 10,
@@ -457,134 +457,149 @@ export default function StudenzBitDetail() {
 
         <div
           style={{
-            position: 'absolute',
-            top: '3rem',
-            left: '3rem',
+            position: 'relative',
+            height: '100%',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gridTemplateRows: 'auto auto',
+            gap: 0,
+            padding: '5rem 3rem 3rem 3rem',
+            alignItems: 'start',
             zIndex: 10,
-            opacity: 1,
           }}
         >
           <div
             style={{
-              width: '50px',
-              height: '1px',
-              background: 'rgba(45,26,14,0.35)',
-              marginBottom: '0.8rem',
-              opacity: 1,
-            }}
-          />
-
-          <p
-            style={{
-              margin: '0 0 0.8rem 0',
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 700,
-              fontSize: '0.65rem',
-              letterSpacing: '0.25em',
-              color: 'rgba(45,26,14,0.55)',
-              textTransform: 'uppercase',
-              display: 'block',
-              opacity: 1,
+              gridColumn: 1,
+              gridRow: 1,
+              paddingRight: '2rem',
+              paddingTop: '2rem',
             }}
           >
-            PROBLEM STATEMENT
-          </p>
+            <span
+              style={{
+                width: '50px',
+                height: '1px',
+                background: 'rgba(45,26,14,0.35)',
+                marginBottom: '0.8rem',
+                display: 'block',
+              }}
+            />
+            <span
+              style={{
+                fontFamily: 'DM Sans, sans-serif',
+                fontWeight: 700,
+                fontSize: '0.65rem',
+                letterSpacing: '0.25em',
+                color: 'rgba(45,26,14,0.55)',
+                textTransform: 'uppercase',
+                marginBottom: '0.8rem',
+                display: 'block',
+              }}
+            >
+              PROBLEM STATEMENT
+            </span>
+            <div
+              style={{
+                fontFamily: 'Unbounded, sans-serif',
+                fontWeight: 800,
+                fontSize: 'clamp(2rem, 3.5vw, 3rem)',
+                color: '#2d1a0e',
+                lineHeight: 1.05,
+              }}
+            >
+              <span style={{ display: 'block' }}>The Problem</span>
+              <span style={{ display: 'block' }}>I Solved.</span>
+            </div>
+          </div>
 
-          <h2
+          <div
             style={{
-              margin: 0,
-              fontFamily: 'Unbounded, sans-serif',
-              fontWeight: 800,
-              fontSize: 'clamp(2rem, 4vw, 3.2rem)',
-              color: '#2d1a0e',
-              lineHeight: 1.05,
-              opacity: 1,
+              gridColumn: 2,
+              gridRow: 1,
+              paddingLeft: '2rem',
+              paddingTop: '5rem',
             }}
           >
-            <span style={{ display: 'block', opacity: 1 }}>The Problem</span>
-            <span style={{ display: 'block', opacity: 1 }}>I Solved.</span>
-          </h2>
-        </div>
+            <p
+              style={{
+                margin: 0,
+                fontFamily: 'DM Sans, sans-serif',
+                fontWeight: 300,
+                fontSize: '0.88rem',
+                color: 'rgba(45,26,14,0.75)',
+                lineHeight: 1.85,
+              }}
+            >
+              International students arriving in Canada face a fragmented information problem — SIM cards, banking,
+              housing, and OHIP each require separate research across unreliable sources. No single platform existed
+              targeting Canada-bound international students specifically.
+              <br />
+              <br />
+              StudenzBit consolidates this into one curated platform: structured guides, character-driven blog content,
+              and affiliate-monetized resource pages — built for discoverability from day one.
+            </p>
+          </div>
 
-        <div
-          style={{
-            position: 'absolute',
-            right: '3rem',
-            top: '52%',
-            maxWidth: '420px',
-            zIndex: 10,
-            opacity: 1,
-            transform: 'translateY(-50%)',
-          }}
-        >
-          <p
+          <div
             style={{
-              margin: '0 0 2rem 0',
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 300,
-              fontSize: '0.88rem',
-              color: 'rgba(45,26,14,0.75)',
-              lineHeight: 1.85,
-              opacity: 1,
+              gridColumn: '1 / -1',
+              gridRow: 2,
+              marginTop: '2.5rem',
             }}
           >
-            International students arriving in Canada face a fragmented information problem — SIM cards, banking,
-            housing, and OHIP each require separate research across unreliable sources. No single platform existed
-            targeting Canada-bound international students specifically.
-            <br />
-            <br />
-            StudenzBit consolidates this into one curated platform: structured guides, character-driven blog content,
-            and affiliate-monetized resource pages — built for discoverability from day one.
-          </p>
-
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-            {techCards.map((card, idx) => (
-              <div
-                key={card.tech}
-                style={{
-                  width: idx === techCards.length - 1 ? '100%' : 'calc(50% - 0.75rem)',
-                  boxSizing: 'border-box',
-                  background: 'rgba(255,255,255,0.25)',
-                  backdropFilter: 'blur(10px)',
-                  WebkitBackdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(45,26,14,0.15)',
-                  borderRadius: '10px',
-                  padding: '0.9rem 1rem',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.45)';
-                  e.currentTarget.style.borderColor = 'rgba(45,26,14,0.25)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.25)';
-                  e.currentTarget.style.borderColor = 'rgba(45,26,14,0.15)';
-                }}
-              >
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+              {techCards.map((card) => (
                 <div
+                  key={card.tech}
                   style={{
-                    fontFamily: 'Unbounded, sans-serif',
-                    fontWeight: 700,
-                    fontSize: '0.75rem',
-                    color: '#2d1a0e',
-                    marginBottom: '0.3rem',
+                    width: 'calc(20% - 0.75rem)',
+                    minWidth: '160px',
+                    flex: 1,
+                    boxSizing: 'border-box',
+                    background: 'rgba(255,255,255,0.25)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(45,26,14,0.15)',
+                    borderRadius: '10px',
+                    padding: '0.9rem 1rem',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.45)';
+                    e.currentTarget.style.borderColor = 'rgba(45,26,14,0.25)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.25)';
+                    e.currentTarget.style.borderColor = 'rgba(45,26,14,0.15)';
                   }}
                 >
-                  {card.tech}
+                  <span
+                    style={{
+                      fontFamily: 'Unbounded, sans-serif',
+                      fontWeight: 700,
+                      fontSize: '0.75rem',
+                      color: '#2d1a0e',
+                      marginBottom: '0.3rem',
+                      display: 'block',
+                    }}
+                  >
+                    {card.tech}
+                  </span>
+                  <div
+                    style={{
+                      fontFamily: 'DM Sans, sans-serif',
+                      fontWeight: 300,
+                      fontSize: '0.72rem',
+                      color: 'rgba(45,26,14,0.6)',
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {card.desc}
+                  </div>
                 </div>
-                <div
-                  style={{
-                    fontFamily: 'DM Sans, sans-serif',
-                    fontWeight: 300,
-                    fontSize: '0.72rem',
-                    color: 'rgba(45,26,14,0.6)',
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {card.desc}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
