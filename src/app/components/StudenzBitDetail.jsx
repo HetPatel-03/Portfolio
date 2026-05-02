@@ -103,69 +103,6 @@ export default function StudenzBitDetail() {
           ease: 'none',
         });
       }
-
-      gsap.set('.s3-header', { opacity: 0, y: 30 });
-      gsap.set('.s3-tag', { opacity: 0, y: 10 });
-      gsap.set('.s3-card', { opacity: 0, y: 40 });
-      gsap.set('.s3-quote', { opacity: 0, y: 20 });
-
-      gsap.fromTo(
-        '.s3-header',
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          scrollTrigger: {
-            trigger: '.s3-header',
-            start: 'top 80%',
-          },
-        }
-      );
-
-      gsap.fromTo(
-        '.s3-tag',
-        { opacity: 0, y: 10 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.4,
-          stagger: 0.05,
-          scrollTrigger: {
-            trigger: '.s3-tags',
-            start: 'top 80%',
-          },
-        }
-      );
-
-      gsap.fromTo(
-        '.s3-card',
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          stagger: 0.15,
-          scrollTrigger: {
-            trigger: '.s3-cards',
-            start: 'top 75%',
-          },
-        }
-      );
-
-      gsap.fromTo(
-        '.s3-quote',
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          scrollTrigger: {
-            trigger: '.s3-quote',
-            start: 'top 85%',
-          },
-        }
-      );
     }, rootRef);
 
     return () => ctx.revert();
@@ -856,6 +793,8 @@ export default function StudenzBitDetail() {
           width: '100%',
           position: 'relative',
           padding: '6rem 4rem',
+          opacity: 1,
+          zIndex: 1,
         }}
       >
         <div
@@ -864,6 +803,7 @@ export default function StudenzBitDetail() {
             maxWidth: '800px',
             margin: '0 auto 4rem auto',
             textAlign: 'center',
+            opacity: 1,
           }}
         >
           <span
@@ -924,6 +864,7 @@ export default function StudenzBitDetail() {
             flexWrap: 'wrap',
             justifyContent: 'center',
             gap: '0.5rem',
+            opacity: 1,
           }}
         >
           {s3TechTags.map((tag) => (
@@ -940,6 +881,7 @@ export default function StudenzBitDetail() {
                 fontSize: '0.72rem',
                 color: '#0D9488',
                 letterSpacing: '0.05em',
+                opacity: 1,
               }}
             >
               {tag}
@@ -955,6 +897,7 @@ export default function StudenzBitDetail() {
             gap: '1.5rem',
             maxWidth: '1000px',
             margin: '0 auto',
+            opacity: 1,
           }}
         >
           {decisionLogCards.map((card) => (
@@ -969,6 +912,7 @@ export default function StudenzBitDetail() {
                 boxShadow: '0 2px 20px rgba(26,10,0,0.05)',
                 borderLeft: '3px solid #0D9488',
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                opacity: 1,
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-4px)';
@@ -1106,6 +1050,7 @@ export default function StudenzBitDetail() {
             maxWidth: '600px',
             marginLeft: 'auto',
             marginRight: 'auto',
+            opacity: 1,
           }}
         >
           <div
