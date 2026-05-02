@@ -1,84 +1,235 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function StudenzBitDetail() {
+  const rootRef = useRef(null);
   const heroRef = useRef(null);
   const section2Ref = useRef(null);
-  const moonRef = useRef(null);
   const heroTextRef = useRef(null);
 
-  useEffect(() => {
-    if (!moonRef.current || !section2Ref.current || !heroRef.current || !heroTextRef.current) return undefined;
+  const portfolioLinkRef = useRef(null);
+  const heroStampRef = useRef(null);
+  const statRowRefs = useRef([]);
+  const heroLineIntoRef = useRef(null);
+  const heroLineUnknownRef = useRef(null);
+  const heroSublineRef = useRef(null);
+  const heroButtonsRef = useRef(null);
 
-    gsap.registerPlugin(ScrollTrigger);
+  const section2LineRef = useRef(null);
+  const section2LabelRef = useRef(null);
+  const section2HeadlineLine1Ref = useRef(null);
+  const section2HeadlineLine2Ref = useRef(null);
+  const section2BodyRef = useRef(null);
+  const pillRefs = useRef([]);
 
-    const startRight = window.innerWidth * 0.04;
-    const moonWidth = 180;
-    const endLeft = window.innerWidth * 0.04;
-    const totalX = -(window.innerWidth - startRight - moonWidth - endLeft);
+  useLayoutEffect(() => {
+    if (!rootRef.current || !heroRef.current || !section2Ref.current) return undefined;
 
-    gsap.set(moonRef.current, {
-      position: 'fixed',
-      top: '5vh',
-      right: '4vw',
-      left: 'auto',
-      x: 0,
-      y: 0,
-    });
+    const ctx = gsap.context(() => {
+      const heroBtns = heroButtonsRef.current
+        ? Array.from(heroButtonsRef.current.querySelectorAll('button'))
+        : [];
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section2Ref.current,
-        start: 'top 90%',
-        end: 'top 10%',
-        scrub: 2,
-        onEnter: () => gsap.set(moonRef.current, { zIndex: 3 }),
-        onLeaveBack: () => gsap.set(moonRef.current, { zIndex: 100 }),
-      },
-    });
+      gsap.set(
+        [
+          portfolioLinkRef.current,
+          heroStampRef.current,
+          ...statRowRefs.current,
+          heroLineIntoRef.current,
+          heroLineUnknownRef.current,
+          heroSublineRef.current,
+          ...heroBtns,
+        ].filter(Boolean),
+        { opacity: 0 }
+      );
 
-    tl.to(moonRef.current, {
-      x: totalX,
-      y: 30,
-      rotation: 120,
-      background: 'radial-gradient(circle at 40% 40%, #fffde7 0%, #FDE68A 25%, #FCD34D 55%, rgba(252,180,50,0.7) 75%, transparent 100%)',
-      boxShadow: '0 0 0 1px rgba(252,211,77,0.4), 0 0 50px rgba(252,211,77,0.8), 0 0 100px rgba(252,180,50,0.5), 0 0 180px rgba(252,150,30,0.25)',
-      ease: 'none',
-    });
+      gsap.set(section2LineRef.current, { scaleX: 0, transformOrigin: 'left center' });
+      gsap.set(
+        [
+          section2LabelRef.current,
+          section2HeadlineLine1Ref.current,
+          section2HeadlineLine2Ref.current,
+          section2BodyRef.current,
+          ...pillRefs.current,
+        ].filter(Boolean),
+        { opacity: 0 }
+      );
 
-    const terminator = moonRef.current.querySelector('.terminator');
-    if (terminator) {
-      tl.to(terminator, {
-        opacity: 0,
-        duration: 1,
-        ease: 'none',
-      }, '<');
-    }
+      const intro = gsap.timeline({ defaults: { duration: 0.8, ease: 'power2.out' } });
 
-    gsap.to(heroTextRef.current, {
-      scrollTrigger: {
-        trigger: heroRef.current,
-        start: 'center top',
-        end: 'bottom top',
-        scrub: 1,
-      },
-      opacity: 0,
-      y: -30,
-      ease: 'none',
-    });
+      intro.fromTo(
+        portfolioLinkRef.current,
+        { opacity: 0, y: -10 },
+        { opacity: 1, y: 0 },
+        0.2
+      );
 
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
+      intro.fromTo(
+        heroStampRef.current,
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0 },
+        0.4
+      );
+
+      intro.fromTo(
+        statRowRefs.current,
+        { opacity: 0, x: -20 },
+        { opacity: 1, x: 0, stagger: 0.15 },
+        0.5
+      );
+
+      intro.fromTo(
+        heroLineIntoRef.current,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0 },
+        0.6
+      );
+
+      intro.fromTo(
+        heroLineUnknownRef.current,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0 },
+        0.75
+      );
+
+      intro.fromTo(
+        heroSublineRef.current,
+        { opacity: 0 },
+        { opacity: 1 },
+        0.9
+      );
+
+      intro.fromTo(
+        heroBtns,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, stagger: 0.1 },
+        1.0
+      );
+
+      if (heroTextRef.current) {
+        gsap.to(heroTextRef.current, {
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'center top',
+            end: 'bottom top',
+            scrub: 1,
+          },
+          opacity: 0,
+          y: -40,
+          ease: 'none',
+        });
+      }
+
+      gsap.fromTo(
+        section2LineRef.current,
+        { scaleX: 0 },
+        {
+          scaleX: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: section2Ref.current,
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        section2LabelRef.current,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+          delay: 0.6,
+          scrollTrigger: {
+            trigger: section2Ref.current,
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        section2HeadlineLine1Ref.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: section2Ref.current,
+            start: 'top 75%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        section2HeadlineLine2Ref.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          delay: 0.15,
+          scrollTrigger: {
+            trigger: section2Ref.current,
+            start: 'top 75%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        section2BodyRef.current,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power2.out',
+          delay: 0.2,
+          scrollTrigger: {
+            trigger: section2Ref.current,
+            start: 'top 70%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        pillRefs.current,
+        { opacity: 0, y: 15 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power2.out',
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: section2Ref.current,
+            start: 'top 65%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+    }, rootRef);
+
+    return () => ctx.revert();
   }, []);
 
   const statPills = ['16+ Pages', '4 Blog Posts', 'Amazon Affiliate', 'Launched 2024'];
 
   return (
-    <div style={{ position: 'relative', background: '#000', margin: 0, padding: 0, overflowX: 'hidden' }}>
+    <div ref={rootRef} style={{ position: 'relative', background: '#000', margin: 0, padding: 0, overflowX: 'hidden' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@900&family=DM+Sans:wght@300;400;700&display=swap');
         html, body, #root {
@@ -88,73 +239,6 @@ export default function StudenzBitDetail() {
           scroll-behavior: smooth;
         }
       `}</style>
-
-      <div
-        ref={moonRef}
-        style={{
-          position: 'fixed',
-          top: '5vh',
-          right: '4vw',
-          left: 'auto',
-          width: '180px',
-          height: '180px',
-          borderRadius: '50%',
-          overflow: 'hidden',
-          background:
-            'radial-gradient(circle at 35% 35%, #e8e8e0 0%, #c8c8b8 25%, #a0a090 50%, #787868 75%, #505040 100%)',
-          boxShadow:
-            '0 0 0 1px rgba(200,220,255,0.2), 0 0 40px rgba(180,200,255,0.5), 0 0 80px rgba(150,180,255,0.3), 0 0 140px rgba(120,160,255,0.15)',
-          zIndex: 100,
-          pointerEvents: 'none',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            top: '20%',
-            left: '25%',
-            width: '30px',
-            height: '30px',
-            borderRadius: '50%',
-            background: 'rgba(0,0,0,0.15)',
-            boxShadow: 'inset 2px 2px 4px rgba(0,0,0,0.3)',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            top: '55%',
-            left: '40%',
-            width: '20px',
-            height: '20px',
-            borderRadius: '50%',
-            background: 'rgba(0,0,0,0.15)',
-            boxShadow: 'inset 2px 2px 4px rgba(0,0,0,0.3)',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            top: '30%',
-            left: '60%',
-            width: '15px',
-            height: '15px',
-            borderRadius: '50%',
-            background: 'rgba(0,0,0,0.15)',
-            boxShadow: 'inset 2px 2px 4px rgba(0,0,0,0.3)',
-          }}
-        />
-        <div
-          className="terminator"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            borderRadius: '50%',
-            background:
-              'radial-gradient(circle at 70% 50%, transparent 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.8) 100%)',
-          }}
-        />
-      </div>
 
       <section
         ref={heroRef}
@@ -180,6 +264,7 @@ export default function StudenzBitDetail() {
           }}
         >
           <a
+            ref={portfolioLinkRef}
             href="#"
             onClick={(e) => {
               e.preventDefault();
@@ -201,31 +286,33 @@ export default function StudenzBitDetail() {
             ← Portfolio
           </a>
 
-          <p
-            style={{
-              margin: 0,
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 700,
-              fontSize: '0.75rem',
-              letterSpacing: '0.2em',
-              color: 'rgba(255,255,255,0.9)',
-              marginBottom: '0.3rem',
-            }}
-          >
-            TECHNICAL DEEP DIVE · 2024
-          </p>
-          <p
-            style={{
-              margin: '0 0 2rem 0',
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 300,
-              fontSize: '0.65rem',
-              letterSpacing: '0.12em',
-              color: 'rgba(255,255,255,0.45)',
-            }}
-          >
-            Web · Affiliate · SEO · Content
-          </p>
+          <div ref={heroStampRef}>
+            <p
+              style={{
+                margin: 0,
+                fontFamily: 'DM Sans, sans-serif',
+                fontWeight: 700,
+                fontSize: '0.75rem',
+                letterSpacing: '0.2em',
+                color: 'rgba(255,255,255,0.9)',
+                marginBottom: '0.3rem',
+              }}
+            >
+              TECHNICAL DEEP DIVE · 2024
+            </p>
+            <p
+              style={{
+                margin: '0 0 2rem 0',
+                fontFamily: 'DM Sans, sans-serif',
+                fontWeight: 300,
+                fontSize: '0.65rem',
+                letterSpacing: '0.12em',
+                color: 'rgba(255,255,255,0.45)',
+              }}
+            >
+              Web · Affiliate · SEO · Content
+            </p>
+          </div>
 
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {[
@@ -233,7 +320,13 @@ export default function StudenzBitDetail() {
               { value: '4', label: 'Blog Posts' },
               { value: '2024', label: 'Year Launched' },
             ].map((s, idx) => (
-              <div key={s.label} style={{ marginBottom: idx === 2 ? 0 : '1.2rem' }}>
+              <div
+                key={s.label}
+                ref={(el) => {
+                  statRowRefs.current[idx] = el;
+                }}
+                style={{ marginBottom: idx === 2 ? 0 : '1.2rem' }}
+              >
                 <div
                   style={{
                     fontFamily: 'Unbounded, sans-serif',
@@ -302,6 +395,7 @@ export default function StudenzBitDetail() {
           }}
         >
           <span
+            ref={heroLineIntoRef}
             style={{
               display: 'block',
               fontFamily: 'Unbounded, sans-serif',
@@ -314,6 +408,7 @@ export default function StudenzBitDetail() {
             into the
           </span>
           <span
+            ref={heroLineUnknownRef}
             style={{
               display: 'block',
               fontFamily: 'Unbounded, sans-serif',
@@ -326,6 +421,7 @@ export default function StudenzBitDetail() {
             unknown
           </span>
           <p
+            ref={heroSublineRef}
             style={{
               margin: '1rem 0 0 auto',
               maxWidth: '300px',
@@ -342,6 +438,7 @@ export default function StudenzBitDetail() {
         </div>
 
         <div
+          ref={heroButtonsRef}
           style={{
             position: 'absolute',
             bottom: '3rem',
@@ -439,14 +536,25 @@ export default function StudenzBitDetail() {
         <div
           style={{
             position: 'absolute',
-            zIndex: 10,
             right: '4rem',
             top: '50%',
             transform: 'translateY(-50%)',
             maxWidth: '480px',
           }}
         >
+          <div style={{ position: 'relative', zIndex: 10 }}>
+          <div
+            ref={section2LineRef}
+            style={{
+              width: '40px',
+              height: '1px',
+              background: 'rgba(45,26,14,0.3)',
+              marginBottom: '1rem',
+            }}
+          />
+
           <p
+            ref={section2LabelRef}
             style={{
               margin: '0 0 1rem 0',
               fontFamily: 'DM Sans, sans-serif',
@@ -462,7 +570,6 @@ export default function StudenzBitDetail() {
           <h2
             style={{
               margin: '0 0 1.5rem 0',
-              whiteSpace: 'pre-line',
               fontFamily: 'Unbounded, sans-serif',
               fontWeight: 900,
               fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
@@ -470,10 +577,22 @@ export default function StudenzBitDetail() {
               lineHeight: 1.1,
             }}
           >
-            {'10,000km from home.\nGooggling everything.'}
+            <span
+              ref={section2HeadlineLine1Ref}
+              style={{ display: 'block', whiteSpace: 'pre-line' }}
+            >
+              10,000km from home.
+            </span>
+            <span
+              ref={section2HeadlineLine2Ref}
+              style={{ display: 'block', whiteSpace: 'pre-line' }}
+            >
+              Googgling everything.
+            </span>
           </h2>
 
           <p
+            ref={section2BodyRef}
             style={{
               margin: '0 0 2rem 0',
               fontFamily: 'DM Sans, sans-serif',
@@ -489,9 +608,12 @@ export default function StudenzBitDetail() {
           </p>
 
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            {statPills.map((pill) => (
+            {statPills.map((pill, idx) => (
               <span
                 key={pill}
+                ref={(el) => {
+                  pillRefs.current[idx] = el;
+                }}
                 style={{
                   border: '1px solid rgba(45,26,14,0.2)',
                   padding: '0.4rem 0.9rem',
@@ -505,6 +627,7 @@ export default function StudenzBitDetail() {
                 {pill}
               </span>
             ))}
+          </div>
           </div>
         </div>
       </section>
