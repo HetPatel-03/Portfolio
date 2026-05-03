@@ -54,28 +54,69 @@ const ARCH_LEGEND = [
   { color: '#9CA3AF', bg: '#F3F4F6', label: 'Future Roadmap' },
 ];
 
-const WHAT_BROKE_CARDS = [
+const bugCards = [
   {
     number: '01',
-    problem: 'D3.js map not rendering on mobile',
+    tag: 'FRONTEND BUG',
+    tagColor: '#0D9488',
+    tagBg: 'rgba(13,148,136,0.07)',
+    tagBorder: 'rgba(13,148,136,0.15)',
+    borderColor: '#0D9488',
+    title: 'D3.js Map Not Rendering on Mobile',
+    role: 'Sole developer · Frontend & UX fix',
     cause:
-      "SVG viewport wasn't respecting device width. The map was rendering off-screen on anything below 768px.",
-    fix: 'Added viewport detection. Below 768px switches to a static image fallback. Above 768px loads the full D3 interactive map.',
-    tag: 'Frontend Bug',
+      "SVG viewport wasn't respecting device width. The map was rendering completely off-screen on anything below 768px — invisible to mobile users.",
+    fix: 'Added viewport detection using window.innerWidth on load and resize. Below 768px switches to a static image fallback. Above 768px loads the full D3 interactive map.',
+    stack: ['D3.js', 'Vanilla JS', 'CSS Media Queries'],
+    impact: '100% of mobile traffic could access the map content after the fix.',
+    business:
+      'Reduced bounce rate on mobile — protected the experience for 60%+ of users who visit on phone.',
+    link: {
+      label: 'View Live Map ↗',
+      href: 'https://studenzbit.com/destinations',
+    },
   },
   {
     number: '02',
-    problem: 'Affiliate links flagged by Google',
-    cause: "Raw affiliate links without proper attribution were being treated as manipulative by Google's crawler.",
-    fix: "Added rel='sponsored' and rel='nofollow' to all affiliate links. Cleaned up anchor text to be descriptive not clickbait.",
-    tag: 'SEO Fix',
+    tag: 'SEO FIX',
+    tagColor: '#7C3AED',
+    tagBg: 'rgba(124,58,237,0.07)',
+    tagBorder: 'rgba(124,58,237,0.15)',
+    borderColor: '#7C3AED',
+    title: 'Affiliate Links Flagged by Google',
+    role: 'Sole developer · SEO & compliance fix',
+    cause:
+      "Raw affiliate links without proper attribution were being treated as manipulative by Google's crawler. Risk of manual action and ranking penalty.",
+    fix: "Added rel='sponsored' and rel='nofollow' to all affiliate links across 30+ pages. Cleaned up anchor text to be descriptive rather than clickbait.",
+    stack: ['HTML', 'Google Search Console', 'rel attributes'],
+    impact: 'Restored clean crawl status. Removed manual action risk across all monetized pages.',
+    business:
+      'Protected organic search rankings — maintained the affiliate revenue stream that funds the platform.',
+    link: {
+      label: 'View Live Blog ↗',
+      href: 'https://studenzbit.com/blog',
+    },
   },
   {
     number: '03',
-    problem: 'AI crawlers ignoring blog content',
-    cause: 'Blog posts had inconsistent heading hierarchy. H1 → H4 jumps confused AI parsers.',
-    fix: 'Restructured all headings H1 → H2 → H3 strictly. Added llms.txt with explicit content map and blog index.',
-    tag: 'AI Visibility',
+    tag: 'AI VISIBILITY',
+    tagColor: '#B45309',
+    tagBg: 'rgba(180,83,9,0.07)',
+    tagBorder: 'rgba(180,83,9,0.15)',
+    borderColor: '#B45309',
+    title: 'AI Crawlers Ignoring Blog Content',
+    role: 'Sole developer · AI visibility & SEO fix',
+    cause:
+      'Blog posts had inconsistent heading hierarchy — H1 jumping to H4 in places. AI parsers use heading structure to understand content relationships and were skipping the posts entirely.',
+    fix: 'Restructured all headings strictly H1 → H2 → H3 across every post. Added llms.txt with explicit content map and blog index. Added clear summary sections at the top of each post.',
+    stack: ['llms.txt', 'JSON-LD', 'Heading Hierarchy', 'OpenGraph'],
+    impact: 'Improved crawl coverage. Content now surfaces in AI-generated search answers.',
+    business:
+      'Opened a second discovery channel beyond traditional search — reaching students who search via AI tools.',
+    link: {
+      label: 'View llms.txt ↗',
+      href: 'https://studenzbit.com/llms.txt',
+    },
   },
 ];
 
@@ -1238,7 +1279,8 @@ export default function StudenzBitDetail() {
           .sb-s6-two-col { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
           .sb-s7-metrics { grid-template-columns: 1fr !important; max-width: 100% !important; }
           .sb-s9-roadmap { grid-template-columns: 1fr !important; }
-          .sb-s5-cause-fix { grid-template-columns: 1fr !important; }
+          .sb-s5-body { grid-template-columns: 1fr !important; }
+          .sb-s5-footer { grid-template-columns: 1fr !important; align-items: stretch !important; }
           .sb-s10-btns { flex-direction: column !important; align-items: stretch !important; }
         }
       `}</style>
@@ -1502,130 +1544,284 @@ export default function StudenzBitDetail() {
             Production always finds what development missed.
           </p>
 
-          <div style={{ maxWidth: '800px', margin: '3rem auto 0' }}>
-            {WHAT_BROKE_CARDS.map((card) => (
+          <div style={{ maxWidth: '1000px', margin: '3rem auto 0' }}>
+            {bugCards.map((card) => (
               <div
                 key={card.number}
                 style={{
                   background: 'white',
-                  borderRadius: '12px',
-                  padding: '1.8rem 2rem',
-                  marginBottom: '1.2rem',
-                  borderLeft: '3px solid #0D9488',
-                  boxShadow: '0 2px 16px rgba(13,148,136,0.06)',
+                  borderRadius: '14px',
+                  boxShadow: '0 2px 20px rgba(10,38,32,0.06)',
+                  overflow: 'hidden',
+                  borderTop: `3px solid ${card.borderColor}`,
+                  marginBottom: '1.5rem',
                 }}
               >
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                    gap: '0.75rem',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: 'Unbounded, sans-serif',
-                      fontWeight: 700,
-                      fontSize: '0.7rem',
-                      background: '#CCFBF1',
-                      color: '#0D9488',
-                      borderRadius: '4px',
-                      padding: '0.2rem 0.5rem',
-                    }}
-                  >
-                    {card.number}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: 'DM Sans, sans-serif',
-                      fontWeight: 700,
-                      fontSize: '1rem',
-                      color: '#0a2620',
-                      flex: '1',
-                      margin: '0 1rem',
-                      minWidth: '200px',
-                    }}
-                  >
-                    {card.problem}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: 'DM Sans, sans-serif',
-                      fontWeight: 400,
-                      fontSize: '0.65rem',
-                      background: 'rgba(13,148,136,0.08)',
-                      border: '1px solid rgba(13,148,136,0.2)',
-                      color: '#0D9488',
-                      borderRadius: '20px',
-                      padding: '0.2rem 0.7rem',
-                    }}
-                  >
-                    {card.tag}
-                  </span>
-                </div>
-                <div
-                  style={{
-                    marginTop: '1.2rem',
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '1.5rem',
-                  }}
-                  className="sb-s5-cause-fix"
-                >
-                  <div>
+                <div style={{ padding: '2.2rem 2.4rem' }}>
+                  <div style={{ marginBottom: '1.5rem' }}>
                     <div
                       style={{
-                        fontFamily: 'DM Sans, sans-serif',
-                        fontWeight: 700,
-                        fontSize: '0.6rem',
-                        letterSpacing: '0.15em',
-                        color: 'rgba(10,38,32,0.4)',
-                        textTransform: 'uppercase',
-                        marginBottom: '0.4rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: '1rem',
+                        flexWrap: 'wrap',
+                        gap: '0.5rem',
                       }}
                     >
-                      WHAT HAPPENED
+                      <span
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          background: card.tagBg,
+                          border: `1px solid ${card.tagBorder}`,
+                          borderRadius: '20px',
+                          padding: '0.3rem 0.85rem',
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 700,
+                          fontSize: '0.62rem',
+                          letterSpacing: '0.12em',
+                          color: card.tagColor,
+                        }}
+                      >
+                        {card.tag}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 300,
+                          fontSize: '0.72rem',
+                          color: 'rgba(10,38,32,0.45)',
+                          fontStyle: 'italic',
+                          textAlign: 'right',
+                        }}
+                      >
+                        {card.role}
+                      </span>
                     </div>
-                    <p
+                    <h3
                       style={{
-                        fontFamily: 'DM Sans, sans-serif',
-                        fontWeight: 300,
-                        fontSize: '0.82rem',
-                        color: 'rgba(10,38,32,0.65)',
-                        lineHeight: 1.7,
                         margin: 0,
+                        fontFamily: 'Unbounded, sans-serif',
+                        fontWeight: 700,
+                        fontSize: 'clamp(1rem, 2vw, 1.4rem)',
+                        color: '#0a2620',
+                        lineHeight: 1.15,
                       }}
                     >
-                      {card.cause}
-                    </p>
+                      {card.title}
+                    </h3>
                   </div>
-                  <div>
+
+                  <div
+                    className="sb-s5-body"
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '2rem',
+                      paddingTop: '1.5rem',
+                      marginTop: '1.5rem',
+                      borderTop: '1px solid rgba(10,38,32,0.06)',
+                    }}
+                  >
+                    <div>
+                      <span
+                        style={{
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 700,
+                          fontSize: '0.6rem',
+                          letterSpacing: '0.15em',
+                          color: 'rgba(10,38,32,0.35)',
+                          textTransform: 'uppercase',
+                          marginBottom: '0.6rem',
+                          display: 'block',
+                        }}
+                      >
+                        WHAT HAPPENED
+                      </span>
+                      <p
+                        style={{
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 300,
+                          fontSize: '0.85rem',
+                          color: 'rgba(10,38,32,0.65)',
+                          lineHeight: 1.8,
+                          margin: 0,
+                        }}
+                      >
+                        {card.cause}
+                      </p>
+                    </div>
+                    <div>
+                      <span
+                        style={{
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 700,
+                          fontSize: '0.6rem',
+                          letterSpacing: '0.15em',
+                          color: card.tagColor,
+                          opacity: 0.7,
+                          textTransform: 'uppercase',
+                          marginBottom: '0.6rem',
+                          display: 'block',
+                        }}
+                      >
+                        HOW I FIXED IT
+                      </span>
+                      <p
+                        style={{
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 300,
+                          fontSize: '0.85rem',
+                          color: 'rgba(10,38,32,0.65)',
+                          lineHeight: 1.8,
+                          margin: 0,
+                        }}
+                      >
+                        {card.fix}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    className="sb-s5-footer"
+                    style={{
+                      marginTop: '1.5rem',
+                      paddingTop: '1.2rem',
+                      borderTop: '1px solid rgba(10,38,32,0.06)',
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr 1fr',
+                      gap: '1.5rem',
+                      alignItems: 'end',
+                    }}
+                  >
+                    <div>
+                      <span
+                        style={{
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 700,
+                          fontSize: '0.6rem',
+                          letterSpacing: '0.15em',
+                          color: 'rgba(10,38,32,0.35)',
+                          textTransform: 'uppercase',
+                          marginBottom: '0.5rem',
+                          display: 'block',
+                        }}
+                      >
+                        STACK
+                      </span>
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          gap: '0.3rem',
+                        }}
+                      >
+                        {card.stack.map((t) => (
+                          <span
+                            key={t}
+                            style={{
+                              background: 'rgba(10,38,32,0.04)',
+                              border: '1px solid rgba(10,38,32,0.08)',
+                              borderRadius: '4px',
+                              padding: '0.2rem 0.5rem',
+                              fontFamily: 'DM Sans, sans-serif',
+                              fontWeight: 400,
+                              fontSize: '0.65rem',
+                              color: 'rgba(10,38,32,0.5)',
+                            }}
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <span
+                        style={{
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 700,
+                          fontSize: '0.6rem',
+                          letterSpacing: '0.15em',
+                          color: 'rgba(10,38,32,0.35)',
+                          textTransform: 'uppercase',
+                          marginBottom: '0.5rem',
+                          display: 'block',
+                        }}
+                      >
+                        IMPACT
+                      </span>
+                      <p
+                        style={{
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 300,
+                          fontSize: '0.78rem',
+                          color: 'rgba(10,38,32,0.6)',
+                          lineHeight: 1.6,
+                          margin: 0,
+                        }}
+                      >
+                        {card.impact}
+                      </p>
+                      <p
+                        style={{
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 300,
+                          fontSize: '0.72rem',
+                          color: 'rgba(10,38,32,0.45)',
+                          lineHeight: 1.5,
+                          marginTop: '0.4rem',
+                          fontStyle: 'italic',
+                          marginBottom: 0,
+                        }}
+                      >
+                        {card.business}
+                      </p>
+                    </div>
                     <div
                       style={{
-                        fontFamily: 'DM Sans, sans-serif',
-                        fontWeight: 700,
-                        fontSize: '0.6rem',
-                        letterSpacing: '0.15em',
-                        color: 'rgba(13,148,136,0.7)',
-                        textTransform: 'uppercase',
-                        marginBottom: '0.4rem',
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        justifyContent: 'flex-end',
                       }}
                     >
-                      HOW I FIXED IT
+                      <a
+                        href={card.link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.3rem',
+                          background: card.tagBg,
+                          border: `1px solid ${card.tagBorder}`,
+                          borderRadius: '50px',
+                          padding: '0.5rem 1.1rem',
+                          fontFamily: 'DM Sans, sans-serif',
+                          fontWeight: 400,
+                          fontSize: '0.75rem',
+                          color: card.tagColor,
+                          textDecoration: 'none',
+                          transition: 'all 0.2s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-1px)';
+                          if (card.number === '01') {
+                            e.currentTarget.style.background = 'rgba(13,148,136,0.14)';
+                          } else if (card.number === '02') {
+                            e.currentTarget.style.background = 'rgba(124,58,237,0.14)';
+                          } else {
+                            e.currentTarget.style.background = 'rgba(180,83,9,0.14)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = '';
+                          e.currentTarget.style.background = card.tagBg;
+                        }}
+                      >
+                        {card.link.label}
+                      </a>
                     </div>
-                    <p
-                      style={{
-                        fontFamily: 'DM Sans, sans-serif',
-                        fontWeight: 300,
-                        fontSize: '0.82rem',
-                        color: 'rgba(10,38,32,0.65)',
-                        lineHeight: 1.7,
-                        margin: 0,
-                      }}
-                    >
-                      {card.fix}
-                    </p>
                   </div>
                 </div>
               </div>
