@@ -1826,7 +1826,7 @@ export default function StudenzBitDetail() {
       <section
         className="sb-s6-pad"
         style={{
-          background: '#FFF0F5',
+          background: '#FEF6F8',
           minHeight: '100vh',
           padding: '6rem 4rem',
           position: 'relative',
@@ -1890,38 +1890,61 @@ export default function StudenzBitDetail() {
               gridTemplateColumns: '1fr 1fr',
               gap: '4rem',
               marginTop: '3rem',
-              alignItems: 'start',
+              alignItems: 'stretch',
             }}
           >
-            <div>
-              <p
-                style={{
-                  fontFamily: 'DM Sans, sans-serif',
-                  fontWeight: 300,
-                  fontSize: '0.9rem',
-                  color: 'rgba(61,10,26,0.7)',
-                  lineHeight: 1.85,
-                  margin: '0 0 1.5rem 0',
-                }}
-              >
-                International students are overwhelmed — new country, new systems, new everything. Most
-                platforms respond with information overload. StudenzBit responded with calm.
-              </p>
-              <p
-                style={{
-                  fontFamily: 'DM Sans, sans-serif',
-                  fontWeight: 300,
-                  fontSize: '0.9rem',
-                  color: 'rgba(61,10,26,0.7)',
-                  lineHeight: 1.85,
-                  margin: 0,
-                }}
-              >
-                GenZ doesn&apos;t separate aesthetics from function. For this generation, how something
-                looks is how it feels to use. A cold interface signals a cold experience. Pastel
-                signals safety, approachability, and warmth — exactly what someone 10,000km from home
-                needs.
-              </p>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                height: '100%',
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    fontFamily: 'DM Sans, sans-serif',
+                    fontWeight: 300,
+                    fontSize: '0.9rem',
+                    color: 'rgba(61,10,26,0.7)',
+                    lineHeight: 1.85,
+                    margin: '0 0 1.5rem 0',
+                  }}
+                >
+                  International students are overwhelmed — new country, new systems, new everything. Most
+                  platforms respond with information overload. StudenzBit responded with calm.
+                </p>
+                <p
+                  style={{
+                    fontFamily: 'DM Sans, sans-serif',
+                    fontWeight: 300,
+                    fontSize: '0.9rem',
+                    color: 'rgba(61,10,26,0.7)',
+                    lineHeight: 1.85,
+                    margin: '0 0 1.5rem 0',
+                  }}
+                >
+                  GenZ doesn&apos;t separate aesthetics from function. For this generation, how something
+                  looks is how it feels to use. A cold interface signals a cold experience. Pastel
+                  signals safety, approachability, and warmth — exactly what someone 10,000km from home
+                  needs.
+                </p>
+                <p
+                  style={{
+                    fontFamily: 'DM Sans, sans-serif',
+                    fontWeight: 300,
+                    fontSize: '0.9rem',
+                    color: 'rgba(61,10,26,0.7)',
+                    lineHeight: 1.85,
+                    margin: '0 0 1.5rem 0',
+                  }}
+                >
+                  Research in UX psychology shows that warm, muted tones reduce cognitive load. For a
+                  student processing immigration documents, banking jargon, and housing contracts
+                  simultaneously — every design decision that reduces friction matters.
+                </p>
+              </div>
               <p
                 style={{
                   fontFamily: 'Unbounded, sans-serif',
