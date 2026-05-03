@@ -938,7 +938,7 @@ export default function StudenzBitDetail() {
       <section
         className="sb-s3-pad"
         style={{
-          background: '#F0EBFF',
+          background: '#FFF8EE',
           minHeight: '100vh',
           width: '100%',
           position: 'relative',
