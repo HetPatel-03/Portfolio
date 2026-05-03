@@ -73,7 +73,7 @@ const bugCards = [
       'Reduced bounce rate on mobile — protected the experience for 60%+ of users who visit on phone.',
     link: {
       label: 'View Live Map ↗',
-      href: 'https://studenzbit.com/destinations',
+      href: 'https://www.studenzbit.com/studenzbit_destinations.html',
     },
   },
   {
@@ -94,7 +94,7 @@ const bugCards = [
       'Protected organic search rankings — maintained the affiliate revenue stream that funds the platform.',
     link: {
       label: 'View Live Blog ↗',
-      href: 'https://studenzbit.com/blog',
+      href: 'https://www.studenzbit.com/studenzbit_blog.html',
     },
   },
   {
