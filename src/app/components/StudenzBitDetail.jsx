@@ -144,6 +144,78 @@ const archNodeById = ARCH_NODES.reduce((acc, n) => {
   return acc;
 }, {});
 
+const ENGINEERING_DECISIONS = [
+  {
+    id: '1',
+    ghost: '01',
+    borderTop: '#0D9488',
+    pill: {
+      background: 'rgba(13,148,136,0.07)',
+      border: '1px solid rgba(13,148,136,0.15)',
+      color: '#0D9488',
+    },
+    title: 'Why Static HTML Over a Framework',
+    tags: ['Static HTML', 'Vanilla JS', 'GSAP', 'Lighthouse'],
+    impacts: [
+      '95+ Lighthouse score',
+      'Zero JS bundle overhead',
+      'Full SEO crawlability',
+      'No maintenance burden',
+    ],
+    paragraphs: [
+      "When I started StudenzBit, the obvious choice for most developers in 2024 would have been React or Next.js. I knew both. I could have used either. I didn't.",
+      'The product is a content platform — guides, blogs, resource pages. There is no dynamic state. There are no API calls on render. There is no user session to manage on the frontend. Reaching for React here would have been the same mistake junior developers make every time they start a project — defaulting to the familiar rather than choosing the appropriate.',
+      "Static HTML meant zero JavaScript bundle overhead. Every page loaded in under a second. Google's crawler never had to wait for hydration. When I ran Lighthouse, the scores weren't optimized — they were just the natural result of not shipping unnecessary code. The constraint became the feature.",
+    ],
+  },
+  {
+    id: '2',
+    ghost: '02',
+    borderTop: '#7C3AED',
+    pill: {
+      background: 'rgba(124,58,237,0.07)',
+      border: '1px solid rgba(124,58,237,0.15)',
+      color: '#7C3AED',
+    },
+    title: 'How I Approached Discoverability',
+    tags: ['JSON-LD', 'Schema', 'GA4', 'llms.txt', 'OpenGraph'],
+    impacts: [
+      'Indexed on Google + AI search',
+      'Rich results via JSON-LD',
+      'AI crawler ready via llms.txt',
+      'Dual discovery channels',
+    ],
+    paragraphs: [
+      "Most developers think about SEO as an afterthought — metadata tags added before deployment, a sitemap submitted to Search Console, and done. I treated discoverability as a core architectural decision because the product only has value if students can find it.",
+      "There were two distinct audiences I needed to reach: Google's traditional crawler and the new generation of AI-powered search tools. These two systems have fundamentally different expectations. For Google, I implemented JSON-LD structured data on every page — WebPage schema on landing pages, Article schema on blog posts, FAQPage schema on resource guides.",
+      "For AI search, I created an llms.txt file — an emerging standard that explicitly tells AI crawlers what the site contains, how it's structured, and which pages are most valuable. I also structured every blog post with a clear summary section at the top because AI systems extract and surface those summaries directly in search responses.",
+    ],
+  },
+  {
+    id: '3',
+    ghost: '03',
+    borderTop: '#B45309',
+    pill: {
+      background: 'rgba(180,83,9,0.07)',
+      border: '1px solid rgba(180,83,9,0.15)',
+      color: '#B45309',
+    },
+    title: 'The Character System as a Technical Strategy',
+    tags: ['Blog System', 'Long-tail SEO', 'Arjun & Priya', 'Templates'],
+    impacts: [
+      'Low-competition keywords',
+      'Consistent content structure',
+      'Evergreen narrative',
+      'Higher time-on-page signals',
+    ],
+    paragraphs: [
+      "Arjun and Priya are not a gimmick. They are a content architecture decision. The core problem with information platforms is content decay — guides become outdated, pages lose relevance, and maintaining accuracy across dozens of pages becomes a maintenance burden no solo developer can sustain.",
+      "Character-driven narrative solved three problems simultaneously. First, evergreen content — Arjun and Priya's experience of arriving in Canada is the same for every international student regardless of year. Second, SEO — character-driven content naturally generates long-tail keywords that face almost zero competition. Third, consistency — every blog post inherits the same HTML structure, schema markup, and OpenGraph format automatically.",
+      "From a technical standpoint, I built a reusable blog template so every new post ships with full SEO setup out of the box. No manual meta tags. No forgotten schema. The system does it.",
+    ],
+  },
+];
+
 export default function StudenzBitDetail() {
   const rootRef = useRef(null);
   const heroRef = useRef(null);
@@ -255,70 +327,6 @@ export default function StudenzBitDetail() {
     { tech: 'Schema Markup', desc: 'JSON-LD + OpenGraph. Built for AI and search discoverability.' },
     { tech: 'Amazon Affiliate', desc: 'Monetization layer via Associates program. Revenue from day one.' },
     { tech: 'llms.txt', desc: 'AI search visibility. Structured for AI crawlers.' },
-  ];
-
-  const s3TechTags = [
-    'Static HTML',
-    'Tailwind CDN',
-    'Vanilla JS',
-    'GA4',
-    'JSON-LD',
-    'llms.txt',
-    'Google Fonts',
-    'D3.js',
-    'GSAP',
-    'Supabase (planned)',
-  ];
-
-  const decisionLogCards = [
-    {
-      number: '01',
-      title: 'Build Approach',
-      rejected: [
-        { name: 'React / Next.js', reason: 'Overkill. Build pipeline unnecessary for content site.' },
-        { name: 'WordPress CMS', reason: 'Too heavy, slow, costs money solo.' },
-      ],
-      chosen: {
-        name: 'Static HTML',
-        reason: 'Zero overhead, full control, ships instantly. Lighthouse 95+ out of the box.',
-      },
-    },
-    {
-      number: '02',
-      title: 'Styling Strategy',
-      rejected: [
-        { name: 'Custom CSS only', reason: 'Too slow to build at scale across 30+ pages.' },
-        { name: 'Full Tailwind npm', reason: 'Unnecessary build step for a no-pipeline project.' },
-      ],
-      chosen: {
-        name: 'Tailwind CDN',
-        reason: 'Rapid utility-first styling with zero build configuration.',
-      },
-    },
-    {
-      number: '03',
-      title: 'Content Strategy',
-      rejected: [
-        { name: 'Generic guides', reason: 'No differentiation. Every competitor does this.' },
-        { name: 'Video content', reason: 'High production cost for a solo build.' },
-      ],
-      chosen: {
-        name: 'Arjun & Priya Blog',
-        reason: 'Character-driven content creates emotional connection and drives SEO long-tail keywords.',
-      },
-    },
-    {
-      number: '04',
-      title: 'Discoverability',
-      rejected: [
-        { name: 'SEO only', reason: 'Misses the growing AI search market entirely.' },
-        { name: 'Social only', reason: 'Algorithm dependent, zero ownership.' },
-      ],
-      chosen: {
-        name: 'JSON-LD + llms.txt',
-        reason: 'Dual strategy. Schema markup feeds Google rich results. llms.txt feeds AI crawlers.',
-      },
-    },
   ];
 
   return (
@@ -928,29 +936,29 @@ export default function StudenzBitDetail() {
       </section>
 
       <section
+        className="sb-s3-pad"
         style={{
-          background: '#FFF8EE',
+          background: '#F0EBFF',
           minHeight: '100vh',
           width: '100%',
           position: 'relative',
           padding: '6rem 4rem',
           opacity: 1,
-          zIndex: 1,
         }}
       >
         <div
-          className="s3-header"
           style={{
-            maxWidth: '800px',
+            position: 'relative',
+            zIndex: 10,
+            maxWidth: '1000px',
             margin: '0 auto 4rem auto',
-            textAlign: 'center',
-            opacity: 1,
+            textAlign: 'left',
           }}
         >
           <span
             style={{
               fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 400,
+              fontWeight: 700,
               fontSize: '0.65rem',
               letterSpacing: '0.25em',
               color: 'rgba(13,148,136,0.7)',
@@ -959,225 +967,232 @@ export default function StudenzBitDetail() {
               display: 'block',
             }}
           >
-            DECISION LOG
+            ENGINEERING DECISIONS
           </span>
           <div
             style={{
               width: '40px',
               height: '1px',
-              background: 'rgba(13,148,136,0.4)',
-              margin: '0 auto 1.2rem auto',
+              background: 'rgba(13,148,136,0.3)',
+              marginBottom: '1.2rem',
             }}
           />
           <h2
             style={{
-              margin: '0 0 1rem 0',
+              margin: '0 0 0.8rem 0',
               fontFamily: 'Unbounded, sans-serif',
               fontWeight: 800,
-              fontSize: 'clamp(2.2rem, 4.5vw, 4rem)',
-              color: '#1a0a00',
+              fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+              color: '#1a0a3d',
               lineHeight: 1.05,
-              textTransform: 'lowercase',
             }}
           >
-            why I built it this way
+            the thinking behind the build
           </h2>
           <p
             style={{
               fontFamily: 'DM Sans, sans-serif',
               fontWeight: 300,
               fontSize: '0.92rem',
-              color: 'rgba(26,10,0,0.55)',
+              color: 'rgba(26,10,61,0.5)',
               lineHeight: 1.8,
-              maxWidth: '480px',
-              margin: '0 auto',
+              margin: 0,
             }}
           >
-            Every decision had a reason — sometimes obvious,
-            <br />
-            sometimes learned the hard way.
+            Three decisions that shaped everything.
           </p>
         </div>
 
         <div
-          className="s3-tags"
           style={{
-            marginBottom: '3rem',
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            gap: '0.5rem',
-            opacity: 1,
-          }}
-        >
-          {s3TechTags.map((tag) => (
-            <span
-              key={tag}
-              className="s3-tag"
-              style={{
-                background: 'rgba(13,148,136,0.08)',
-                border: '1px solid rgba(13,148,136,0.2)',
-                borderRadius: '50px',
-                padding: '0.35rem 0.9rem',
-                fontFamily: 'DM Sans, sans-serif',
-                fontWeight: 400,
-                fontSize: '0.72rem',
-                color: '#0D9488',
-                letterSpacing: '0.05em',
-                opacity: 1,
-              }}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <div
-          className="s3-cards"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '1.5rem',
             maxWidth: '1000px',
             margin: '0 auto',
-            opacity: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2rem',
+            position: 'relative',
+            zIndex: 10,
           }}
         >
-          {decisionLogCards.map((card) => (
+          {ENGINEERING_DECISIONS.map((card) => (
             <div
-              key={card.number}
-              className="s3-card"
+              key={card.id}
               style={{
-                background: '#ffffff',
-                border: '1px solid rgba(26,10,0,0.08)',
+                background: 'white',
                 borderRadius: '14px',
-                padding: '1.8rem',
-                boxShadow: '0 2px 20px rgba(26,10,0,0.05)',
-                borderLeft: '3px solid #0D9488',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                opacity: 1,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(26,10,0,0.1)';
-                e.currentTarget.style.borderLeftColor = '#0a7a70';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = '';
-                e.currentTarget.style.boxShadow = '0 2px 20px rgba(26,10,0,0.05)';
-                e.currentTarget.style.borderLeftColor = '#0D9488';
+                boxShadow: '0 2px 20px rgba(26,10,61,0.07)',
+                overflow: 'hidden',
+                position: 'relative',
+                borderTop: `3px solid ${card.borderTop}`,
               }}
             >
-              <div
+              <span
+                aria-hidden
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  marginBottom: '1.4rem',
+                  position: 'absolute',
+                  top: '-0.5rem',
+                  right: '1.5rem',
+                  fontFamily: 'Unbounded, sans-serif',
+                  fontWeight: 900,
+                  fontSize: '8rem',
+                  color: 'rgba(13,148,136,0.04)',
+                  pointerEvents: 'none',
+                  userSelect: 'none',
+                  lineHeight: 1,
+                  zIndex: 0,
                 }}
               >
-                <span
-                  style={{
-                    fontFamily: 'Unbounded, sans-serif',
-                    fontWeight: 700,
-                    fontSize: '0.7rem',
-                    color: '#0D9488',
-                    background: 'rgba(13,148,136,0.1)',
-                    borderRadius: '4px',
-                    padding: '0.2rem 0.5rem',
-                  }}
-                >
-                  {card.number}
-                </span>
-                <span
-                  style={{
-                    fontFamily: 'Unbounded, sans-serif',
-                    fontWeight: 700,
-                    fontSize: '0.85rem',
-                    color: '#1a0a00',
-                    letterSpacing: '0.02em',
-                  }}
-                >
-                  {card.title}
-                </span>
-              </div>
-
-              <div style={{ marginBottom: '1rem' }}>
-                {card.rejected.map((item) => (
+                {card.ghost}
+              </span>
+              <div style={{ position: 'relative', zIndex: 1, padding: '2.2rem 2.4rem' }}>
+                <div style={{ marginBottom: '1.8rem' }}>
                   <div
-                    key={item.name}
                     style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '0.5rem',
-                      marginBottom: '0.6rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      background: card.pill.background,
+                      border: card.pill.border,
+                      borderRadius: '20px',
+                      padding: '0.3rem 0.85rem',
+                      marginBottom: '1rem',
                     }}
                   >
-                    <span style={{ fontSize: '0.7rem', marginTop: '2px', flexShrink: 0 }}>❌</span>
-                    <div>
-                      <span
+                    <span
+                      style={{
+                        fontFamily: 'DM Sans, sans-serif',
+                        fontWeight: 700,
+                        fontSize: '0.62rem',
+                        letterSpacing: '0.12em',
+                        color: card.pill.color,
+                      }}
+                    >
+                      ENGINEERING DECISION · {card.ghost}
+                    </span>
+                  </div>
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontFamily: 'Unbounded, sans-serif',
+                      fontWeight: 700,
+                      fontSize: 'clamp(1.2rem, 2.2vw, 1.6rem)',
+                      color: '#1a0a00',
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                </div>
+
+                <div
+                  className="sb-s3-card-grid"
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '220px 1fr',
+                    gap: '2.5rem',
+                    paddingTop: '1.5rem',
+                    borderTop: '1px solid rgba(26,10,0,0.06)',
+                  }}
+                >
+                  <div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: '0.4rem',
+                        marginBottom: '1.5rem',
+                      }}
+                    >
+                      {card.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          style={{
+                            background: 'rgba(26,10,0,0.04)',
+                            border: '1px solid rgba(26,10,0,0.08)',
+                            borderRadius: '4px',
+                            padding: '0.25rem 0.6rem',
+                            fontFamily: 'DM Sans, sans-serif',
+                            fontWeight: 400,
+                            fontSize: '0.68rem',
+                            color: 'rgba(26,10,0,0.5)',
+                          }}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <div
+                      style={{
+                        width: '100%',
+                        height: '1px',
+                        background: 'rgba(26,10,0,0.06)',
+                        marginBottom: '1.2rem',
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontFamily: 'DM Sans, sans-serif',
+                        fontWeight: 700,
+                        fontSize: '0.6rem',
+                        letterSpacing: '0.15em',
+                        color: 'rgba(13,148,136,0.6)',
+                        textTransform: 'uppercase',
+                        marginBottom: '0.8rem',
+                        display: 'block',
+                      }}
+                    >
+                      WHAT THIS ENABLED
+                    </span>
+                    {card.impacts.map((line) => (
+                      <div
+                        key={line}
                         style={{
-                          fontFamily: 'DM Sans, sans-serif',
-                          fontWeight: 600,
-                          fontSize: '0.78rem',
-                          color: 'rgba(26,10,0,0.5)',
-                          textDecoration: 'line-through',
-                          marginRight: '0.3rem',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: '0.4rem',
+                          marginBottom: '0.5rem',
                         }}
                       >
-                        {item.name}
-                      </span>
-                      <div
+                        <span
+                          style={{
+                            fontFamily: 'DM Sans, sans-serif',
+                            fontWeight: 400,
+                            fontSize: '0.72rem',
+                            color: '#0D9488',
+                            flexShrink: 0,
+                          }}
+                        >
+                          →
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: 'DM Sans, sans-serif',
+                            fontWeight: 300,
+                            fontSize: '0.75rem',
+                            color: 'rgba(26,10,0,0.6)',
+                            lineHeight: 1.5,
+                          }}
+                        >
+                          {line}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <div>
+                    {card.paragraphs.map((para, i) => (
+                      <p
+                        key={i}
                         style={{
                           fontFamily: 'DM Sans, sans-serif',
                           fontWeight: 300,
-                          fontSize: '0.72rem',
-                          color: 'rgba(26,10,0,0.4)',
-                          lineHeight: 1.5,
-                          marginTop: '0.15rem',
+                          fontSize: '0.88rem',
+                          color: 'rgba(26,10,0,0.68)',
+                          lineHeight: 2,
+                          margin: '0 0 1.2rem 0',
                         }}
                       >
-                        {item.reason}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div
-                style={{
-                  width: '100%',
-                  height: '1px',
-                  background: 'rgba(13,148,136,0.15)',
-                  margin: '1rem 0',
-                }}
-              />
-
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
-                <span style={{ fontSize: '0.7rem', marginTop: '2px', flexShrink: 0 }}>✅</span>
-                <div>
-                  <div
-                    style={{
-                      fontFamily: 'DM Sans, sans-serif',
-                      fontWeight: 700,
-                      fontSize: '0.82rem',
-                      color: '#0D9488',
-                    }}
-                  >
-                    {card.chosen.name}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: 'DM Sans, sans-serif',
-                      fontWeight: 300,
-                      fontSize: '0.78rem',
-                      color: 'rgba(26,10,0,0.6)',
-                      lineHeight: 1.6,
-                      fontStyle: 'italic',
-                      marginTop: '0.25rem',
-                    }}
-                  >
-                    {card.chosen.reason}
+                        {para}
+                      </p>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -1186,59 +1201,40 @@ export default function StudenzBitDetail() {
         </div>
 
         <div
-          className="s3-quote"
           style={{
-            marginTop: '3rem',
-            textAlign: 'center',
-            maxWidth: '600px',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            opacity: 1,
+            maxWidth: '1000px',
+            margin: '3rem auto 0 auto',
+            paddingTop: '2rem',
+            borderTop: '1px solid rgba(13,148,136,0.15)',
+            position: 'relative',
+            zIndex: 10,
           }}
         >
-          <div
-            style={{
-              width: '60px',
-              height: '1px',
-              background: 'rgba(13,148,136,0.3)',
-              margin: '0 auto 1.5rem auto',
-            }}
-          />
           <p
             style={{
               margin: 0,
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 300,
-              fontSize: '1rem',
-              fontStyle: 'italic',
-              color: 'rgba(26,10,0,0.5)',
-              lineHeight: 1.8,
+              fontFamily: 'Unbounded, sans-serif',
+              fontWeight: 600,
+              fontSize: '1.1rem',
+              color: '#0D9488',
+              borderLeft: '3px solid #0D9488',
+              paddingLeft: '1.2rem',
+              lineHeight: 1.6,
             }}
           >
-            Honestly? I got some of these wrong the first time.
+            These weren&apos;t the easiest decisions.
             <br />
-            That&apos;s kind of the point.
-          </p>
-          <p
-            style={{
-              margin: '0.5rem 0 0 0',
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 400,
-              fontSize: '0.72rem',
-              color: 'rgba(13,148,136,0.7)',
-              letterSpacing: '0.1em',
-            }}
-          >
-            — Het
+            They were the right ones.
           </p>
         </div>
       </section>
 
       <style>{`
         @media (max-width: 767px) {
-          .sb-s4-pad, .sb-s5-pad, .sb-s6-pad, .sb-s7-pad, .sb-s8-pad, .sb-s9-pad, .sb-s10-pad {
+          .sb-s3-pad, .sb-s4-pad, .sb-s5-pad, .sb-s6-pad, .sb-s7-pad, .sb-s8-pad, .sb-s9-pad, .sb-s10-pad {
             padding: 4rem 1.5rem !important;
           }
+          .sb-s3-card-grid { grid-template-columns: 1fr !important; gap: 1.75rem !important; }
           .sb-s6-two-col { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
           .sb-s7-metrics { grid-template-columns: 1fr !important; max-width: 100% !important; }
           .sb-s9-roadmap { grid-template-columns: 1fr !important; }
