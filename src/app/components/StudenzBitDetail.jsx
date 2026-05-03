@@ -1848,6 +1848,19 @@ export default function StudenzBitDetail() {
           >
             DESIGN THINKING
           </span>
+          <span
+            style={{
+              fontFamily: 'DM Sans, sans-serif',
+              fontWeight: 300,
+              fontSize: '0.75rem',
+              color: 'rgba(61,10,26,0.5)',
+              fontStyle: 'italic',
+              marginBottom: '1rem',
+              display: 'block',
+            }}
+          >
+            My role: UX research · Visual design · Front-end implementation · Content strategy
+          </span>
           <div
             style={{
               width: '40px',
@@ -1929,6 +1942,20 @@ export default function StudenzBitDetail() {
                   looks is how it feels to use. A cold interface signals a cold experience. Pastel
                   signals safety, approachability, and warmth — exactly what someone 10,000km from home
                   needs.
+                </p>
+                <p
+                  style={{
+                    fontFamily: 'DM Sans, sans-serif',
+                    fontWeight: 300,
+                    fontSize: '0.9rem',
+                    color: 'rgba(61,10,26,0.7)',
+                    lineHeight: 1.85,
+                    margin: '0 0 1.5rem 0',
+                  }}
+                >
+                  Warm, muted tones correlate with lower bounce rates in content-heavy platforms — a
+                  principle I applied deliberately across every page. Every colour in this system was
+                  chosen to reduce cognitive load, not to look pretty.
                 </p>
                 <p
                   style={{
