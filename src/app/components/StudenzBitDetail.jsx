@@ -1499,9 +1499,7 @@ export default function StudenzBitDetail() {
               margin: 0,
             }}
           >
-            Shipping solo means debugging solo.
-            <br />
-            Here&apos;s what actually went wrong.
+            Production always finds what development missed.
           </p>
 
           <div style={{ maxWidth: '800px', margin: '3rem auto 0' }}>
