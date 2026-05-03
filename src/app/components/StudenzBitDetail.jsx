@@ -120,14 +120,6 @@ const bugCards = [
   },
 ];
 
-const PASTEL_SWATCHES = [
-  { hex: '#0D9488', name: 'Teal', role: 'Primary · Trust · Navigation' },
-  { hex: '#F9A8D4', name: 'Blush', role: 'Warmth · Approachability' },
-  { hex: '#FDE68A', name: 'Gold', role: 'Optimism · Highlights' },
-  { hex: '#E9D5FF', name: 'Lavender', role: 'Calm · Secondary BG' },
-  { hex: '#FFF7ED', name: 'Cream', role: 'Base · Breathing Room' },
-];
-
 const RESULTS_METRICS = [
   { number: '95+', label: 'Lighthouse Score', sub: 'Performance · SEO · Accessibility' },
   { number: '30+', label: 'Pages Engineered', sub: 'All hand-coded, no CMS' },
@@ -1952,67 +1944,23 @@ export default function StudenzBitDetail() {
                   fontWeight: 700,
                   fontSize: '0.65rem',
                   letterSpacing: '0.2em',
-                  color: 'rgba(61,10,26,0.4)',
-                  textTransform: 'uppercase',
-                  marginBottom: '1.5rem',
+                  color: 'rgba(190,24,93,0.4)',
+                  marginBottom: '0.8rem',
                 }}
               >
                 THE COLOUR SYSTEM
               </div>
-              {PASTEL_SWATCHES.map((sw) => (
-                <div
-                  key={sw.hex}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    marginBottom: '1rem',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '8px',
-                      background: sw.hex,
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                      flexShrink: 0,
-                    }}
-                  />
-                  <div>
-                    <div
-                      style={{
-                        fontFamily: 'JetBrains Mono, monospace',
-                        fontSize: '0.75rem',
-                        color: 'rgba(61,10,26,0.5)',
-                        marginBottom: '0.1rem',
-                      }}
-                    >
-                      {sw.hex}
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: 'DM Sans, sans-serif',
-                        fontWeight: 700,
-                        fontSize: '0.82rem',
-                        color: '#3d0a1a',
-                      }}
-                    >
-                      {sw.name}
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: 'DM Sans, sans-serif',
-                        fontWeight: 300,
-                        fontSize: '0.72rem',
-                        color: 'rgba(61,10,26,0.45)',
-                      }}
-                    >
-                      {sw.role}
-                    </div>
-                  </div>
-                </div>
-              ))}
+              <img
+                src="/Studenzbit_Colourpallet.png"
+                alt="StudenzBit Colour System"
+                style={{
+                  width: '100%',
+                  borderRadius: '12px',
+                  boxShadow: '0 4px 24px rgba(61,10,26,0.08)',
+                  border: '1px solid rgba(61,10,26,0.06)',
+                  display: 'block',
+                }}
+              />
             </div>
           </div>
         </div>
