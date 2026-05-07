@@ -1,5 +1,5 @@
 import React, { useRef, useLayoutEffect } from 'react';
-import { Github, Linkedin, Twitter } from 'lucide-react';
+import { Github, Linkedin } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -21,6 +21,12 @@ export function Footer() {
     { label: 'Stack', id: 'stack' },
     { label: 'Connect', id: 'connect' },
   ];
+
+  const XIcon = ({ size = 15 }: { size?: number }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -291,8 +297,8 @@ export function Footer() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           {[
             { icon: Github, href: 'https://github.com/HetPatel-03' },
-            { icon: Linkedin, href: 'https://linkedin.com/in/hetpatel' },
-            { icon: Twitter, href: 'https://twitter.com/hetpatel' },
+            { icon: Linkedin, href: 'https://www.linkedin.com/in/het-patel-86243a308/' },
+            { icon: XIcon, href: 'https://x.com/hetpatel37?s=21' },
           ].map(({ icon: Icon, href }) => (
             <a
               key={href}

@@ -323,7 +323,7 @@ export function Hero() {
               }}
             >
               <a
-                href="https://github.com/hetpatel"
+                href="https://github.com/HetPatel-03"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -355,7 +355,7 @@ export function Hero() {
                 GitHub
               </a>
               <a
-                href="https://linkedin.com/in/hetpatel"
+                href="https://www.linkedin.com/in/het-patel-86243a308/"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -387,7 +387,7 @@ export function Hero() {
                 LinkedIn
               </a>
               <a
-                href="https://x.com/hetpatel"
+                href="https://x.com/hetpatel37?s=21"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{

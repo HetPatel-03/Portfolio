@@ -33,20 +33,20 @@ export function Contact() {
     {
       icon: Linkedin,
       label: 'LinkedIn',
-      value: '/in/hetpatel',
-      href: 'https://linkedin.com/in/hetpatel'
+      value: '/in/het-patel-86243a308',
+      href: 'https://www.linkedin.com/in/het-patel-86243a308/'
     },
     {
       icon: Github,
       label: 'GitHub',
-      value: '@hetpatel',
-      href: 'https://github.com/hetpatel'
+      value: '@HetPatel-03',
+      href: 'https://github.com/HetPatel-03'
     },
     {
       icon: Twitter,
       label: 'X',
-      value: '@hetpatel',
-      href: 'https://twitter.com/hetpatel'
+      value: '@hetpatel37',
+      href: 'https://x.com/hetpatel37?s=21'
     }
   ];
 
