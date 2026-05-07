@@ -194,7 +194,7 @@ export function Hero() {
             >
               <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'var(--sage-green)' }} />
               <span className="text-sm" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}>
-                Available for opportunities · Summer 2026
+                Open to opportunities
               </span>
             </div>
 
