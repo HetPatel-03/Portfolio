@@ -167,9 +167,66 @@ const scienceCards = [
 
 function TaskManagerArchitectureDiagram() {
   const ff = "'JetBrains Mono', monospace";
+  function SvgMutedLines({
+    x,
+    y,
+    lines,
+    fontSize,
+  }: {
+    x: number;
+    y: number;
+    lines: string[];
+    fontSize?: number;
+  }) {
+    const fs = fontSize ?? 11;
+    return (
+      <text x={x} y={y} fill="#6B6B6B" fontFamily={ff} fontSize={fs}>
+        {lines.map((line, i) =>
+          i === 0 ? (
+            <tspan key={i}>{line}</tspan>
+          ) : (
+            <tspan key={i} x={x} dy="1.2em">
+              {line}
+            </tspan>
+          ),
+        )}
+      </text>
+    );
+  }
+
+  function SvgBoldLines({
+    x,
+    y,
+    lines,
+    fontSize,
+  }: {
+    x: number;
+    y: number;
+    lines: string[];
+    fontSize?: number;
+  }) {
+    const fs = fontSize ?? 13;
+    return (
+      <text fill={FG} fontFamily={ff} fontSize={fs} fontWeight="700">
+        {lines.map((line, i) =>
+          i === 0 ? (
+            <tspan key={i} x={x} y={y}>
+              {line}
+            </tspan>
+          ) : (
+            <tspan key={i} x={x} dy="1.2em">
+              {line}
+            </tspan>
+          ),
+        )}
+      </text>
+    );
+  }
+
+  const vbW = 1700;
   return (
     <svg
-      viewBox="0 0 1600 900"
+      viewBox={`0 0 ${vbW} 900`}
       width="100%"
       height="auto"
       role="img"
@@ -198,7 +255,7 @@ function TaskManagerArchitectureDiagram() {
           <polygon points="0 0, 10 3.5, 0 7" fill={PURPLE} />
         </marker>
       </defs>
-      <rect x="0" y="0" width="1600" height="900" fill={BG} stroke="none" />
+      <rect x="0" y="0" width={vbW} height="900" fill={BG} stroke="none" />
 
       {/* USER ACTION */}
       <circle cx="125" cy="290" r="60" fill={BG} stroke={CRIMSON} strokeWidth="2" />
@@ -228,65 +285,63 @@ function TaskManagerArchitectureDiagram() {
       <text x="666" y="180" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
         [ Zustand ]
       </text>
-      <text x="666" y="202" fill="#6B6B6B" fontFamily={ff} fontSize="11">
-        local UI state · selected date · view mode
-      </text>
+      <SvgMutedLines
+        x={666}
+        y={202}
+        lines={['local UI state · selected date ·', 'view mode']}
+      />
 
       <rect x="650" y="330" width="300" height="90" fill={BG} stroke={FG} strokeWidth="2" />
       <text x="666" y="360" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
         [ React Query ]
       </text>
-      <text x="666" y="382" fill="#6B6B6B" fontFamily={ff} fontSize="11">
-        server cache · background sync
-      </text>
+      <SvgMutedLines x={666} y={382} lines={['server cache · background sync']} />
 
       {/* API layer */}
       <rect x="1060" y="240" width="320" height="100" fill={BG} stroke={FG} strokeWidth="2" />
-      <text x="1076" y="273" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
-        [ Node.js + Next.js API Routes ]
-      </text>
-      <text x="1076" y="295" fill="#6B6B6B" fontFamily={ff} fontSize="11">
-        REST endpoints · auth middleware · validation
-      </text>
+      <SvgBoldLines
+        x={1076}
+        y={273}
+        lines={['[ Node.js + Next.js', 'API Routes ]']}
+      />
+      <SvgMutedLines
+        x={1076}
+        y={302}
+        lines={['REST endpoints · auth', 'middleware · validation']}
+      />
 
       {/* Backend layer */}
-      <rect x="1440" y="90" width="140" height="90" fill={BG} stroke={FG} strokeWidth="2" />
+      <rect x="1440" y="90" width="180" height="90" fill={BG} stroke={FG} strokeWidth="2" />
       <text x="1452" y="120" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
         [ Supabase DB ]
       </text>
-      <text x="1452" y="142" fill="#6B6B6B" fontFamily={ff} fontSize="10">
-        tables: tasks, braindump,
-      </text>
-      <text x="1452" y="157" fill="#6B6B6B" fontFamily={ff} fontSize="10">
-        users, reminders
-      </text>
+      <SvgMutedLines
+        x={1452}
+        y={142}
+        fontSize={10}
+        lines={['tables: tasks, braindump,', 'users, reminders']}
+      />
 
-      <rect x="1440" y="200" width="140" height="90" fill={BG} stroke={FG} strokeWidth="2" />
+      <rect x="1440" y="200" width="180" height="90" fill={BG} stroke={FG} strokeWidth="2" />
       <text x="1452" y="230" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
         [ Supabase Auth ]
       </text>
-      <text x="1452" y="252" fill="#6B6B6B" fontFamily={ff} fontSize="11">
-        email · Google SSO
-      </text>
+      <SvgMutedLines x={1452} y={252} lines={['email · Google SSO']} />
 
-      <rect x="1440" y="310" width="140" height="90" fill={BG} stroke={FG} strokeWidth="2" />
-      <text x="1452" y="340" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
-        [ Supabase Realtime ]
-      </text>
-      <text x="1452" y="362" fill="#6B6B6B" fontFamily={ff} fontSize="11">
-        live sync across devices
-      </text>
+      <rect x="1440" y="310" width="180" height="90" fill={BG} stroke={FG} strokeWidth="2" />
+      <SvgBoldLines x={1452} y={332} lines={['[ Supabase', 'Realtime ]']} />
+      <SvgMutedLines x={1452} y={366} lines={['live sync across', 'devices']} />
 
-      <rect x="1440" y="420" width="140" height="90" fill={BG} stroke={FG} strokeWidth="2" />
+      <rect x="1440" y="420" width="180" height="90" fill={BG} stroke={FG} strokeWidth="2" />
       <text x="1452" y="450" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
         [ Python Worker ]
       </text>
-      <text x="1452" y="472" fill="#6B6B6B" fontFamily={ff} fontSize="10">
-        task processing · reminder
-      </text>
-      <text x="1452" y="487" fill="#6B6B6B" fontFamily={ff} fontSize="10">
-        scheduling · analytics
-      </text>
+      <SvgMutedLines
+        x={1452}
+        y={472}
+        fontSize={10}
+        lines={['task processing · reminder', 'scheduling · analytics']}
+      />
 
       {/* Live arrows */}
       <line x1="185" y1="250" x2="280" y2="195" stroke={FG} strokeWidth="2" markerEnd="url(#tm-arr-blk)" />
@@ -324,12 +379,11 @@ function TaskManagerArchitectureDiagram() {
       <text x="744" y="660" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
         [ Claude API ]
       </text>
-      <text x="744" y="680" fill="#6B6B6B" fontFamily={ff} fontSize="11">
-        NLP sentence → structured task
-      </text>
-      <text x="744" y="696" fill="#6B6B6B" fontFamily={ff} fontSize="11">
-        {'{title, date, time, priority}'}
-      </text>
+      <SvgMutedLines
+        x={744}
+        y={680}
+        lines={['NLP sentence → structured task', '{title, date, time, priority}']}
+      />
 
       <rect x="1015" y="620" width="255" height="110" fill="#F5F0FF" stroke={PURPLE} strokeWidth="2" />
       <rect x="1185" y="630" width="74" height="18" fill={PURPLE} />
@@ -339,9 +393,11 @@ function TaskManagerArchitectureDiagram() {
       <text x="1029" y="660" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
         [ Wispr Flow ]
       </text>
-      <text x="1029" y="680" fill="#6B6B6B" fontFamily={ff} fontSize="11">
-        voice input → text → task pipeline
-      </text>
+      <SvgMutedLines
+        x={1029}
+        y={680}
+        lines={['voice input → text → task', 'pipeline']}
+      />
 
       <rect x="1300" y="620" width="255" height="110" fill="#F5F0FF" stroke={PURPLE} strokeWidth="2" />
       <rect x="1470" y="630" width="74" height="18" fill={PURPLE} />
@@ -351,12 +407,11 @@ function TaskManagerArchitectureDiagram() {
       <text x="1314" y="660" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
         [ FCM ]
       </text>
-      <text x="1314" y="680" fill="#6B6B6B" fontFamily={ff} fontSize="11">
-        Firebase Cloud Messaging · push
-      </text>
-      <text x="1314" y="696" fill="#6B6B6B" fontFamily={ff} fontSize="11">
-        notifications
-      </text>
+      <SvgMutedLines
+        x={1314}
+        y={680}
+        lines={['Firebase Cloud Messaging ·', 'push notifications']}
+      />
 
       {/* Roadmap connections */}
       <line
