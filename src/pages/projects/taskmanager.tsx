@@ -668,6 +668,17 @@ export default function TaskManagerProjectPage() {
             </span>
             <span style={{ color: FG, fontWeight: 900 }}>.</span>
           </h1>
+          <p
+            style={{
+              ...mono,
+              fontSize: 'clamp(1.1rem, 2vw, 1.4rem)',
+              fontWeight: 700,
+              color: FG,
+              margin: '0 0 0.5rem 0',
+            }}
+          >
+            Scheduling a task shouldn&apos;t feel like a task.
+          </p>
           <p style={{ ...mono, fontSize: 16, margin: '0 0 0.75rem 0', maxWidth: 760, lineHeight: 1.7 }}>
             A minimal task manager built on one idea — if scheduling takes effort, it doesn&apos;t
             happen. Capture first. Schedule second.
