@@ -1,7 +1,16 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import App from './app/App.tsx';
+import TaskManagerProjectPage from './pages/projects/taskmanager.tsx';
+import './styles/index.css';
 
-  import { createRoot } from "react-dom/client";
-  import App from "./app/App.tsx";
-  import "./styles/index.css";
-
-  createRoot(document.getElementById("root")!).render(<App />);
-  
+createRoot(document.getElementById('root')!).render(
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="/projects/taskmanager" element={<TaskManagerProjectPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  </BrowserRouter>
+);
