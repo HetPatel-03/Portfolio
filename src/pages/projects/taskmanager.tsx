@@ -3,8 +3,12 @@ import { useNavigate } from 'react-router-dom';
 
 const BG = '#F5F0E8';
 const FG = '#0A0A0A';
+const CRIMSON = '#C2185B';
+const PURPLE = '#7C3AED';
 const BORDER = `2px solid ${FG}`;
+const BORDER_PURPLE = `2px solid ${PURPLE}`;
 const mono: CSSProperties = { fontFamily: "'JetBrains Mono', monospace" };
+const MUTED = 'rgba(10,10,10,0.45)';
 
 function Box({
   children,
@@ -31,16 +35,127 @@ function Box({
   );
 }
 
-const features = [
-  '[ 01 ] Drag-and-drop Kanban board across Todo, In Progress, Done columns',
-  '[ 02 ] Real-time sync with Firebase — changes reflect instantly across tabs',
-  '[ 03 ] Keyboard-first editing — add, edit and move cards without touching the mouse',
-  '[ 04 ] Built with React and Tailwind — fast, lightweight, no unnecessary dependencies',
-  '[ 05 ] Clean brutalist UI — distraction-free by design',
-  '[ 06 ] Mobile responsive — works on any screen size',
+const features: { num: string; text: string; roadmap: boolean }[] = [
+  {
+    num: '01',
+    text: 'Scrollable week strip (Mon–Sun) with a pill to jump between weeks — your whole week visible in one swipe',
+    roadmap: false,
+  },
+  {
+    num: '02',
+    text: 'One-tap + to add a task — no forms, no friction, no date required',
+    roadmap: false,
+  },
+  {
+    num: '03',
+    text: '4 views: Daily, Weekly, Calendar, Task list — switch instantly',
+    roadmap: false,
+  },
+  {
+    num: '04',
+    text: 'Brain Dump — a dateless, timeless capture zone for ideas and future tasks',
+    roadmap: false,
+  },
+  {
+    num: '05',
+    text: 'AI sentence-to-task parser (roadmap) — type naturally, app structures it',
+    roadmap: true,
+  },
+  {
+    num: '06',
+    text: 'Wispr Flow voice-to-text integration (roadmap) — speak your task, it appears',
+    roadmap: true,
+  },
 ];
 
 const techPills = ['React', 'Tailwind CSS', 'Firebase', 'Vite', 'TypeScript'];
+
+const compareRows: {
+  name: string;
+  friction: ReactNode;
+  quick: ReactNode;
+  voice: ReactNode;
+  dump: ReactNode;
+  price: string;
+}[] = [
+  {
+    name: 'Task Manager',
+    friction: (
+      <span style={{ color: CRIMSON, fontWeight: 700 }}>
+        ● ZERO
+      </span>
+    ),
+    quick: <span style={{ color: CRIMSON }}>✓</span>,
+    voice: 'Roadmap',
+    dump: <span style={{ color: CRIMSON }}>✓</span>,
+    price: 'Free',
+  },
+  {
+    name: 'Google Calendar',
+    friction: 'High',
+    quick: <span style={{ color: MUTED }}>✗</span>,
+    voice: <span style={{ color: MUTED }}>✗</span>,
+    dump: <span style={{ color: MUTED }}>✗</span>,
+    price: 'Free',
+  },
+  {
+    name: 'Notion/Motion',
+    friction: 'High',
+    quick: <span style={{ color: MUTED }}>✗</span>,
+    voice: <span style={{ color: MUTED }}>✗</span>,
+    dump: 'Partial',
+    price: '$$$',
+  },
+  {
+    name: 'Fantastical',
+    friction: 'Medium',
+    quick: 'Partial',
+    voice: <span style={{ color: CRIMSON }}>✓</span>,
+    dump: <span style={{ color: MUTED }}>✗</span>,
+    price: '$$$',
+  },
+  {
+    name: 'TickTick',
+    friction: 'Medium',
+    quick: 'Partial',
+    voice: <span style={{ color: CRIMSON }}>✓</span>,
+    dump: 'Partial',
+    price: 'Free/$$',
+  },
+];
+
+const scienceCards = [
+  {
+    title: 'FRICTION THEORY',
+    body: (
+      <>
+        Behavioral science shows that every additional step in a process reduces completion rate by
+        ~20%. Removing one tap from task entry means 20% more tasks actually get scheduled.{' '}
+        <span className="tm-muted">(Fogg Behavior Model, 2009)</span>
+      </>
+    ),
+  },
+  {
+    title: 'COGNITIVE LOAD',
+    body: (
+      <>
+        Working memory holds 4±1 items at once. Complex UIs consume working memory before the task
+        is even entered. Minimal interfaces preserve cognitive resources for the actual work.{' '}
+        <span className="tm-muted">(Miller&apos;s Law)</span>
+      </>
+    ),
+  },
+  {
+    title: 'COLOR PSYCHOLOGY',
+    body: (
+      <>
+        Off-white reduces eye strain during long sessions. Black creates authority and focus.
+        Crimson triggers urgency and action. Purple signals intelligence and calm. The palette is
+        not aesthetic — it is functional.
+      </>
+    ),
+  },
+];
 
 export default function TaskManagerProjectPage() {
   const navigate = useNavigate();
@@ -66,6 +181,7 @@ export default function TaskManagerProjectPage() {
           border-bottom: ${BORDER};
           background: ${BG};
         }
+        .tm-nav-back:hover { color: ${CRIMSON}; }
         .tm-main {
           max-width: 1120px;
           margin: 0 auto;
@@ -81,11 +197,15 @@ export default function TaskManagerProjectPage() {
           border-bottom: ${BORDER};
         }
         .tm-muted { opacity: 0.65; }
+        .tm-label-purple {
+          color: ${PURPLE};
+        }
         .tm-meta-row {
           display: flex;
           flex-wrap: wrap;
           gap: 0.5rem;
           margin: 0 0 0.75rem 0;
+          align-items: center;
         }
         .tm-meta-pill {
           border: ${BORDER};
@@ -93,9 +213,18 @@ export default function TaskManagerProjectPage() {
           font-size: 11px;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          display: inline-block;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
           background: ${BG};
           color: ${FG};
+        }
+        .tm-status-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: ${CRIMSON};
+          flex-shrink: 0;
         }
         .tm-hero {
           border-top: ${BORDER};
@@ -124,7 +253,14 @@ export default function TaskManagerProjectPage() {
           text-decoration: none;
           display: inline-block;
         }
-        .tm-btn-primary { background: ${FG}; color: ${BG}; }
+        .tm-btn-primary {
+          background: ${FG};
+          color: ${BG};
+        }
+        .tm-btn-primary:hover {
+          background: ${CRIMSON};
+          color: ${BG};
+        }
         .tm-btn-disabled {
           background: transparent;
           color: ${FG};
@@ -174,10 +310,23 @@ export default function TaskManagerProjectPage() {
           }
           .tm-feat-grid > div:nth-child(3n) { border-right: none; }
           .tm-feat-grid > div:nth-last-child(-n+3) { border-bottom: none; }
+          .tm-feat-grid > div.tm-feat-roadmap {
+            border: ${BORDER_PURPLE} !important;
+            position: relative;
+            z-index: 1;
+          }
         }
         @media (max-width: 767px) {
           .tm-feat-grid > div { border-bottom: ${BORDER}; }
           .tm-feat-grid > div:last-child { border-bottom: none; }
+          .tm-feat-grid > div.tm-feat-roadmap {
+            border-bottom: ${BORDER_PURPLE} !important;
+            border-top: ${BORDER_PURPLE} !important;
+            border-left: ${BORDER_PURPLE} !important;
+            border-right: ${BORDER_PURPLE} !important;
+            position: relative;
+            z-index: 1;
+          }
         }
         .tm-shots {
           display: grid;
@@ -190,6 +339,42 @@ export default function TaskManagerProjectPage() {
         }
         @media (max-width: 639px) {
           .tm-shots > div:not(:last-child) { border-bottom: ${BORDER}; }
+        }
+        .tm-compare {
+          width: 100%;
+          border-collapse: collapse;
+          border: ${BORDER};
+        }
+        .tm-compare th,
+        .tm-compare td {
+          border: ${BORDER};
+          padding: 0.65rem 0.75rem;
+          font-size: 12px;
+          text-align: left;
+          vertical-align: top;
+        }
+        .tm-compare thead th {
+          background: ${FG};
+          color: ${BG};
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          font-size: 10px;
+        }
+        .tm-compare tbody tr:nth-child(odd) { background: ${BG}; }
+        .tm-compare tbody tr:nth-child(even) { background: #ebe5db; }
+        .tm-science-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 0;
+          border: ${BORDER};
+        }
+        @media (min-width: 900px) {
+          .tm-science-grid { grid-template-columns: repeat(3, 1fr); }
+          .tm-science-grid > div:not(:last-child) { border-right: ${BORDER}; border-bottom: none; }
+        }
+        @media (max-width: 899px) {
+          .tm-science-grid > div:not(:last-child) { border-bottom: ${BORDER}; }
         }
       `}</style>
 
@@ -205,6 +390,7 @@ export default function TaskManagerProjectPage() {
           <button
             type="button"
             onClick={backToProjects}
+            className="tm-nav-back"
             style={{
               ...mono,
               fontSize: 13,
@@ -227,6 +413,7 @@ export default function TaskManagerProjectPage() {
       <main className="tm-main">
         <section className="tm-section tm-hero">
           <p
+            className="tm-label-purple"
             style={{
               ...mono,
               fontSize: 11,
@@ -239,21 +426,28 @@ export default function TaskManagerProjectPage() {
           </p>
           <div className="tm-meta-row">
             <span className="tm-meta-pill" style={mono}>
+              <span className="tm-status-dot" aria-hidden />
               [ STATUS: IN PROGRESS ]
+            </span>
+            <span className="tm-meta-sep tm-muted" style={{ ...mono, fontSize: 11 }}>
+              ·
             </span>
             <span className="tm-meta-pill" style={mono}>
               [ YEAR: 2026 ]
             </span>
+            <span className="tm-meta-sep tm-muted" style={{ ...mono, fontSize: 11 }}>
+              ·
+            </span>
             <span className="tm-meta-pill" style={mono}>
-              [ STACK: REACT + FIREBASE ]
+              [ PLATFORM: iOS · Android · Web ]
             </span>
           </div>
           <h1 className="tm-hero-title" style={mono}>
-            Drag. Drop. Done.
+            Your tasks. Zero friction.
           </h1>
           <p style={{ ...mono, fontSize: 16, margin: '0 0 0.75rem 0', maxWidth: 760, lineHeight: 1.7 }}>
-            A Kanban-style task management app with real-time sync, drag-and-drop, and keyboard-first
-            editing.
+            A minimal task manager built on one idea — if scheduling takes effort, it doesn&apos;t
+            happen. Capture first. Schedule second.
           </p>
           <div className="tm-hero-actions">
             <a
@@ -265,48 +459,56 @@ export default function TaskManagerProjectPage() {
             >
               view on github →
             </a>
-            <span
-              className="tm-btn tm-btn-disabled"
-              style={mono}
-              aria-disabled
-            >
-              not deployed yet
+            <span className="tm-btn tm-btn-disabled" style={mono} aria-disabled>
+              coming soon
             </span>
           </div>
+          <p
+            style={{
+              ...mono,
+              fontSize: 12,
+              fontWeight: 700,
+              color: CRIMSON,
+              margin: '0 0 0 0',
+              letterSpacing: '0.04em',
+            }}
+          >
+            // NOT ANOTHER KANBAN APP
+          </p>
         </section>
 
         <section className="tm-section">
           <div className="tm-stats">
-          {[
-            { k: 'STACK', v: 'React · Tailwind · Firebase' },
-            { k: 'TYPE', v: 'Web App' },
-            { k: 'STATUS', v: 'In Progress' },
-            { k: 'YEAR', v: '2026' },
-          ].map((row) => (
-            <div
-              key={row.k}
-              style={{
-                minHeight: 100,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
+            {[
+              { k: 'PLATFORM', v: 'iOS · Android · Web' },
+              { k: 'TYPE', v: 'Mobile + Web App' },
+              { k: 'STATUS', v: 'In Progress' },
+              { k: 'YEAR', v: '2026' },
+            ].map((row) => (
               <div
+                key={row.k}
                 style={{
-                  ...mono,
-                  fontSize: 10,
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  background: FG,
-                  color: BG,
-                  padding: '0.45rem 0.75rem',
+                  minHeight: 100,
+                  display: 'flex',
+                  flexDirection: 'column',
                 }}
               >
-                {row.k}
+                <div
+                  style={{
+                    ...mono,
+                    fontSize: 10,
+                    letterSpacing: '0.15em',
+                    textTransform: 'uppercase',
+                    background: FG,
+                    color: BG,
+                    padding: '0.45rem 0.75rem',
+                  }}
+                >
+                  {row.k}
+                </div>
+                <div style={{ ...mono, fontSize: 14, padding: '0.9rem 0.75rem' }}>{row.v}</div>
               </div>
-              <div style={{ ...mono, fontSize: 14, padding: '0.9rem 0.75rem' }}>{row.v}</div>
-            </div>
-          ))}
+            ))}
           </div>
         </section>
 
@@ -328,8 +530,10 @@ export default function TaskManagerProjectPage() {
               </div>
               <div style={{ padding: '1.25rem 1rem' }}>
                 <p style={{ ...mono, fontSize: 16, lineHeight: 1.8, margin: 0 }}>
-              Most task apps are bloated with features nobody uses. Students and developers need
-              something fast, keyboard-friendly, and distraction-free.
+                  Every task app adds friction. Opening the app, picking a date, choosing a time,
+                  selecting a project. By the time you&apos;ve scheduled it, you&apos;ve lost the
+                  thought. Google Calendar is powerful but heavy. Notion is flexible but slow. Motion
+                  is smart but complex. The scheduling layer is always in the way.
                 </p>
               </div>
             </Box>
@@ -349,8 +553,10 @@ export default function TaskManagerProjectPage() {
               </div>
               <div style={{ padding: '1.25rem 1rem' }}>
                 <p style={{ ...mono, fontSize: 16, lineHeight: 1.8, margin: 0 }}>
-              A minimal Kanban board with drag-and-drop cards, real-time Firebase sync, and full
-              keyboard navigation. No accounts needed to try it.
+                  Task Manager removes every unnecessary step. Tap +, type the task, done. The app
+                  captures first and schedules second. A scrollable week strip, a brain dump for
+                  undated tasks, and 4 views (Daily, Weekly, Calendar, Task list) — all reachable in
+                  one tap.
                 </p>
               </div>
             </Box>
@@ -358,45 +564,158 @@ export default function TaskManagerProjectPage() {
         </section>
 
         <section className="tm-section">
+          <div
+            className="tm-label-purple"
+            style={{ ...mono, fontSize: 12, fontWeight: 600, marginBottom: '1rem' }}
+          >
+            // CORE FEATURES
+          </div>
           <div className="tm-feat-grid">
-            {features.map((text) => {
-              const m = text.match(/^\[\s*(\d+)\s*\]\s*(.*)$/);
-              const num = m?.[1] ?? '';
-              const rest = m?.[2] ?? text;
-              return (
-                <div key={text} style={{ padding: '1.5rem 1.25rem' }}>
-                  <div
+            {features.map((feat) => (
+              <div
+                key={feat.num}
+                className={feat.roadmap ? 'tm-feat-roadmap' : undefined}
+                style={{ padding: '1.5rem 1.25rem', position: 'relative' }}
+              >
+                {feat.roadmap ? (
+                  <span
+                    style={{
+                      ...mono,
+                      position: 'absolute',
+                      top: 10,
+                      right: 10,
+                      fontSize: 9,
+                      letterSpacing: '0.14em',
+                      fontWeight: 700,
+                      color: BG,
+                      background: PURPLE,
+                      padding: '0.25rem 0.45rem',
+                    }}
+                  >
+                    ROADMAP
+                  </span>
+                ) : null}
+                <div
+                  style={{
+                    ...mono,
+                    background: FG,
+                    color: BG,
+                    padding: '0.5rem 1rem',
+                    fontSize: 11,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    marginBottom: '1rem',
+                  }}
+                >
+                  FEATURE
+                </div>
+                <div style={{ marginBottom: '0.75rem' }}>
+                  <span
                     style={{
                       ...mono,
                       background: FG,
                       color: BG,
-                      padding: '0.5rem 1rem',
+                      display: 'inline-block',
+                      padding: '2px 8px',
                       fontSize: 11,
-                      letterSpacing: '0.12em',
-                      textTransform: 'uppercase',
-                      marginBottom: '1rem',
                     }}
                   >
-                    FEATURE\n+                  </div>
-                  <div style={{ marginBottom: '0.75rem' }}>
-                    <span
-                      style={{
-                        ...mono,
-                        background: FG,
-                        color: BG,
-                        display: 'inline-block',
-                        padding: '2px 8px',
-                        fontSize: 11,
-                      }}
-                    >
-                      {num ? `[ ${num} ]` : '[ 00 ]'}
-                    </span>
-                  </div>
-                  <p style={{ ...mono, fontSize: 14, lineHeight: 1.8, margin: 0 }}>{rest}</p>
+                    [ {feat.num} ]
+                  </span>
                 </div>
-              );
-            })}
+                <p style={{ ...mono, fontSize: 14, lineHeight: 1.8, margin: 0 }}>{feat.text}</p>
+              </div>
+            ))}
           </div>
+        </section>
+
+        <section className="tm-section" style={{ overflowX: 'auto' }}>
+          <div
+            className="tm-label-purple"
+            style={{ ...mono, fontSize: 12, fontWeight: 600, marginBottom: '1rem' }}
+          >
+            // HOW WE&apos;RE DIFFERENT
+          </div>
+          <table className="tm-compare" style={mono}>
+            <thead>
+              <tr>
+                <th>App name</th>
+                <th>Friction level</th>
+                <th>Quick capture</th>
+                <th>Voice input</th>
+                <th>Brain dump</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {compareRows.map((row) => (
+                <tr key={row.name}>
+                  <td>{row.name}</td>
+                  <td>{row.friction}</td>
+                  <td>{row.quick}</td>
+                  <td>{row.voice}</td>
+                  <td>{row.dump}</td>
+                  <td>{row.price}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+
+        <section
+          className="tm-section"
+          style={{
+            borderLeft: `4px solid ${PURPLE}`,
+            paddingLeft: '1.25rem',
+            marginLeft: 0,
+          }}
+        >
+          <div
+            className="tm-label-purple"
+            style={{
+              ...mono,
+              fontSize: 12,
+              fontWeight: 600,
+              marginBottom: '1rem',
+              letterSpacing: '0.06em',
+            }}
+          >
+            // THE SCIENCE · WHY MINIMALISM WORKS
+          </div>
+          <div className="tm-science-grid">
+            {scienceCards.map((card) => (
+              <div key={card.title} style={{ padding: 0, background: BG }}>
+                <div
+                  style={{
+                    ...mono,
+                    background: PURPLE,
+                    color: BG,
+                    padding: '0.5rem 1rem',
+                    fontSize: 11,
+                    letterSpacing: '0.12em',
+                    fontWeight: 700,
+                  }}
+                >
+                  [ {card.title} ]
+                </div>
+                <div style={{ padding: '1.25rem 1rem' }}>
+                  <p style={{ ...mono, fontSize: 14, lineHeight: 1.8, margin: 0 }}>{card.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p
+            className="tm-label-purple"
+            style={{
+              ...mono,
+              fontSize: 11,
+              marginTop: '1rem',
+              marginBottom: 0,
+              letterSpacing: '0.04em',
+            }}
+          >
+            // designed with behavior in mind, not features
+          </p>
         </section>
 
         <section className="tm-section" style={{ overflowX: 'auto' }}>
@@ -426,13 +745,22 @@ export default function TaskManagerProjectPage() {
         </section>
 
         <section className="tm-section">
-          <div style={{ ...mono, fontSize: 12, fontWeight: 600, marginBottom: '1rem' }}>
-            // SCREENSHOTS
+          <div
+            className="tm-label-purple"
+            style={{ ...mono, fontSize: 12, fontWeight: 600, marginBottom: '1rem' }}
+          >
+            // APP PREVIEWS
           </div>
           <div className="tm-shots">
-            {[0, 1, 2].map((i) => (
+            {(
+              [
+                '[ WEEKLY VIEW · COMING SOON ]',
+                '[ DAILY VIEW · COMING SOON ]',
+                '[ BRAIN DUMP · COMING SOON ]',
+              ] as const
+            ).map((label) => (
               <div
-                key={i}
+                key={label}
                 style={{
                   minHeight: 280,
                   display: 'flex',
@@ -440,15 +768,31 @@ export default function TaskManagerProjectPage() {
                   justifyContent: 'center',
                   padding: '1.5rem',
                   boxSizing: 'border-box',
+                  position: 'relative',
                   backgroundImage:
                     'repeating-linear-gradient(45deg, #0A0A0A 0, #0A0A0A 1px, transparent 0, transparent 50%)',
                   backgroundSize: '8px 8px',
                   backgroundColor: BG,
-                  opacity: 1,
                 }}
               >
+                <span
+                  style={{
+                    ...mono,
+                    position: 'absolute',
+                    top: 12,
+                    right: 12,
+                    fontSize: 9,
+                    letterSpacing: '0.12em',
+                    fontWeight: 700,
+                    color: BG,
+                    background: CRIMSON,
+                    padding: '0.3rem 0.5rem',
+                  }}
+                >
+                  COMING SOON
+                </span>
                 <span style={{ ...mono, fontSize: 12, textAlign: 'center', opacity: 0.6 }}>
-                  [ SCREENSHOT · COMING SOON ]
+                  {label}
                 </span>
               </div>
             ))}
@@ -460,6 +804,7 @@ export default function TaskManagerProjectPage() {
         style={{
           display: 'flex',
           flexWrap: 'wrap',
+          alignItems: 'center',
           justifyContent: 'space-between',
           gap: '1rem',
           padding: '1.5rem 2rem',
@@ -469,21 +814,34 @@ export default function TaskManagerProjectPage() {
         }}
       >
         <span style={{ ...mono, fontSize: 12, color: BG }}>PROJ / 03 · TASK MANAGER · 2026</span>
-        <button
-          type="button"
-          onClick={backToProjects}
+        <div
           style={{
-            ...mono,
-            fontSize: 12,
-            background: 'none',
-            border: 'none',
-            padding: 0,
-            color: BG,
-            cursor: 'pointer',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: '1.5rem',
+            marginLeft: 'auto',
           }}
         >
-          ← back to projects
-        </button>
+          <span style={{ ...mono, fontSize: 11, color: BG, opacity: 0.9 }}>
+            built different. on purpose.
+          </span>
+          <button
+            type="button"
+            onClick={backToProjects}
+            style={{
+              ...mono,
+              fontSize: 12,
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              color: BG,
+              cursor: 'pointer',
+            }}
+          >
+            ← back to projects
+          </button>
+        </div>
       </footer>
     </div>
   );
