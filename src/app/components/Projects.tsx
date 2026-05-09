@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 import { getTechTagPillStyle } from '../lib/techTagPill';
 
-type ProjectsProps = {
-  onOpenProjectDetail?: (projectName: string) => void;
-};
-
 type Project = {
   id: string;
   name: string;
@@ -14,13 +10,12 @@ type Project = {
   status: string;
   views: string;
   statusTone: 'live' | 'in-progress';
-  studenzBitDetail?: boolean;
-  inspectHref?: string;
+  pageHref: string;
 };
 
 const GAP_PX = 24;
 
-export function Projects({ onOpenProjectDetail }: ProjectsProps) {
+export function Projects() {
   const projects: Project[] = [
     {
       id: 'PROJ / 01',
@@ -32,7 +27,7 @@ export function Projects({ onOpenProjectDetail }: ProjectsProps) {
       status: 'live',
       views: '214',
       statusTone: 'live',
-      studenzBitDetail: true,
+      pageHref: '/projects/studenzbit',
     },
     {
       id: 'PROJ / 02',
@@ -44,6 +39,7 @@ export function Projects({ onOpenProjectDetail }: ProjectsProps) {
       status: 'live',
       views: '187',
       statusTone: 'live',
+      pageHref: '/projects/recurlist',
     },
     {
       id: 'PROJ / 03',
@@ -55,6 +51,7 @@ export function Projects({ onOpenProjectDetail }: ProjectsProps) {
       status: 'live',
       views: '156',
       statusTone: 'live',
+      pageHref: '/projects/taskmanager',
     },
     {
       id: 'PROJ / 04',
@@ -66,7 +63,7 @@ export function Projects({ onOpenProjectDetail }: ProjectsProps) {
       status: 'live',
       views: '—',
       statusTone: 'live',
-      inspectHref: '/projects/fixxo',
+      pageHref: '/projects/fixxo',
     },
     {
       id: 'PROJ / 05',
@@ -78,7 +75,7 @@ export function Projects({ onOpenProjectDetail }: ProjectsProps) {
       status: 'in progress',
       views: '—',
       statusTone: 'in-progress',
-      inspectHref: '/projects/sentrymind',
+      pageHref: '/projects/sentrymind',
     },
   ];
 
@@ -235,7 +232,15 @@ export function Projects({ onOpenProjectDetail }: ProjectsProps) {
               const { dot, text: statusTextColor } = statusColors(project.statusTone);
               return (
                 <div key={project.id} className="projects-carousel-slide" data-carousel-slide>
-                  <div className="project-card group h-full">
+                  <a
+                    href={project.pageHref}
+                    className="project-card group h-full block cursor-pointer"
+                    style={{
+                      color: 'inherit',
+                      textDecoration: 'none',
+                    }}
+                    aria-label={`View ${project.name} project`}
+                  >
                     <div
                       className="project-card__media h-[180px] relative overflow-hidden"
                       style={{ background: project.gradient }}
@@ -358,52 +363,16 @@ export function Projects({ onOpenProjectDetail }: ProjectsProps) {
                       </p>
 
                       <div className="flex justify-between items-center">
-                        {project.studenzBitDetail ? (
-                          <button
-                            type="button"
-                            className="text-sm group-hover:translate-x-1 transition-transform duration-200"
-                            style={{
-                              color: 'var(--coral)',
-                              fontFamily: 'var(--font-body)',
-                              background: 'none',
-                              border: 'none',
-                              padding: 0,
-                              cursor: 'pointer',
-                            }}
-                            onClick={() => {
-                              onOpenProjectDetail?.(project.name);
-                            }}
-                          >
-                            inspect →
-                          </button>
-                        ) : project.inspectHref ? (
-                          <a
-                            href={project.inspectHref}
-                            className="text-sm group-hover:translate-x-1 transition-transform duration-200"
-                            style={{
-                              color: 'var(--coral)',
-                              fontFamily: 'var(--font-body)',
-                              textDecoration: 'none',
-                            }}
-                          >
-                            inspect →
-                          </a>
-                        ) : (
-                          <button
-                            type="button"
-                            className="text-sm group-hover:translate-x-1 transition-transform duration-200"
-                            style={{
-                              color: 'var(--coral)',
-                              fontFamily: 'var(--font-body)',
-                              background: 'none',
-                              border: 'none',
-                              padding: 0,
-                              cursor: 'default',
-                            }}
-                          >
-                            inspect →
-                          </button>
-                        )}
+                        <span
+                          className="text-sm group-hover:translate-x-1 transition-transform duration-200"
+                          style={{
+                            color: 'var(--coral)',
+                            fontFamily: 'var(--font-body)',
+                          }}
+                          aria-hidden
+                        >
+                          inspect →
+                        </span>
                         <div className="flex items-center gap-1.5">
                           <span className="w-1.5 h-1.5 rounded-full" style={{ background: dot }} />
                           <span
@@ -415,7 +384,7 @@ export function Projects({ onOpenProjectDetail }: ProjectsProps) {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </a>
                 </div>
               );
             })}

@@ -20,12 +20,6 @@ export default function App() {
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  const openProjectDetail = (projectName: string) => {
-    if (projectName === 'StudenzBit') {
-      window.location.hash = 'studenzbit';
-    }
-  };
-
   if (isStudenzBitDetailOpen) {
     return (
       <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
@@ -39,7 +33,7 @@ export default function App() {
       <Navbar />
       <HeroAboutScene />
       <Universe />
-      <Projects onOpenProjectDetail={openProjectDetail} />
+      <Projects />
       <Marquee />
       <Experience />
       <Education />
