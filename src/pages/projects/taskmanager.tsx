@@ -661,7 +661,7 @@ export default function TaskManagerProjectPage() {
                 fontWeight: 900,
                 textDecoration: 'line-through',
                 textDecorationColor: FG,
-                textDecorationThickness: 3,
+                textDecorationThickness: 6,
               }}
             >
               Friction
