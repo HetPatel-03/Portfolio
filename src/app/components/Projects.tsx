@@ -27,7 +27,7 @@ export function Projects() {
       status: 'live',
       views: '214',
       statusTone: 'live',
-      pageHref: '/projects/studenzbit',
+      pageHref: '#studenzbit',
     },
     {
       id: 'PROJ / 02',
