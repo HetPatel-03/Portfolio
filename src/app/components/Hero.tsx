@@ -355,7 +355,7 @@ export function Hero() {
                 GitHub
               </a>
               <a
-                href="https://www.linkedin.com/in/het-patel-86243a308/"
+                href="https://www.linkedin.com/in/hetppatel"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{

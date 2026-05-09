@@ -79,6 +79,16 @@ const TECH_COLORS: Record<
     border: 'rgba(255, 255, 255, 0.15)',
     color: '#E0E0E0',
   },
+  'WhatsApp API': {
+    bg: 'rgba(37, 211, 102, 0.12)',
+    border: 'rgba(37, 211, 102, 0.28)',
+    color: '#25D366',
+  },
+  'Claude API': {
+    bg: 'rgba(167, 139, 250, 0.12)',
+    border: 'rgba(167, 139, 250, 0.28)',
+    color: '#C4B5FD',
+  },
 };
 
 const BASE_PILL: CSSProperties = {

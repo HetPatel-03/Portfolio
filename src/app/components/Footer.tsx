@@ -297,7 +297,7 @@ export function Footer() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           {[
             { icon: Github, href: 'https://github.com/HetPatel-03' },
-            { icon: Linkedin, href: 'https://www.linkedin.com/in/het-patel-86243a308/' },
+            { icon: Linkedin, href: 'https://www.linkedin.com/in/hetppatel' },
             { icon: XIcon, href: 'https://x.com/hetpatel37?s=21' },
           ].map(({ icon: Icon, href }) => (
             <a

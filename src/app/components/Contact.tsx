@@ -33,8 +33,8 @@ export function Contact() {
     {
       icon: Linkedin,
       label: 'LinkedIn',
-      value: '/in/het-patel-86243a308',
-      href: 'https://www.linkedin.com/in/het-patel-86243a308/'
+      value: '/in/hetppatel',
+      href: 'https://www.linkedin.com/in/hetppatel'
     },
     {
       icon: Github,
