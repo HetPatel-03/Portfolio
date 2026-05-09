@@ -654,7 +654,19 @@ export default function TaskManagerProjectPage() {
             </span>
           </div>
           <h1 className="tm-hero-title" style={mono}>
-            Your tasks. Zero friction.
+            <span style={{ color: FG, fontWeight: 900 }}>Kill the </span>
+            <span
+              style={{
+                color: CRIMSON,
+                fontWeight: 900,
+                textDecoration: 'line-through',
+                textDecorationColor: CRIMSON,
+                textDecorationThickness: 3,
+              }}
+            >
+              Friction
+            </span>
+            <span style={{ color: FG, fontWeight: 900 }}>.</span>
           </h1>
           <p style={{ ...mono, fontSize: 16, margin: '0 0 0.75rem 0', maxWidth: 760, lineHeight: 1.7 }}>
             A minimal task manager built on one idea — if scheduling takes effort, it doesn&apos;t
