@@ -660,7 +660,7 @@ export default function TaskManagerProjectPage() {
                 color: CRIMSON,
                 fontWeight: 900,
                 textDecoration: 'line-through',
-                textDecorationColor: CRIMSON,
+                textDecorationColor: FG,
                 textDecorationThickness: 3,
               }}
             >
