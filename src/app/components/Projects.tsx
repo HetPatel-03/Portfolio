@@ -240,7 +240,13 @@ export function Projects({ onOpenProjectDetail }: ProjectsProps) {
                       className="project-card__media h-[180px] relative overflow-hidden"
                       style={{ background: project.gradient }}
                     >
-                      <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                      <div
+                        className={`absolute inset-0 flex items-center justify-center ${
+                          project.name === 'FIXXO' || project.name === 'SentryMind'
+                            ? 'opacity-30'
+                            : 'opacity-20'
+                        }`}
+                      >
                         {project.name === 'StudenzBit' && (
                           <svg width="120" height="120" viewBox="0 0 120 120">
                             <circle cx="60" cy="60" r="50" fill="none" stroke="white" strokeWidth="2" />
@@ -266,21 +272,37 @@ export function Projects({ onOpenProjectDetail }: ProjectsProps) {
                           </svg>
                         )}
                         {project.name === 'FIXXO' && (
-                          <svg width="100" height="100" viewBox="0 0 100 100">
+                          <svg width="100" height="100" viewBox="0 0 100 100" fill="none" aria-hidden>
                             <path
-                              d="M30 70 L50 30 L70 70 M40 55 L60 55"
-                              fill="none"
+                              d="M28 22h44c5.5 0 10 4.5 10 10v24c0 5.5-4.5 10-10 10H46l-12 12V66H28c-5.5 0-10-4.5-10-10V32c0-5.5 4.5-10 10-10z"
+                              stroke="white"
+                              strokeWidth="2"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d="M38 48l7 7 16-16"
                               stroke="white"
                               strokeWidth="2"
                               strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
-                            <circle cx="50" cy="78" r="4" fill="white" opacity="0.9" />
                           </svg>
                         )}
                         {project.name === 'SentryMind' && (
-                          <svg width="100" height="100" viewBox="0 0 100 100">
-                            <path d="M50 22 L68 42 L62 72 L38 72 L32 42 Z" fill="none" stroke="white" strokeWidth="2" />
-                            <circle cx="50" cy="48" r="6" fill="white" opacity="0.85" />
+                          <svg width="100" height="100" viewBox="0 0 100 100" fill="none" aria-hidden>
+                            <path
+                              d="M50 16 L74 28 V42 C74 58 62 72 50 80 C38 72 26 58 26 42 V28 L50 16 Z"
+                              stroke="white"
+                              strokeWidth="2"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d="M20 50h10l6-12 8 22 8-18 6 10h12"
+                              stroke="white"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
                           </svg>
                         )}
                       </div>
