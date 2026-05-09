@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { Link } from 'react-router-dom';
 import { getTechTagPillStyle } from '../lib/techTagPill';
 
 type Project = {
@@ -232,8 +233,8 @@ export function Projects() {
               const { dot, text: statusTextColor } = statusColors(project.statusTone);
               return (
                 <div key={project.id} className="projects-carousel-slide" data-carousel-slide>
-                  <a
-                    href={project.pageHref}
+                  <Link
+                    to={project.pageHref}
                     className="project-card group h-full block cursor-pointer"
                     style={{
                       color: 'inherit',
@@ -384,7 +385,7 @@ export function Projects() {
                         </div>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               );
             })}
