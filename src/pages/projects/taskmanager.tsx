@@ -61,6 +61,78 @@ export default function TaskManagerProjectPage() {
       }}
     >
       <style>{`
+        .tm-nav {
+          padding: 1rem 2rem;
+          border-bottom: ${BORDER};
+          background: ${BG};
+        }
+        .tm-main {
+          max-width: 1120px;
+          margin: 0 auto;
+          padding: 2rem;
+          border-left: ${BORDER};
+        }
+        @media (max-width: 640px) {
+          .tm-nav { padding: 1rem 1.25rem; }
+          .tm-main { padding: 1.25rem; }
+        }
+        .tm-section {
+          padding: 1.5rem 0;
+          border-bottom: ${BORDER};
+        }
+        .tm-muted { opacity: 0.65; }
+        .tm-meta-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin: 0 0 0.75rem 0;
+        }
+        .tm-meta-pill {
+          border: ${BORDER};
+          padding: 0.35rem 0.6rem;
+          font-size: 11px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          display: inline-block;
+          background: ${BG};
+          color: ${FG};
+        }
+        .tm-hero {
+          border-top: ${BORDER};
+          padding-top: 1.25rem;
+        }
+        .tm-hero-title {
+          font-size: clamp(4rem, 10vw, 9rem);
+          font-weight: 800;
+          line-height: 0.95;
+          margin: 0 0 0.75rem 0;
+          letter-spacing: -0.02em;
+        }
+        .tm-hero-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+          margin: 1.25rem 0 0 0;
+          padding: 1.25rem 0;
+          border-bottom: ${BORDER};
+        }
+        .tm-btn {
+          padding: 1rem 2rem;
+          font-size: 1rem;
+          border-radius: 0;
+          border: ${BORDER};
+          text-decoration: none;
+          display: inline-block;
+        }
+        .tm-btn-primary { background: ${FG}; color: ${BG}; }
+        .tm-btn-disabled {
+          background: transparent;
+          color: ${FG};
+          opacity: 0.4;
+          cursor: not-allowed;
+          user-select: none;
+        }
+
         .tm-stats {
           display: grid;
           grid-template-columns: 1fr;
@@ -122,175 +194,228 @@ export default function TaskManagerProjectPage() {
       `}</style>
 
       <header
+        className="tm-nav"
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '1rem 1.25rem',
-          borderBottom: BORDER,
-          background: BG,
         }}
       >
-        <button
-          type="button"
-          onClick={backToProjects}
-          style={{
-            ...mono,
-            fontSize: 13,
-            background: 'none',
-            border: 'none',
-            padding: 0,
-            color: FG,
-            cursor: 'pointer',
-          }}
-        >
-          ← back
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <button
+            type="button"
+            onClick={backToProjects}
+            style={{
+              ...mono,
+              fontSize: 13,
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              color: FG,
+              cursor: 'pointer',
+            }}
+          >
+            ← back
+          </button>
+          <span style={{ ...mono, fontSize: 11, letterSpacing: '0.08em' }} className="tm-muted">
+            [ PROJ-03 · 2026 ]
+          </span>
+        </div>
         <span style={{ ...mono, fontSize: 13 }}>hetppatel.dev</span>
       </header>
 
-      <main style={{ maxWidth: 1120, margin: '0 auto', padding: 'clamp(1.5rem, 4vw, 3rem)' }}>
-        <section style={{ marginBottom: '3rem' }}>
+      <main className="tm-main">
+        <section className="tm-section tm-hero">
           <p
             style={{
               ...mono,
               fontSize: 11,
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
-              margin: '0 0 1.25rem 0',
+              margin: '0 0 0.75rem 0',
             }}
           >
             PROJ / 03 · TASK MANAGER
           </p>
-          <h1
-            style={{
-              ...mono,
-              fontSize: 'clamp(2rem, 6vw, 3.25rem)',
-              fontWeight: 700,
-              margin: '0 0 1rem 0',
-              lineHeight: 1.1,
-            }}
-          >
+          <div className="tm-meta-row">
+            <span className="tm-meta-pill" style={mono}>
+              [ STATUS: IN PROGRESS ]
+            </span>
+            <span className="tm-meta-pill" style={mono}>
+              [ YEAR: 2026 ]
+            </span>
+            <span className="tm-meta-pill" style={mono}>
+              [ STACK: REACT + FIREBASE ]
+            </span>
+          </div>
+          <h1 className="tm-hero-title" style={mono}>
             Drag. Drop. Done.
           </h1>
-          <p style={{ ...mono, fontSize: 15, margin: '0 0 1.5rem 0', maxWidth: 640 }}>
+          <p style={{ ...mono, fontSize: 16, margin: '0 0 0.75rem 0', maxWidth: 760, lineHeight: 1.7 }}>
             A Kanban-style task management app with real-time sync, drag-and-drop, and keyboard-first
             editing.
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem' }}>
+          <div className="tm-hero-actions">
             <a
               href="https://github.com/HetPatel-03"
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                ...mono,
-                display: 'inline-block',
-                padding: '0.65rem 1.25rem',
-                background: FG,
-                color: BG,
-                border: BORDER,
-                textDecoration: 'none',
-                fontSize: 13,
-                borderRadius: 0,
-              }}
+              className="tm-btn tm-btn-primary"
+              style={mono}
             >
               view on github →
             </a>
             <span
-              style={{
-                ...mono,
-                display: 'inline-block',
-                padding: '0.65rem 1.25rem',
-                border: BORDER,
-                background: 'transparent',
-                color: FG,
-                fontSize: 13,
-                opacity: 0.4,
-                cursor: 'not-allowed',
-                userSelect: 'none',
-              }}
+              className="tm-btn tm-btn-disabled"
+              style={mono}
               aria-disabled
             >
               not deployed yet
             </span>
           </div>
-          <p
-            style={{
-              ...mono,
-              fontSize: 12,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              margin: 0,
-            }}
-          >
-            <span style={{ marginRight: 8 }}>●</span>
-            IN PROGRESS
-          </p>
         </section>
 
-        <section className="tm-stats" style={{ marginBottom: '3rem' }}>
+        <section className="tm-section">
+          <div className="tm-stats">
           {[
             { k: 'STACK', v: 'React · Tailwind · Firebase' },
             { k: 'TYPE', v: 'Web App' },
             { k: 'STATUS', v: 'In Progress' },
             { k: 'YEAR', v: '2026' },
           ].map((row) => (
-            <div key={row.k} style={{ padding: '1rem 1.1rem' }}>
-              <div style={{ ...mono, fontSize: 10, letterSpacing: '0.15em', marginBottom: '0.5rem' }}>
+            <div
+              key={row.k}
+              style={{
+                minHeight: 100,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <div
+                style={{
+                  ...mono,
+                  fontSize: 10,
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                  background: FG,
+                  color: BG,
+                  padding: '0.45rem 0.75rem',
+                }}
+              >
                 {row.k}
               </div>
-              <div style={{ ...mono, fontSize: 13 }}>{row.v}</div>
+              <div style={{ ...mono, fontSize: 14, padding: '0.9rem 0.75rem' }}>{row.v}</div>
             </div>
           ))}
-        </section>
-
-        <section className="tm-prob-sol" style={{ marginBottom: '3rem', border: BORDER }}>
-          <Box style={{ padding: '1.25rem 1.5rem', border: 'none' }}>
-            <div style={{ ...mono, fontSize: 12, fontWeight: 600, marginBottom: '1rem' }}>
-              // THE PROBLEM
-            </div>
-            <p style={{ ...mono, fontSize: 14, margin: 0 }}>
-              Most task apps are bloated with features nobody uses. Students and developers need
-              something fast, keyboard-friendly, and distraction-free.
-            </p>
-          </Box>
-          <Box style={{ padding: '1.25rem 1.5rem', border: 'none' }}>
-            <div style={{ ...mono, fontSize: 12, fontWeight: 600, marginBottom: '1rem' }}>
-              // THE SOLUTION
-            </div>
-            <p style={{ ...mono, fontSize: 14, margin: 0 }}>
-              A minimal Kanban board with drag-and-drop cards, real-time Firebase sync, and full
-              keyboard navigation. No accounts needed to try it.
-            </p>
-          </Box>
-        </section>
-
-        <section style={{ marginBottom: '3rem' }}>
-          <div className="tm-feat-grid">
-            {features.map((text) => (
-              <div key={text} style={{ padding: '1rem 1.1rem' }}>
-                <p style={{ ...mono, fontSize: 13, margin: 0 }}>{text}</p>
-              </div>
-            ))}
           </div>
         </section>
 
-        <section style={{ marginBottom: '3rem', overflowX: 'auto' }}>
-          <div style={{ display: 'inline-flex', flexWrap: 'nowrap', minWidth: 'min-content', maxWidth: '100%' }}>
+        <section className="tm-section">
+          <div className="tm-prob-sol" style={{ border: BORDER }}>
+            <Box style={{ padding: 0, border: 'none' }}>
+              <div
+                style={{
+                  ...mono,
+                  background: FG,
+                  color: BG,
+                  padding: '0.5rem 1rem',
+                  fontSize: 11,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                // THE PROBLEM
+              </div>
+              <div style={{ padding: '1.25rem 1rem' }}>
+                <p style={{ ...mono, fontSize: 16, lineHeight: 1.8, margin: 0 }}>
+              Most task apps are bloated with features nobody uses. Students and developers need
+              something fast, keyboard-friendly, and distraction-free.
+                </p>
+              </div>
+            </Box>
+            <Box style={{ padding: 0, border: 'none' }}>
+              <div
+                style={{
+                  ...mono,
+                  background: FG,
+                  color: BG,
+                  padding: '0.5rem 1rem',
+                  fontSize: 11,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                // THE SOLUTION
+              </div>
+              <div style={{ padding: '1.25rem 1rem' }}>
+                <p style={{ ...mono, fontSize: 16, lineHeight: 1.8, margin: 0 }}>
+              A minimal Kanban board with drag-and-drop cards, real-time Firebase sync, and full
+              keyboard navigation. No accounts needed to try it.
+                </p>
+              </div>
+            </Box>
+          </div>
+        </section>
+
+        <section className="tm-section">
+          <div className="tm-feat-grid">
+            {features.map((text) => {
+              const m = text.match(/^\[\s*(\d+)\s*\]\s*(.*)$/);
+              const num = m?.[1] ?? '';
+              const rest = m?.[2] ?? text;
+              return (
+                <div key={text} style={{ padding: '1.5rem 1.25rem' }}>
+                  <div
+                    style={{
+                      ...mono,
+                      background: FG,
+                      color: BG,
+                      padding: '0.5rem 1rem',
+                      fontSize: 11,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      marginBottom: '1rem',
+                    }}
+                  >
+                    FEATURE\n+                  </div>
+                  <div style={{ marginBottom: '0.75rem' }}>
+                    <span
+                      style={{
+                        ...mono,
+                        background: FG,
+                        color: BG,
+                        display: 'inline-block',
+                        padding: '2px 8px',
+                        fontSize: 11,
+                      }}
+                    >
+                      {num ? `[ ${num} ]` : '[ 00 ]'}
+                    </span>
+                  </div>
+                  <p style={{ ...mono, fontSize: 14, lineHeight: 1.8, margin: 0 }}>{rest}</p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="tm-section" style={{ overflowX: 'auto' }}>
+          <div style={{ display: 'inline-flex', flexWrap: 'nowrap', minWidth: 'min-content', maxWidth: '100%', gap: 0 }}>
             {techPills.map((t, i) => (
               <span
                 key={t}
                 style={{
                   ...mono,
                   display: 'inline-block',
-                  padding: '0.45rem 0.9rem',
+                  padding: '0.75rem 1.5rem',
                   border: BORDER,
                   borderRadius: 0,
                   fontSize: 12,
                   marginLeft: i > 0 ? -2 : 0,
                   position: 'relative' as const,
                   zIndex: i,
-                  background: BG,
+                  background: FG,
+                  color: BG,
                   whiteSpace: 'nowrap',
                 }}
               >
@@ -300,7 +425,7 @@ export default function TaskManagerProjectPage() {
           </div>
         </section>
 
-        <section style={{ marginBottom: '3rem' }}>
+        <section className="tm-section">
           <div style={{ ...mono, fontSize: 12, fontWeight: 600, marginBottom: '1rem' }}>
             // SCREENSHOTS
           </div>
@@ -309,16 +434,21 @@ export default function TaskManagerProjectPage() {
               <div
                 key={i}
                 style={{
-                  minHeight: 140,
+                  minHeight: 280,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   padding: '1.5rem',
                   boxSizing: 'border-box',
+                  backgroundImage:
+                    'repeating-linear-gradient(45deg, #0A0A0A 0, #0A0A0A 1px, transparent 0, transparent 50%)',
+                  backgroundSize: '8px 8px',
+                  backgroundColor: BG,
+                  opacity: 1,
                 }}
               >
-                <span style={{ ...mono, fontSize: 12, textAlign: 'center', opacity: 0.7 }}>
-                  [ screenshot coming soon ]
+                <span style={{ ...mono, fontSize: 12, textAlign: 'center', opacity: 0.6 }}>
+                  [ SCREENSHOT · COMING SOON ]
                 </span>
               </div>
             ))}
@@ -332,12 +462,13 @@ export default function TaskManagerProjectPage() {
           flexWrap: 'wrap',
           justifyContent: 'space-between',
           gap: '1rem',
-          padding: '1rem 1.25rem',
+          padding: '1.5rem 2rem',
           borderTop: BORDER,
-          background: BG,
+          background: FG,
+          color: BG,
         }}
       >
-        <span style={{ ...mono, fontSize: 12 }}>PROJ / 03 · TASK MANAGER · 2026</span>
+        <span style={{ ...mono, fontSize: 12, color: BG }}>PROJ / 03 · TASK MANAGER · 2026</span>
         <button
           type="button"
           onClick={backToProjects}
@@ -347,7 +478,7 @@ export default function TaskManagerProjectPage() {
             background: 'none',
             border: 'none',
             padding: 0,
-            color: FG,
+            color: BG,
             cursor: 'pointer',
           }}
         >
