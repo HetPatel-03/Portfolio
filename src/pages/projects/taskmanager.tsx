@@ -35,35 +35,43 @@ function Box({
   );
 }
 
-const features: { num: string; text: string; roadmap: boolean }[] = [
+const PROBLEM_MUTED = '#6B6B6B';
+
+const features: { num: string; title: string; problem: string; roadmap: boolean }[] = [
   {
     num: '01',
-    text: 'Scrollable week strip (Mon–Sun) with a pill to jump between weeks — your whole week visible in one swipe',
+    title: 'Scrollable week strip (Mon–Sun) with a pill to jump between weeks',
+    problem: 'most apps bury the week behind 3 taps and a date picker',
     roadmap: false,
   },
   {
     num: '02',
-    text: 'One-tap + to add a task — no forms, no friction, no date required',
+    title: 'One-tap + to add a task — no forms, no friction, no date required',
+    problem: "long task entry flows mean thoughts get lost before they're captured",
     roadmap: false,
   },
   {
     num: '03',
-    text: '4 views: Daily, Weekly, Calendar, Task list — switch instantly',
+    title: '4 views: Daily, Weekly, Calendar, Task list — switch instantly',
+    problem: 'being locked into one view forces context switching and cognitive load',
     roadmap: false,
   },
   {
     num: '04',
-    text: 'Brain Dump — a dateless, timeless capture zone for ideas and future tasks',
+    title: 'Brain Dump — a dateless, timeless capture zone for ideas and future tasks',
+    problem: 'unscheduled ideas have nowhere to live, so they disappear',
     roadmap: false,
   },
   {
     num: '05',
-    text: 'AI sentence-to-task parser (roadmap) — type naturally, app structures it',
+    title: 'AI sentence-to-task parser (roadmap) — type naturally, app structures it',
+    problem: 'manual date and time entry is the single highest-friction step in scheduling',
     roadmap: true,
   },
   {
     num: '06',
-    text: 'Wispr Flow voice-to-text integration (roadmap) — speak your task, it appears',
+    title: 'Wispr Flow voice-to-text integration (roadmap) — speak your task, it appears',
+    problem: 'typing while commuting, cooking or in a meeting is impossible',
     roadmap: true,
   },
 ];
@@ -156,6 +164,209 @@ const scienceCards = [
     ),
   },
 ];
+
+function TaskManagerArchitectureDiagram() {
+  const ff = "'JetBrains Mono', monospace";
+  return (
+    <svg
+      viewBox="0 0 1100 1020"
+      width="100%"
+      height="auto"
+      role="img"
+      aria-label="Task Manager system architecture"
+      style={{ display: 'block', maxWidth: '100%' }}
+    >
+      <defs>
+        <marker
+          id="tm-arr-blk"
+          markerWidth="10"
+          markerHeight="7"
+          refX="9"
+          refY="3.5"
+          orient="auto"
+        >
+          <polygon points="0 0, 10 3.5, 0 7" fill={FG} />
+        </marker>
+        <marker
+          id="tm-arr-purp"
+          markerWidth="10"
+          markerHeight="7"
+          refX="9"
+          refY="3.5"
+          orient="auto"
+        >
+          <polygon points="0 0, 10 3.5, 0 7" fill={PURPLE} />
+        </marker>
+      </defs>
+      <rect x="0" y="0" width="1100" height="1020" fill={BG} stroke="none" />
+
+      {/* Row 1 — Client layer (crimson border) */}
+      <rect x="28" y="36" width="1044" height="138" fill={BG} stroke={CRIMSON} strokeWidth="2" />
+      <text x="40" y="58" fill={FG} fontFamily={ff} fontSize="11" fontWeight="600" letterSpacing="0.08em">
+        CLIENT LAYER
+      </text>
+      {[
+        { x: 44, label: '[ iOS App ]', sub: 'React Native + Expo' },
+        { x: 382, label: '[ Android App ]', sub: 'React Native + Expo' },
+        { x: 720, label: '[ Web App ]', sub: 'React + Vite' },
+      ].map((c) => (
+        <g key={c.label}>
+          <rect
+            x={c.x}
+            y="72"
+            width="318"
+            height="90"
+            fill={BG}
+            stroke={FG}
+            strokeWidth="2"
+          />
+          <text x={c.x + 14} y="98" fill={FG} fontFamily={ff} fontSize="12" fontWeight="700">
+            {c.label}
+          </text>
+          <text x={c.x + 14} y="118" fill={FG} fontFamily={ff} fontSize="10">
+            {c.sub}
+          </text>
+        </g>
+      ))}
+
+      {/* Arrow 1 */}
+      <line
+        x1="550"
+        y1="182"
+        x2="550"
+        y2="218"
+        stroke={FG}
+        strokeWidth="2"
+        markerEnd="url(#tm-arr-blk)"
+      />
+      <text x="564" y="206" fill={FG} fontFamily={ff} fontSize="9">
+        API calls / Realtime listeners
+      </text>
+
+      {/* Row 2 — State */}
+      <rect x="28" y="232" width="1044" height="108" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="40" y="254" fill={FG} fontFamily={ff} fontSize="11" fontWeight="600" letterSpacing="0.08em">
+        STATE MANAGEMENT LAYER
+      </text>
+      <rect x="44" y="268" width="500" height="60" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="58" y="292" fill={FG} fontFamily={ff} fontSize="11" fontWeight="700">
+        [ Zustand Store ]
+      </text>
+      <text x="58" y="310" fill={FG} fontFamily={ff} fontSize="9">
+        local UI state, view mode, selected date, active task
+      </text>
+      <rect x="556" y="268" width="500" height="60" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="570" y="292" fill={FG} fontFamily={ff} fontSize="11" fontWeight="700">
+        [ React Query ]
+      </text>
+      <text x="570" y="310" fill={FG} fontFamily={ff} fontSize="9">
+        server state, cache, background sync
+      </text>
+
+      {/* Arrow 2 */}
+      <line
+        x1="550"
+        y1="348"
+        x2="550"
+        y2="384"
+        stroke={FG}
+        strokeWidth="2"
+        markerEnd="url(#tm-arr-blk)"
+      />
+      <text x="564" y="372" fill={FG} fontFamily={ff} fontSize="9">
+        reads / writes
+      </text>
+
+      {/* Row 3 — Firebase (thick black) */}
+      <rect x="28" y="398" width="1044" height="178" fill={BG} stroke={FG} strokeWidth="4" />
+      <rect x="40" y="410" width="1020" height="32" fill={FG} stroke={FG} strokeWidth="2" />
+      <text x="52" y="432" fill={BG} fontFamily={ff} fontSize="11" fontWeight="700" letterSpacing="0.06em">
+        // FIREBASE BACKEND
+      </text>
+      {[
+        { x: 44, t1: '[ Firebase Auth ]', t2: 'email, Google SSO' },
+        { x: 291, t1: '[ Firestore ]', t2: 'collections: tasks, braindump, users' },
+        { x: 538, t1: '[ Realtime DB ]', t2: 'live sync across devices' },
+        { x: 785, t1: '[ Cloud Functions ]', t2: 'task reminders, scheduled notifications' },
+      ].map((b) => (
+        <g key={b.t1}>
+          <rect x={b.x} y="454" width="235" height="108" fill={BG} stroke={FG} strokeWidth="2" />
+          <text x={b.x + 12} y="482" fill={FG} fontFamily={ff} fontSize="10" fontWeight="700">
+            {b.t1}
+          </text>
+          <text x={b.x + 12} y="502" fill={FG} fontFamily={ff} fontSize="9">
+            {b.t2}
+          </text>
+        </g>
+      ))}
+
+      {/* Arrow 3 — roadmap (purple) */}
+      <line
+        x1="550"
+        y1="588"
+        x2="550"
+        y2="624"
+        stroke={PURPLE}
+        strokeWidth="2"
+        markerEnd="url(#tm-arr-purp)"
+      />
+      <text x="564" y="612" fill={PURPLE} fontFamily={ff} fontSize="9">
+        triggers / webhooks
+      </text>
+
+      {/* Row 4 — Roadmap integrations (purple border) */}
+      <rect x="28" y="638" width="1044" height="168" fill={BG} stroke={PURPLE} strokeWidth="2" />
+      <rect x="40" y="650" width="1020" height="32" fill={PURPLE} stroke={PURPLE} strokeWidth="2" />
+      <text x="52" y="672" fill={BG} fontFamily={ff} fontSize="11" fontWeight="700" letterSpacing="0.06em">
+        // ROADMAP INTEGRATIONS
+      </text>
+      {[
+        { x: 44, t1: '[ Claude API ]', t2: 'AI sentence-to-task parser' },
+        { x: 382, t1: '[ Wispr Flow ]', t2: 'voice-to-text input layer' },
+        { x: 720, t1: '[ Push Notifications ]', t2: 'Firebase Cloud Messaging' },
+      ].map((b) => (
+        <g key={b.t1}>
+          <rect x={b.x} y="694" width="318" height="98" fill={BG} stroke={FG} strokeWidth="2" />
+          <rect x={b.x + 206} y="702" width="72" height="18" fill={PURPLE} stroke={PURPLE} strokeWidth="1" />
+          <text
+            x={b.x + 214}
+            y="715"
+            fill={BG}
+            fontFamily={ff}
+            fontSize="7"
+            fontWeight="700"
+            letterSpacing="0.1em"
+          >
+            ROADMAP
+          </text>
+          <text x={b.x + 12} y="738" fill={FG} fontFamily={ff} fontSize="11" fontWeight="700">
+            {b.t1}
+          </text>
+          <text x={b.x + 12} y="758" fill={FG} fontFamily={ff} fontSize="9">
+            {b.t2}
+          </text>
+        </g>
+      ))}
+
+      {/* Legend */}
+      <text x="28" y="860" fill={FG} fontFamily={ff} fontSize="10" fontWeight="700" letterSpacing="0.06em">
+        LEGEND
+      </text>
+      <rect x="28" y="872" width="14" height="14" fill={CRIMSON} stroke={FG} strokeWidth="2" />
+      <text x="50" y="884" fill={FG} fontFamily={ff} fontSize="10">
+        LIVE
+      </text>
+      <rect x="160" y="872" width="14" height="14" fill={PURPLE} stroke={FG} strokeWidth="2" />
+      <text x="182" y="884" fill={FG} fontFamily={ff} fontSize="10">
+        ROADMAP
+      </text>
+      <rect x="320" y="872" width="14" height="14" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="342" y="884" fill={FG} fontFamily={ff} fontSize="10">
+        CORE INFRASTRUCTURE
+      </text>
+    </svg>
+  );
+}
 
 export default function TaskManagerProjectPage() {
   const navigate = useNavigate();
@@ -512,6 +723,32 @@ export default function TaskManagerProjectPage() {
           </div>
         </section>
 
+        <section className="tm-section" style={{ overflowX: 'auto' }}>
+          <div style={{ display: 'inline-flex', flexWrap: 'nowrap', minWidth: 'min-content', maxWidth: '100%', gap: 0 }}>
+            {techPills.map((t, i) => (
+              <span
+                key={t}
+                style={{
+                  ...mono,
+                  display: 'inline-block',
+                  padding: '0.75rem 1.5rem',
+                  border: BORDER,
+                  borderRadius: 0,
+                  fontSize: 12,
+                  marginLeft: i > 0 ? -2 : 0,
+                  position: 'relative' as const,
+                  zIndex: i,
+                  background: FG,
+                  color: BG,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        </section>
+
         <section className="tm-section">
           <div className="tm-prob-sol" style={{ border: BORDER }}>
             <Box style={{ padding: 0, border: 'none' }}>
@@ -609,7 +846,15 @@ export default function TaskManagerProjectPage() {
                 >
                   FEATURE
                 </div>
-                <div style={{ marginBottom: '0.75rem' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'baseline',
+                    gap: '0.5rem',
+                    marginBottom: '0.75rem',
+                  }}
+                >
                   <span
                     style={{
                       ...mono,
@@ -618,12 +863,26 @@ export default function TaskManagerProjectPage() {
                       display: 'inline-block',
                       padding: '2px 8px',
                       fontSize: 11,
+                      flexShrink: 0,
                     }}
                   >
                     [ {feat.num} ]
                   </span>
+                  <span style={{ ...mono, fontSize: 14, lineHeight: 1.5, fontWeight: 700 }}>{feat.title}</span>
                 </div>
-                <p style={{ ...mono, fontSize: 14, lineHeight: 1.8, margin: 0 }}>{feat.text}</p>
+                <p
+                  style={{
+                    ...mono,
+                    fontSize: 12,
+                    lineHeight: 1.65,
+                    color: PROBLEM_MUTED,
+                    fontStyle: 'italic',
+                    margin: 0,
+                  }}
+                >
+                  <span style={{ color: CRIMSON, fontStyle: 'italic' }}>↳ solves: </span>
+                  {feat.problem}
+                </p>
               </div>
             ))}
           </div>
@@ -660,6 +919,18 @@ export default function TaskManagerProjectPage() {
               ))}
             </tbody>
           </table>
+        </section>
+
+        <section className="tm-section">
+          <div
+            className="tm-label-purple"
+            style={{ ...mono, fontSize: 12, fontWeight: 600, marginBottom: '1rem' }}
+          >
+            // ARCHITECTURE
+          </div>
+          <div style={{ border: BORDER, background: BG, overflow: 'hidden' }}>
+            <TaskManagerArchitectureDiagram />
+          </div>
         </section>
 
         <section
@@ -716,32 +987,6 @@ export default function TaskManagerProjectPage() {
           >
             // designed with behavior in mind, not features
           </p>
-        </section>
-
-        <section className="tm-section" style={{ overflowX: 'auto' }}>
-          <div style={{ display: 'inline-flex', flexWrap: 'nowrap', minWidth: 'min-content', maxWidth: '100%', gap: 0 }}>
-            {techPills.map((t, i) => (
-              <span
-                key={t}
-                style={{
-                  ...mono,
-                  display: 'inline-block',
-                  padding: '0.75rem 1.5rem',
-                  border: BORDER,
-                  borderRadius: 0,
-                  fontSize: 12,
-                  marginLeft: i > 0 ? -2 : 0,
-                  position: 'relative' as const,
-                  zIndex: i,
-                  background: FG,
-                  color: BG,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {t}
-              </span>
-            ))}
-          </div>
         </section>
 
         <section className="tm-section">
