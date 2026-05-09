@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useEffect, type CSSProperties, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const BG = '#F5F0E8';
@@ -76,7 +76,7 @@ const features: { num: string; title: string; problem: string; roadmap: boolean 
   },
 ];
 
-const techPills = ['React', 'Tailwind CSS', 'Firebase', 'Vite', 'TypeScript'];
+const techPills = ['Python', 'Node.js', 'Next.js', 'Supabase', 'React Native', 'Expo'];
 
 const compareRows: {
   name: string;
@@ -96,7 +96,7 @@ const compareRows: {
     quick: <span style={{ color: CRIMSON }}>✓</span>,
     voice: 'Roadmap',
     dump: <span style={{ color: CRIMSON }}>✓</span>,
-    price: 'Free',
+    price: 'Free/$$',
   },
   {
     name: 'Google Calendar',
@@ -169,7 +169,7 @@ function TaskManagerArchitectureDiagram() {
   const ff = "'JetBrains Mono', monospace";
   return (
     <svg
-      viewBox="0 0 1100 1020"
+      viewBox="0 0 1600 900"
       width="100%"
       height="auto"
       role="img"
@@ -198,171 +198,229 @@ function TaskManagerArchitectureDiagram() {
           <polygon points="0 0, 10 3.5, 0 7" fill={PURPLE} />
         </marker>
       </defs>
-      <rect x="0" y="0" width="1100" height="1020" fill={BG} stroke="none" />
+      <rect x="0" y="0" width="1600" height="900" fill={BG} stroke="none" />
 
-      {/* Row 1 — Client layer (crimson border) */}
-      <rect x="28" y="36" width="1044" height="138" fill={BG} stroke={CRIMSON} strokeWidth="2" />
-      <text x="40" y="58" fill={FG} fontFamily={ff} fontSize="11" fontWeight="600" letterSpacing="0.08em">
-        CLIENT LAYER
-      </text>
-      {[
-        { x: 44, label: '[ iOS App ]', sub: 'React Native + Expo' },
-        { x: 382, label: '[ Android App ]', sub: 'React Native + Expo' },
-        { x: 720, label: '[ Web App ]', sub: 'React + Vite' },
-      ].map((c) => (
-        <g key={c.label}>
-          <rect
-            x={c.x}
-            y="72"
-            width="318"
-            height="90"
-            fill={BG}
-            stroke={FG}
-            strokeWidth="2"
-          />
-          <text x={c.x + 14} y="98" fill={FG} fontFamily={ff} fontSize="12" fontWeight="700">
-            {c.label}
-          </text>
-          <text x={c.x + 14} y="118" fill={FG} fontFamily={ff} fontSize="10">
-            {c.sub}
-          </text>
-        </g>
-      ))}
-
-      {/* Arrow 1 */}
-      <line
-        x1="550"
-        y1="182"
-        x2="550"
-        y2="218"
-        stroke={FG}
-        strokeWidth="2"
-        markerEnd="url(#tm-arr-blk)"
-      />
-      <text x="564" y="206" fill={FG} fontFamily={ff} fontSize="9">
-        API calls / Realtime listeners
+      {/* USER ACTION */}
+      <circle cx="125" cy="290" r="60" fill={BG} stroke={CRIMSON} strokeWidth="2" />
+      <text x="93" y="296" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
+        [ USER ]
       </text>
 
-      {/* Row 2 — State */}
-      <rect x="28" y="232" width="1044" height="108" fill={BG} stroke={FG} strokeWidth="2" />
-      <text x="40" y="254" fill={FG} fontFamily={ff} fontSize="11" fontWeight="600" letterSpacing="0.08em">
-        STATE MANAGEMENT LAYER
+      {/* Client layer */}
+      <rect x="280" y="150" width="260" height="90" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="296" y="180" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
+        [ iOS App ]
       </text>
-      <rect x="44" y="268" width="500" height="60" fill={BG} stroke={FG} strokeWidth="2" />
-      <text x="58" y="292" fill={FG} fontFamily={ff} fontSize="11" fontWeight="700">
-        [ Zustand Store ]
+      <text x="296" y="202" fill="#6B6B6B" fontFamily={ff} fontSize="11">
+        React Native + Expo
       </text>
-      <text x="58" y="310" fill={FG} fontFamily={ff} fontSize="9">
-        local UI state, view mode, selected date, active task
+
+      <rect x="280" y="330" width="260" height="90" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="296" y="360" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
+        [ Android App ]
       </text>
-      <rect x="556" y="268" width="500" height="60" fill={BG} stroke={FG} strokeWidth="2" />
-      <text x="570" y="292" fill={FG} fontFamily={ff} fontSize="11" fontWeight="700">
+      <text x="296" y="382" fill="#6B6B6B" fontFamily={ff} fontSize="11">
+        React Native + Expo
+      </text>
+
+      {/* State layer */}
+      <rect x="650" y="150" width="300" height="90" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="666" y="180" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
+        [ Zustand ]
+      </text>
+      <text x="666" y="202" fill="#6B6B6B" fontFamily={ff} fontSize="11">
+        local UI state · selected date · view mode
+      </text>
+
+      <rect x="650" y="330" width="300" height="90" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="666" y="360" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
         [ React Query ]
       </text>
-      <text x="570" y="310" fill={FG} fontFamily={ff} fontSize="9">
-        server state, cache, background sync
+      <text x="666" y="382" fill="#6B6B6B" fontFamily={ff} fontSize="11">
+        server cache · background sync
       </text>
 
-      {/* Arrow 2 */}
-      <line
-        x1="550"
-        y1="348"
-        x2="550"
-        y2="384"
-        stroke={FG}
-        strokeWidth="2"
-        markerEnd="url(#tm-arr-blk)"
-      />
-      <text x="564" y="372" fill={FG} fontFamily={ff} fontSize="9">
-        reads / writes
+      {/* API layer */}
+      <rect x="1060" y="240" width="320" height="100" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="1076" y="273" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
+        [ Node.js + Next.js API Routes ]
+      </text>
+      <text x="1076" y="295" fill="#6B6B6B" fontFamily={ff} fontSize="11">
+        REST endpoints · auth middleware · validation
       </text>
 
-      {/* Row 3 — Firebase (thick black) */}
-      <rect x="28" y="398" width="1044" height="178" fill={BG} stroke={FG} strokeWidth="4" />
-      <rect x="40" y="410" width="1020" height="32" fill={FG} stroke={FG} strokeWidth="2" />
-      <text x="52" y="432" fill={BG} fontFamily={ff} fontSize="11" fontWeight="700" letterSpacing="0.06em">
-        // FIREBASE BACKEND
+      {/* Backend layer */}
+      <rect x="1440" y="90" width="140" height="90" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="1452" y="120" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
+        [ Supabase DB ]
       </text>
-      {[
-        { x: 44, t1: '[ Firebase Auth ]', t2: 'email, Google SSO' },
-        { x: 291, t1: '[ Firestore ]', t2: 'collections: tasks, braindump, users' },
-        { x: 538, t1: '[ Realtime DB ]', t2: 'live sync across devices' },
-        { x: 785, t1: '[ Cloud Functions ]', t2: 'task reminders, scheduled notifications' },
-      ].map((b) => (
-        <g key={b.t1}>
-          <rect x={b.x} y="454" width="235" height="108" fill={BG} stroke={FG} strokeWidth="2" />
-          <text x={b.x + 12} y="482" fill={FG} fontFamily={ff} fontSize="10" fontWeight="700">
-            {b.t1}
-          </text>
-          <text x={b.x + 12} y="502" fill={FG} fontFamily={ff} fontSize="9">
-            {b.t2}
-          </text>
-        </g>
-      ))}
-
-      {/* Arrow 3 — roadmap (purple) */}
-      <line
-        x1="550"
-        y1="588"
-        x2="550"
-        y2="624"
-        stroke={PURPLE}
-        strokeWidth="2"
-        markerEnd="url(#tm-arr-purp)"
-      />
-      <text x="564" y="612" fill={PURPLE} fontFamily={ff} fontSize="9">
-        triggers / webhooks
+      <text x="1452" y="142" fill="#6B6B6B" fontFamily={ff} fontSize="10">
+        tables: tasks, braindump,
+      </text>
+      <text x="1452" y="157" fill="#6B6B6B" fontFamily={ff} fontSize="10">
+        users, reminders
       </text>
 
-      {/* Row 4 — Roadmap integrations (purple border) */}
-      <rect x="28" y="638" width="1044" height="168" fill={BG} stroke={PURPLE} strokeWidth="2" />
-      <rect x="40" y="650" width="1020" height="32" fill={PURPLE} stroke={PURPLE} strokeWidth="2" />
-      <text x="52" y="672" fill={BG} fontFamily={ff} fontSize="11" fontWeight="700" letterSpacing="0.06em">
-        // ROADMAP INTEGRATIONS
+      <rect x="1440" y="200" width="140" height="90" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="1452" y="230" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
+        [ Supabase Auth ]
       </text>
-      {[
-        { x: 44, t1: '[ Claude API ]', t2: 'AI sentence-to-task parser' },
-        { x: 382, t1: '[ Wispr Flow ]', t2: 'voice-to-text input layer' },
-        { x: 720, t1: '[ Push Notifications ]', t2: 'Firebase Cloud Messaging' },
-      ].map((b) => (
-        <g key={b.t1}>
-          <rect x={b.x} y="694" width="318" height="98" fill={BG} stroke={FG} strokeWidth="2" />
-          <rect x={b.x + 206} y="702" width="72" height="18" fill={PURPLE} stroke={PURPLE} strokeWidth="1" />
-          <text
-            x={b.x + 214}
-            y="715"
-            fill={BG}
-            fontFamily={ff}
-            fontSize="7"
-            fontWeight="700"
-            letterSpacing="0.1em"
-          >
-            ROADMAP
-          </text>
-          <text x={b.x + 12} y="738" fill={FG} fontFamily={ff} fontSize="11" fontWeight="700">
-            {b.t1}
-          </text>
-          <text x={b.x + 12} y="758" fill={FG} fontFamily={ff} fontSize="9">
-            {b.t2}
-          </text>
-        </g>
-      ))}
+      <text x="1452" y="252" fill="#6B6B6B" fontFamily={ff} fontSize="11">
+        email · Google SSO
+      </text>
 
-      {/* Legend */}
-      <text x="28" y="860" fill={FG} fontFamily={ff} fontSize="10" fontWeight="700" letterSpacing="0.06em">
-        LEGEND
+      <rect x="1440" y="310" width="140" height="90" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="1452" y="340" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
+        [ Supabase Realtime ]
       </text>
-      <rect x="28" y="872" width="14" height="14" fill={CRIMSON} stroke={FG} strokeWidth="2" />
-      <text x="50" y="884" fill={FG} fontFamily={ff} fontSize="10">
-        LIVE
+      <text x="1452" y="362" fill="#6B6B6B" fontFamily={ff} fontSize="11">
+        live sync across devices
       </text>
-      <rect x="160" y="872" width="14" height="14" fill={PURPLE} stroke={FG} strokeWidth="2" />
-      <text x="182" y="884" fill={FG} fontFamily={ff} fontSize="10">
+
+      <rect x="1440" y="420" width="140" height="90" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="1452" y="450" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
+        [ Python Worker ]
+      </text>
+      <text x="1452" y="472" fill="#6B6B6B" fontFamily={ff} fontSize="10">
+        task processing · reminder
+      </text>
+      <text x="1452" y="487" fill="#6B6B6B" fontFamily={ff} fontSize="10">
+        scheduling · analytics
+      </text>
+
+      {/* Live arrows */}
+      <line x1="185" y1="250" x2="280" y2="195" stroke={FG} strokeWidth="2" markerEnd="url(#tm-arr-blk)" />
+      <line x1="185" y1="330" x2="280" y2="375" stroke={FG} strokeWidth="2" markerEnd="url(#tm-arr-blk)" />
+      <text x="198" y="228" fill={FG} fontFamily={ff} fontSize="11">
+        taps +
+      </text>
+
+      <line x1="540" y1="195" x2="650" y2="195" stroke={FG} strokeWidth="2" markerEnd="url(#tm-arr-blk)" />
+      <line x1="540" y1="375" x2="650" y2="375" stroke={FG} strokeWidth="2" markerEnd="url(#tm-arr-blk)" />
+      <text x="552" y="172" fill={FG} fontFamily={ff} fontSize="11">
+        dispatches action
+      </text>
+
+      <line x1="950" y1="195" x2="1060" y2="270" stroke={FG} strokeWidth="2" markerEnd="url(#tm-arr-blk)" />
+      <line x1="950" y1="375" x2="1060" y2="310" stroke={FG} strokeWidth="2" markerEnd="url(#tm-arr-blk)" />
+      <text x="952" y="242" fill={FG} fontFamily={ff} fontSize="11">
+        mutation / query
+      </text>
+
+      <line x1="1380" y1="258" x2="1440" y2="130" stroke={FG} strokeWidth="2" markerEnd="url(#tm-arr-blk)" />
+      <line x1="1380" y1="276" x2="1440" y2="245" stroke={FG} strokeWidth="2" markerEnd="url(#tm-arr-blk)" />
+      <line x1="1380" y1="294" x2="1440" y2="355" stroke={FG} strokeWidth="2" markerEnd="url(#tm-arr-blk)" />
+      <line x1="1380" y1="312" x2="1440" y2="465" stroke={FG} strokeWidth="2" markerEnd="url(#tm-arr-blk)" />
+      <text x="1320" y="228" fill={FG} fontFamily={ff} fontSize="11">
+        DB operations
+      </text>
+
+      {/* Roadmap nodes */}
+      <rect x="730" y="620" width="255" height="110" fill="#F5F0FF" stroke={PURPLE} strokeWidth="2" />
+      <rect x="900" y="630" width="74" height="18" fill={PURPLE} />
+      <text x="910" y="643" fill={BG} fontFamily={ff} fontSize="8" fontWeight="700" letterSpacing="0.08em">
         ROADMAP
       </text>
-      <rect x="320" y="872" width="14" height="14" fill={BG} stroke={FG} strokeWidth="2" />
-      <text x="342" y="884" fill={FG} fontFamily={ff} fontSize="10">
-        CORE INFRASTRUCTURE
+      <text x="744" y="660" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
+        [ Claude API ]
+      </text>
+      <text x="744" y="680" fill="#6B6B6B" fontFamily={ff} fontSize="11">
+        NLP sentence → structured task
+      </text>
+      <text x="744" y="696" fill="#6B6B6B" fontFamily={ff} fontSize="11">
+        {'{title, date, time, priority}'}
+      </text>
+
+      <rect x="1015" y="620" width="255" height="110" fill="#F5F0FF" stroke={PURPLE} strokeWidth="2" />
+      <rect x="1185" y="630" width="74" height="18" fill={PURPLE} />
+      <text x="1195" y="643" fill={BG} fontFamily={ff} fontSize="8" fontWeight="700" letterSpacing="0.08em">
+        ROADMAP
+      </text>
+      <text x="1029" y="660" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
+        [ Wispr Flow ]
+      </text>
+      <text x="1029" y="680" fill="#6B6B6B" fontFamily={ff} fontSize="11">
+        voice input → text → task pipeline
+      </text>
+
+      <rect x="1300" y="620" width="255" height="110" fill="#F5F0FF" stroke={PURPLE} strokeWidth="2" />
+      <rect x="1470" y="630" width="74" height="18" fill={PURPLE} />
+      <text x="1480" y="643" fill={BG} fontFamily={ff} fontSize="8" fontWeight="700" letterSpacing="0.08em">
+        ROADMAP
+      </text>
+      <text x="1314" y="660" fill={FG} fontFamily={ff} fontSize="13" fontWeight="700">
+        [ FCM ]
+      </text>
+      <text x="1314" y="680" fill="#6B6B6B" fontFamily={ff} fontSize="11">
+        Firebase Cloud Messaging · push
+      </text>
+      <text x="1314" y="696" fill="#6B6B6B" fontFamily={ff} fontSize="11">
+        notifications
+      </text>
+
+      {/* Roadmap connections */}
+      <line
+        x1="1220"
+        y1="340"
+        x2="1220"
+        y2="605"
+        stroke={PURPLE}
+        strokeWidth="2"
+        strokeDasharray="8 6"
+        markerEnd="url(#tm-arr-purp)"
+      />
+      <text x="1232" y="470" fill={PURPLE} fontFamily={ff} fontSize="11">
+        triggers
+      </text>
+      <line
+        x1="1220"
+        y1="605"
+        x2="855"
+        y2="620"
+        stroke={PURPLE}
+        strokeWidth="2"
+        strokeDasharray="8 6"
+        markerEnd="url(#tm-arr-purp)"
+      />
+      <line
+        x1="1220"
+        y1="605"
+        x2="1140"
+        y2="620"
+        stroke={PURPLE}
+        strokeWidth="2"
+        strokeDasharray="8 6"
+        markerEnd="url(#tm-arr-purp)"
+      />
+      <line
+        x1="1220"
+        y1="605"
+        x2="1425"
+        y2="620"
+        stroke={PURPLE}
+        strokeWidth="2"
+        strokeDasharray="8 6"
+        markerEnd="url(#tm-arr-purp)"
+      />
+
+      {/* Legend */}
+      <text x="60" y="820" fill={CRIMSON} fontFamily={ff} fontSize="12" fontWeight="700">
+        ●
+      </text>
+      <text x="78" y="820" fill={FG} fontFamily={ff} fontSize="11">
+        USER ACTION
+      </text>
+      <rect x="235" y="808" width="12" height="12" fill={BG} stroke={FG} strokeWidth="2" />
+      <text x="258" y="820" fill={FG} fontFamily={ff} fontSize="11">
+        LIVE
+      </text>
+      <rect x="350" y="808" width="12" height="12" fill="#F5F0FF" stroke={PURPLE} strokeWidth="2" />
+      <text x="373" y="820" fill={FG} fontFamily={ff} fontSize="11">
+        ROADMAP
+      </text>
+      <line x1="490" y1="814" x2="565" y2="814" stroke={PURPLE} strokeWidth="2" strokeDasharray="8 6" />
+      <text x="576" y="820" fill={FG} fontFamily={ff} fontSize="11">
+        ROADMAP CONNECTION
       </text>
     </svg>
   );
@@ -370,6 +428,9 @@ function TaskManagerArchitectureDiagram() {
 
 export default function TaskManagerProjectPage() {
   const navigate = useNavigate();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const backToProjects = () => {
     navigate('/#projects');
@@ -650,7 +711,7 @@ export default function TaskManagerProjectPage() {
               ·
             </span>
             <span className="tm-meta-pill" style={mono}>
-              [ PLATFORM: iOS · Android · Web ]
+              [ PLATFORM: iOS · Android ]
             </span>
           </div>
           <h1 className="tm-hero-title" style={mono}>
@@ -714,7 +775,7 @@ export default function TaskManagerProjectPage() {
         <section className="tm-section">
           <div className="tm-stats">
             {[
-              { k: 'PLATFORM', v: 'iOS · Android · Web' },
+              { k: 'PLATFORM', v: 'iOS · Android' },
               { k: 'TYPE', v: 'Mobile + Web App' },
               { k: 'STATUS', v: 'In Progress' },
               { k: 'YEAR', v: '2026' },
