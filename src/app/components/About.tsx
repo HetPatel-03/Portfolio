@@ -35,29 +35,6 @@ export function About() {
 
   return (
     <section id="about" className="section-bg-about relative overflow-hidden py-32 px-8">
-      <div
-        aria-hidden
-        style={{
-          position: 'absolute',
-          right: 'clamp(-4rem, -2vw, 0)',
-          bottom: 'clamp(-2rem, 5vh, 4rem)',
-          transform: 'translateX(15%)',
-          fontFamily: 'var(--font-heading)',
-          fontWeight: 900,
-          fontSize: 'clamp(12rem, 25vw, 22rem)',
-          color: 'white',
-          opacity: 0.04,
-          lineHeight: 1,
-          letterSpacing: '-0.04em',
-          whiteSpace: 'nowrap',
-          userSelect: 'none',
-          pointerEvents: 'none',
-          filter: 'blur(2px)',
-          zIndex: 0,
-        }}
-      >
-        &gt;_
-      </div>
       <div className="max-w-7xl mx-auto relative z-[1]">
         <div className="relative z-[1] flex flex-col gap-12 lg:flex-row lg:gap-16 lg:items-start">
           {/* Left column — 55% */}
@@ -101,26 +78,52 @@ export function About() {
               Full Stack Engineer who builds products people actually use.
             </p>
 
-            <div className="relative z-[1] mb-10 space-y-6">
-              {[
-                "Throughout my software development journey, I've shown a strong commitment to innovation and creative problem-solving — from building live platforms to integrating real APIs used by real users.",
-                'My analytical approach helps me break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
-                'I build full-stack applications end-to-end — designing REST APIs, structuring database schemas, and deploying to cloud infrastructure. Every project I ship is live, documented, and built with real users in mind.',
-              ].map((text, index) => (
-                <p
-                  data-about-line
-                  key={index}
-                  className="flex gap-3 text-[15px] leading-relaxed"
-                  style={{
-                    color: '#A8A8B8',
-                    fontFamily: 'var(--font-body)',
-                    lineHeight: 1.8,
-                  }}
-                >
-                  <span style={{ color: '#F2664A' }}>→</span>
-                  <span>{text}</span>
-                </p>
-              ))}
+            <div className="relative z-[1] mb-10">
+              <div
+                aria-hidden
+                style={{
+                  position: 'absolute',
+                  top: 'auto',
+                  bottom: 0,
+                  right: '-2rem',
+                  left: 'auto',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 900,
+                  fontSize: 'clamp(12rem, 25vw, 22rem)',
+                  color: 'white',
+                  opacity: 0.04,
+                  lineHeight: 1,
+                  letterSpacing: '-0.04em',
+                  whiteSpace: 'nowrap',
+                  userSelect: 'none',
+                  pointerEvents: 'none',
+                  filter: 'blur(2px)',
+                  zIndex: 0,
+                }}
+              >
+                &gt;_
+              </div>
+              <div className="relative z-[1] space-y-6">
+                {[
+                  "Throughout my software development journey, I've shown a strong commitment to innovation and creative problem-solving — from building live platforms to integrating real APIs used by real users.",
+                  'My analytical approach helps me break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
+                  'I build full-stack applications end-to-end — designing REST APIs, structuring database schemas, and deploying to cloud infrastructure. Every project I ship is live, documented, and built with real users in mind.',
+                ].map((text, index) => (
+                  <p
+                    data-about-line
+                    key={index}
+                    className="flex gap-3 text-[15px] leading-relaxed"
+                    style={{
+                      color: '#A8A8B8',
+                      fontFamily: 'var(--font-body)',
+                      lineHeight: 1.8,
+                    }}
+                  >
+                    <span style={{ color: '#F2664A' }}>→</span>
+                    <span>{text}</span>
+                  </p>
+                ))}
+              </div>
             </div>
 
             {/* CTAs */}

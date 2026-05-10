@@ -280,29 +280,6 @@ export function HeroAboutScene() {
                 marginTop: isMobile ? '20px' : '0',
                 zIndex: 1,
               }}>
-                <div
-                  aria-hidden
-                  style={{
-                    position: 'absolute',
-                    right: 'clamp(-3rem, -1vw, 0)',
-                    bottom: 'clamp(0, 8vh, 3rem)',
-                    transform: 'translateX(12%)',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 900,
-                    fontSize: 'clamp(12rem, 25vw, 22rem)',
-                    color: 'white',
-                    opacity: 0.04,
-                    lineHeight: 1,
-                    letterSpacing: '-0.04em',
-                    whiteSpace: 'nowrap',
-                    userSelect: 'none',
-                    pointerEvents: 'none',
-                    filter: 'blur(2px)',
-                    zIndex: 0,
-                  }}
-                >
-                  &gt;_
-                </div>
                 <p style={{ position: 'relative', zIndex: 1, fontFamily: 'var(--font-mono)', color: 'var(--coral)', fontSize: '12px', marginBottom: '16px', letterSpacing: '0.05em' }}>
                   // 01 · about
                 </p>
@@ -318,17 +295,43 @@ export function HeroAboutScene() {
                 <p style={{ position: 'relative', zIndex: 1, fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#D0D0E0', fontSize: '20px', marginBottom: '24px' }}>
                   Full Stack Engineer who builds products people actually use.
                 </p>
-                <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  {[
-                    "Throughout my journey I've shown a strong commitment to innovation and creative problem-solving — building live platforms with real APIs used by real users.",
-                    'I break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
-                    'I build full-stack apps end-to-end — REST APIs, database schemas, cloud infrastructure. Every project I ship is live and documented.',
-                  ].map((text, i) => (
-                    <p key={i} style={{ display: 'flex', gap: '12px', color: '#A8A8B8', fontFamily: 'var(--font-body)', lineHeight: 1.75, fontSize: '15px' }}>
-                      <span style={{ color: '#F2664A', flexShrink: 0, marginTop: '2px' }}>→</span>
-                      <span>{text}</span>
-                    </p>
-                  ))}
+                <div style={{ position: 'relative', zIndex: 1, marginBottom: 0 }}>
+                  <div
+                    aria-hidden
+                    style={{
+                      position: 'absolute',
+                      top: 'auto',
+                      bottom: 0,
+                      right: '-2rem',
+                      left: 'auto',
+                      fontFamily: 'var(--font-heading)',
+                      fontWeight: 900,
+                      fontSize: 'clamp(12rem, 25vw, 22rem)',
+                      color: 'white',
+                      opacity: 0.04,
+                      lineHeight: 1,
+                      letterSpacing: '-0.04em',
+                      whiteSpace: 'nowrap',
+                      userSelect: 'none',
+                      pointerEvents: 'none',
+                      filter: 'blur(2px)',
+                      zIndex: 0,
+                    }}
+                  >
+                    &gt;_
+                  </div>
+                  <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    {[
+                      "Throughout my journey I've shown a strong commitment to innovation and creative problem-solving — building live platforms with real APIs used by real users.",
+                      'I break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
+                      'I build full-stack apps end-to-end — REST APIs, database schemas, cloud infrastructure. Every project I ship is live and documented.',
+                    ].map((text, i) => (
+                      <p key={i} style={{ display: 'flex', gap: '12px', color: '#A8A8B8', fontFamily: 'var(--font-body)', lineHeight: 1.75, fontSize: '15px' }}>
+                        <span style={{ color: '#F2664A', flexShrink: 0, marginTop: '2px' }}>→</span>
+                        <span>{text}</span>
+                      </p>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
