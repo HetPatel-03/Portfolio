@@ -12,13 +12,14 @@ const SHADOW = '0 2px 12px rgba(0, 0, 0, 0.06)';
 const FOOTER_MINT = '#D1FAE5';
 const MUTED_GREEN = '#15803d';
 const FRAME = '#1a1a1a';
-const CRIMSON = '#C2185B';
-const FG_TEXT = '#14532D';
-const MUTED_SVG = '#6B7280';
-const BLACK_STROKE = '#0A0A0A';
-
 const sans =
   'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+const ARCH_MONO = "'JetBrains Mono', ui-monospace, monospace";
+const API_INNER_BG = '#DCFCE7';
+const ROADMAP_FILL = '#F0FDF4';
+const LANE_SEP = '#BBF7D0';
+const SIDEBAR = '#14532D';
+const ARCH_MUTED = '#15803d';
 
 const photo = (name: string) => `/RecurList - Photos/${name}`;
 
@@ -209,488 +210,456 @@ function IPhoneFrame({
   );
 }
 
-function SvgMutedLinesRL({
-  x,
-  y,
-  lines,
-  fontSize,
-}: {
-  x: number;
-  y: number;
-  lines: string[];
-  fontSize?: number;
-}) {
-  const fs = fontSize ?? 11;
-  return (
-    <text x={x} y={y} fill={MUTED_SVG} fontFamily={sans} fontSize={fs}>
-      {lines.map((line, i) =>
-        i === 0 ? (
-          <tspan key={i}>{line}</tspan>
-        ) : (
-          <tspan key={i} x={x} dy="1.2em">
-            {line}
-          </tspan>
-        ),
-      )}
-    </text>
-  );
-}
-
-function SvgBoldLinesRL({
-  x,
-  y,
-  lines,
-  fontSize,
-}: {
-  x: number;
-  y: number;
-  lines: string[];
-  fontSize?: number;
-}) {
-  const fs = fontSize ?? 13;
-  return (
-    <text fill={FG_TEXT} fontFamily={sans} fontSize={fs} fontWeight="700">
-      {lines.map((line, i) =>
-        i === 0 ? (
-          <tspan key={i} x={x} y={y}>
-            {line}
-          </tspan>
-        ) : (
-          <tspan key={i} x={x} dy="1.2em">
-            {line}
-          </tspan>
-        ),
-      )}
-    </text>
-  );
-}
-
 function RecurListArchitectureDiagram() {
-  const vbW = 1760;
+  const W = 1200;
+  const H = 900;
+  const SB = 48;
+  const cx = 600;
+  const x0 = 52;
+  const innerW = W - x0 - 8;
+
+  const L1_T = 14;
+  const L1_B = 140;
+  const L2_T = 168;
+  const L2_B = 278;
+  const L3_T = 306;
+  const L3_B = 422;
+  const L4_T = 450;
+  const L4_B = 602;
+  const L5_T = 630;
+  const L5_B = 796;
+
+  function Sidebar({ top, h, label }: { top: number; h: number; label: string }) {
+    const mid = top + h / 2;
+    return (
+      <>
+        <rect x={0} y={top} width={SB} height={h} fill={SIDEBAR} />
+        <g transform={`translate(24 ${mid}) rotate(-90)`}>
+          <text
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fill="#fff"
+            fontSize={12}
+            fontFamily={sans}
+            fontWeight={600}
+          >
+            {label}
+          </text>
+        </g>
+      </>
+    );
+  }
+
+  function LaneSep(y: number) {
+    return <line x1={0} y1={y} x2={W} y2={y} stroke={LANE_SEP} strokeWidth={2} />;
+  }
+
+  function Pill(x: number, y: number, label: string) {
+    const tw = Math.min(118, 10 + label.length * 5.5);
+    return (
+      <g>
+        <rect
+          x={x}
+          y={y}
+          width={tw}
+          height={18}
+          rx={9}
+          fill={BG}
+          stroke={ACCENT}
+          strokeWidth={1}
+        />
+        <text
+          x={x + tw / 2}
+          y={y + 13}
+          textAnchor="middle"
+          fill={DARK}
+          fontFamily={ARCH_MONO}
+          fontSize={8}
+        >
+          {label}
+        </text>
+      </g>
+    );
+  }
+
+  const gapMid = (a: number, b: number) => (a + b) / 2;
+
+  const boxW2 = (innerW - 10) / 2;
+  const boxW3 = (innerW - 16) / 3;
+  const boxW5 = (innerW - 20) / 5;
+  const boxWrm = (innerW - 16) / 3;
+
   return (
     <svg
-      viewBox={`0 0 ${vbW} 900`}
+      viewBox={`0 0 ${W} ${H}`}
       width="100%"
       height="auto"
       role="img"
-      aria-label="RecurList system architecture"
+      aria-label="RecurList swimlane architecture"
       style={{ display: 'block', maxWidth: '100%' }}
     >
       <defs>
-        <marker
-          id="rl-arr-live"
-          markerWidth="10"
-          markerHeight="7"
-          refX="9"
-          refY="3.5"
-          orient="auto"
-        >
-          <polygon points="0 0, 10 3.5, 0 7" fill={ACCENT} />
-        </marker>
-        <marker
-          id="rl-arr-road"
-          markerWidth="10"
-          markerHeight="7"
-          refX="9"
-          refY="3.5"
-          orient="auto"
-        >
+        <marker id="rl-swim-arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
           <polygon points="0 0, 10 3.5, 0 7" fill={ACCENT} />
         </marker>
       </defs>
-      <rect x="0" y="0" width={vbW} height="900" fill={BG} stroke="none" />
+      <rect x={0} y={0} width={W} height={H} fill={BG} stroke="none" />
 
-      <circle cx="118" cy="278" r="56" fill={BG} stroke={CRIMSON} strokeWidth="2" />
-      <text x="84" y="284" fill={FG_TEXT} fontFamily={sans} fontSize="13" fontWeight="700">
-        [ USER ]
-      </text>
-
+      <Sidebar top={L1_T} h={L1_B - L1_T} label="CLIENT LAYER" />
       <rect
-        x="268"
-        y="130"
-        width="248"
-        height="86"
-        fill={BG}
+        x={x0}
+        y={L1_T + 10}
+        width={boxW2}
+        height={72}
+        rx={8}
+        fill={CARD}
         stroke={ACCENT}
-        strokeWidth="2"
+        strokeWidth={2}
       />
-      <text x="284" y="162" fill={FG_TEXT} fontFamily={sans} fontSize="13" fontWeight="700">
+      <text x={x0 + 10} y={L1_T + 30} fill={DARK} fontFamily={sans} fontSize={11} fontWeight={700}>
         [ iOS App ]
       </text>
-      <text x="284" y="184" fill={MUTED_SVG} fontFamily={sans} fontSize="11">
-        React Native + Expo
+      <text x={x0 + 10} y={L1_T + 48} fill="#64748b" fontFamily={sans} fontSize={9}>
+        React Native 0.81.5 · Expo SDK 54
       </text>
-
       <rect
-        x="268"
-        y="308"
-        width="248"
-        height="86"
-        fill={BG}
+        x={x0 + boxW2 + 10}
+        y={L1_T + 10}
+        width={boxW2}
+        height={72}
+        rx={8}
+        fill={CARD}
         stroke={ACCENT}
-        strokeWidth="2"
+        strokeWidth={2}
       />
-      <text x="284" y="340" fill={FG_TEXT} fontFamily={sans} fontSize="13" fontWeight="700">
+      <text x={x0 + boxW2 + 20} y={L1_T + 30} fill={DARK} fontFamily={sans} fontSize={11} fontWeight={700}>
         [ Android App ]
       </text>
-      <text x="284" y="362" fill={MUTED_SVG} fontFamily={sans} fontSize="11">
-        React Native + Expo
+      <text x={x0 + boxW2 + 20} y={L1_T + 48} fill="#64748b" fontFamily={sans} fontSize={9}>
+        React Native 0.81.5 · Expo SDK 54
       </text>
+      {Pill(x0 + 36, L1_T + 92, 'expo-haptics')}
+      {Pill(x0 + 156, L1_T + 92, 'expo-notifications')}
+      {Pill(x0 + 284, L1_T + 92, 'expo-secure-store')}
+      {Pill(x0 + boxW2 + 46, L1_T + 92, 'expo-haptics')}
+      {Pill(x0 + boxW2 + 166, L1_T + 92, 'expo-notifications')}
+      {Pill(x0 + boxW2 + 294, L1_T + 92, 'expo-secure-store')}
+      <LaneSep y={L1_B} />
 
+      <Sidebar top={L2_T} h={L2_B - L2_T} label="STATE LAYER" />
       <rect
-        x="578"
-        y="118"
-        width="292"
-        height="92"
-        fill={BG}
-        stroke={BLACK_STROKE}
-        strokeWidth="2"
+        x={x0}
+        y={L2_T + 10}
+        width={boxW3}
+        height={88}
+        rx={8}
+        fill={CARD}
+        stroke={ACCENT}
+        strokeWidth={2}
       />
-      <text x="594" y="150" fill={FG_TEXT} fontFamily={sans} fontSize="13" fontWeight="700">
+      <text x={x0 + 8} y={L2_T + 28} fill={DARK} fontFamily={sans} fontSize={10} fontWeight={700}>
         [ React Context ]
       </text>
-      <SvgMutedLinesRL
-        x={594}
-        y={172}
-        lines={['auth state · user profile · active list']}
-      />
-
+      <text x={x0 + 8} y={L2_T + 44} fill="#64748b" fontFamily={sans} fontSize={8}>
+        auth · user profile · active list
+      </text>
       <rect
-        x="578"
-        y="306"
-        width="292"
-        height="92"
-        fill={BG}
-        stroke={BLACK_STROKE}
-        strokeWidth="2"
+        x={x0 + boxW3 + 8}
+        y={L2_T + 10}
+        width={boxW3}
+        height={88}
+        rx={8}
+        fill={CARD}
+        stroke={ACCENT}
+        strokeWidth={2}
       />
-      <text x="594" y="338" fill={FG_TEXT} fontFamily={sans} fontSize="13" fontWeight="700">
+      <text x={x0 + boxW3 + 16} y={L2_T + 28} fill={DARK} fontFamily={sans} fontSize={10} fontWeight={700}>
         [ React Query ]
       </text>
-      <SvgMutedLinesRL x={594} y={360} lines={['server cache · optimistic updates']} />
-
-      <rect
-        x="928"
-        y="218"
-        width="348"
-        height="118"
-        fill={BG}
-        stroke={ACCENT}
-        strokeWidth="3"
-      />
-      <text x="946" y="252" fill={FG_TEXT} fontFamily={sans} fontSize="13" fontWeight="700">
-        [ Supabase Client SDK ]
+      <text x={x0 + boxW3 + 16} y={L2_T + 42} fill="#64748b" fontFamily={sans} fontSize={8}>
+        server cache · optimistic updates ·
       </text>
-      <SvgMutedLinesRL
-        x={946}
-        y={274}
-        fontSize={10}
-        lines={['supabase-js v2 · RLS policies · real-time listeners']}
-      />
-
-      <rect
-        x="1348"
-        y="52"
-        width="210"
-        height="68"
-        fill={BG}
-        stroke={ACCENT}
-        strokeWidth="2"
-      />
-      <text x="1364" y="84" fill={FG_TEXT} fontFamily={sans} fontSize="12" fontWeight="700">
-        [ Supabase Auth ]
+      <text x={x0 + boxW3 + 16} y={L2_T + 54} fill="#64748b" fontFamily={sans} fontSize={8}>
+        background sync
       </text>
-      <SvgMutedLinesRL x={1364} y={102} fontSize={10} lines={['email · magic link · Google OAuth']} />
-
       <rect
-        x="1348"
-        y="132"
-        width="210"
-        height="82"
-        fill={BG}
+        x={x0 + 2 * boxW3 + 16}
+        y={L2_T + 10}
+        width={boxW3}
+        height={88}
+        rx={8}
+        fill={CARD}
         stroke={ACCENT}
-        strokeWidth="2"
+        strokeWidth={2}
       />
-      <text x="1364" y="162" fill={FG_TEXT} fontFamily={sans} fontSize="12" fontWeight="700">
-        [ Postgres DB ]
+      <text x={x0 + 2 * boxW3 + 24} y={L2_T + 28} fill={DARK} fontFamily={sans} fontSize={10} fontWeight={700}>
+        [ React Navigation v7 ]
       </text>
-      <SvgMutedLinesRL
-        x={1364}
-        y={184}
-        fontSize={9}
-        lines={['tables: lists, items, users,', 'resets, stores, rewards']}
-      />
-
-      <rect
-        x="1348"
-        y="226"
-        width="210"
-        height="68"
-        fill={BG}
-        stroke={ACCENT}
-        strokeWidth="2"
-      />
-      <text x="1364" y="258" fill={FG_TEXT} fontFamily={sans} fontSize="12" fontWeight="700">
-        [ Supabase Realtime ]
+      <text x={x0 + 2 * boxW3 + 24} y={L2_T + 44} fill="#64748b" fontFamily={sans} fontSize={8}>
+        native stack · bottom tabs · deep links
       </text>
-      <SvgMutedLinesRL x={1364} y={278} fontSize={10} lines={['live list sync across devices']} />
+      <text x={x0 + 2 * boxW3 + 24} y={L2_T + 56} fill="#64748b" fontFamily={sans} fontSize={8}>
+        recurlist://
+      </text>
+      <LaneSep y={L2_B} />
+
+      <Sidebar top={L3_T} h={L3_B - L3_T} label="API LAYER" />
+      <rect
+        x={x0}
+        y={L3_T + 10}
+        width={innerW}
+        height={98}
+        rx={8}
+        fill={CARD}
+        stroke={ACCENT}
+        strokeWidth={2}
+      />
+      <text x={x0 + 12} y={L3_T + 30} fill={DARK} fontFamily={sans} fontSize={12} fontWeight={700}>
+        [ Supabase Client SDK v2 ]
+      </text>
+      {(['REST API', 'Realtime WebSocket', 'RLS Policies'] as const).map((lbl, i) => {
+        const subW = (innerW - 40) / 3;
+        const sx = x0 + 12 + i * (subW + 8);
+        return (
+          <rect
+            key={lbl}
+            x={sx}
+            y={L3_T + 42}
+            width={subW}
+            height={54}
+            rx={6}
+            fill={API_INNER_BG}
+            stroke={ACCENT}
+            strokeWidth={2}
+          />
+        );
+      })}
+      {(['REST API', 'Realtime WebSocket', 'RLS Policies'] as const).map((lbl, i) => {
+        const subW = (innerW - 40) / 3;
+        const sx = x0 + 12 + i * (subW + 8);
+        return (
+          <text
+            key={`t-${lbl}`}
+            x={sx + subW / 2}
+            y={L3_T + 74}
+            textAnchor="middle"
+            fill={DARK}
+            fontFamily={sans}
+            fontSize={10}
+            fontWeight={600}
+          >
+            {lbl}
+          </text>
+        );
+      })}
+      <LaneSep y={L3_B} />
+
+      <Sidebar top={L4_T} h={L4_B - L4_T} label="BACKEND" />
+      {(
+        [
+          {
+            title: '[ Supabase Auth ]',
+            lines: ['email · magic link ·', 'Google OAuth'],
+          },
+          {
+            title: '[ Postgres DB ]',
+            lines: ['lists · items · users · resets ·', 'stores · rewards_history'],
+          },
+          {
+            title: '[ Supabase Realtime ]',
+            lines: ['live sync · presence ·', 'broadcast'],
+          },
+          {
+            title: '[ Edge Functions ]',
+            lines: ['Deno runtime · reset-lists', 'cron · push triggers'],
+          },
+          {
+            title: '[ RevenueCat ]',
+            lines: ['premium_monthly ·', 'premium_annual · entitlement: premium'],
+          },
+        ] as const
+      ).map((b, i) => {
+        const bx = x0 + i * (boxW5 + 5);
+        return (
+          <g key={b.title}>
+            <rect
+              x={bx}
+              y={L4_T + 10}
+              width={boxW5}
+              height={132}
+              rx={8}
+              fill={CARD}
+              stroke={ACCENT}
+              strokeWidth={2}
+            />
+            <text x={bx + 8} y={L4_T + 30} fill={DARK} fontFamily={sans} fontSize={9} fontWeight={700}>
+              {b.title}
+            </text>
+            {b.lines.map((ln, j) => (
+              <text
+                key={`${b.title}-${j}`}
+                x={bx + 8}
+                y={L4_T + 46 + j * 12}
+                fill="#64748b"
+                fontFamily={sans}
+                fontSize={7.5}
+              >
+                {ln}
+              </text>
+            ))}
+          </g>
+        );
+      })}
+      <LaneSep y={L4_B} />
 
       <rect
-        x="1348"
-        y="306"
-        width="210"
-        height="82"
-        fill={BG}
+        x={SB}
+        y={L5_T}
+        width={W - SB}
+        height={L5_B - L5_T}
+        fill={ROADMAP_FILL}
         stroke={ACCENT}
-        strokeWidth="2"
+        strokeWidth={2}
+        strokeDasharray="8 6"
+        pointerEvents="none"
       />
-      <SvgBoldLinesRL
-        x={1364}
-        y={336}
-        fontSize={11}
-        lines={['[ Edge Functions', '(Deno) ]']}
-      />
-      <SvgMutedLinesRL
-        x={1364}
-        y={366}
-        fontSize={9}
-        lines={['reset-lists cron · notification triggers']}
-      />
+      <Sidebar top={L5_T} h={L5_B - L5_T} label="ROADMAP" />
 
+      {(
+        [
+          {
+            title: '[ Price Scraper ]',
+            lines: [
+              'Python · fuzzy product matching ·',
+              '9 Canadian chains · Supabase cron',
+            ],
+          },
+          {
+            title: '[ AI Trend Engine ]',
+            lines: ['ML consumption model · custom', 'reset intervals · per-item per-household'],
+          },
+          {
+            title: '[ Full Auto Mode ]',
+            lines: ['scraper + AI + push ·', '"Milk running low — Loblaws best price today"'],
+          },
+        ] as const
+      ).map((b, i) => {
+        const bx = x0 + i * (boxWrm + 8);
+        const bw = boxWrm;
+        return (
+          <g key={b.title}>
+            <rect
+              x={bx}
+              y={L5_T + 12}
+              width={bw}
+              height={148}
+              rx={8}
+              fill={ROADMAP_FILL}
+              stroke={ACCENT}
+              strokeWidth={2}
+              strokeDasharray="6 4"
+            />
+            <rect x={bx + bw - 78} y={L5_T + 18} width={72} height={16} rx={2} fill={ACCENT} />
+            <text
+              x={bx + bw - 42}
+              y={L5_T + 30}
+              textAnchor="middle"
+              fill={CARD}
+              fontFamily={sans}
+              fontSize={7}
+              fontWeight={700}
+            >
+              [ ROADMAP ]
+            </text>
+            <text x={bx + 8} y={L5_T + 52} fill={DARK} fontFamily={sans} fontSize={10} fontWeight={700}>
+              {b.title}
+            </text>
+            {b.lines.map((ln, j) => (
+              <text
+                key={`${b.title}-${j}`}
+                x={bx + 8}
+                y={L5_T + 68 + j * 12}
+                fill="#64748b"
+                fontFamily={sans}
+                fontSize={8}
+              >
+                {ln}
+              </text>
+            ))}
+          </g>
+        );
+      })}
+      <LaneSep y={L5_B} />
+
+      <rect x={862} y={848} width={12} height={12} fill={CARD} stroke={ACCENT} strokeWidth={2} />
+      <text x={878} y={859} fill={DARK} fontFamily={sans} fontSize={11}>
+        solid green border = LIVE
+      </text>
       <rect
-        x="1348"
-        y="400"
-        width="210"
-        height="76"
-        fill={BG}
+        x={862}
+        y={868}
+        width={12}
+        height={12}
+        fill={ROADMAP_FILL}
         stroke={ACCENT}
-        strokeWidth="2"
+        strokeWidth={2}
+        strokeDasharray="4 3"
       />
-      <SvgBoldLinesRL
-        x={1364}
-        y={428}
-        fontSize={11}
-        lines={['[ expo-notifications', '+ FCM ]']}
-      />
-      <SvgMutedLinesRL x={1364} y={458} fontSize={10} lines={['push notification delivery']} />
+      <text x={878} y={879} fill={DARK} fontFamily={sans} fontSize={11}>
+        dashed green border = ROADMAP
+      </text>
 
       <line
-        x1="174"
-        y1="248"
-        x2="268"
-        y2="168"
+        x1={cx}
+        y1={L1_B}
+        x2={cx}
+        y2={L2_T}
         stroke={ACCENT}
-        strokeWidth="2"
-        markerEnd="url(#rl-arr-live)"
+        strokeWidth={2}
+        markerEnd="url(#rl-swim-arr)"
       />
-      <line
-        x1="174"
-        y1="308"
-        x2="268"
-        y2="356"
-        stroke={ACCENT}
-        strokeWidth="2"
-        markerEnd="url(#rl-arr-live)"
-      />
-      <text x="188" y="218" fill={ACCENT} fontFamily={sans} fontSize="11" fontWeight="600">
-        opens app
-      </text>
-
-      <line
-        x1="516"
-        y1="173"
-        x2="578"
-        y2="164"
-        stroke={ACCENT}
-        strokeWidth="2"
-        markerEnd="url(#rl-arr-live)"
-      />
-      <line
-        x1="516"
-        y1="351"
-        x2="578"
-        y2="352"
-        stroke={ACCENT}
-        strokeWidth="2"
-        markerEnd="url(#rl-arr-live)"
-      />
-      <text x="528" y="148" fill={ACCENT} fontFamily={sans} fontSize="11" fontWeight="600">
+      <text x={618} y={gapMid(L1_B, L2_T) + 4} fill={ARCH_MUTED} fontFamily={ARCH_MONO} fontSize={11}>
         dispatches action
       </text>
 
       <line
-        x1="870"
-        y1="164"
-        x2="928"
-        y2="252"
+        x1={cx}
+        y1={L2_B}
+        x2={cx}
+        y2={L3_T}
         stroke={ACCENT}
-        strokeWidth="2"
-        markerEnd="url(#rl-arr-live)"
+        strokeWidth={2}
+        markerEnd="url(#rl-swim-arr)"
       />
-      <line
-        x1="870"
-        y1="352"
-        x2="928"
-        y2="302"
-        stroke={ACCENT}
-        strokeWidth="2"
-        markerEnd="url(#rl-arr-live)"
-      />
-      <text x="872" y="232" fill={ACCENT} fontFamily={sans} fontSize="11" fontWeight="600">
+      <text x={618} y={gapMid(L2_B, L3_T) + 4} fill={ARCH_MUTED} fontFamily={ARCH_MONO} fontSize={11}>
         mutation / query
       </text>
 
       <line
-        x1="1276"
-        y1="277"
-        x2="1348"
-        y2="86"
+        x1={cx}
+        y1={L3_B}
+        x2={cx}
+        y2={L4_T}
         stroke={ACCENT}
-        strokeWidth="2"
-        markerEnd="url(#rl-arr-live)"
+        strokeWidth={2}
+        markerEnd="url(#rl-swim-arr)"
       />
-      <line
-        x1="1276"
-        y1="285"
-        x2="1348"
-        y2="168"
-        stroke={ACCENT}
-        strokeWidth="2"
-        markerEnd="url(#rl-arr-live)"
-      />
-      <line
-        x1="1276"
-        y1="293"
-        x2="1348"
-        y2="258"
-        stroke={ACCENT}
-        strokeWidth="2"
-        markerEnd="url(#rl-arr-live)"
-      />
-      <line
-        x1="1276"
-        y1="301"
-        x2="1348"
-        y2="338"
-        stroke={ACCENT}
-        strokeWidth="2"
-        markerEnd="url(#rl-arr-live)"
-      />
-      <line
-        x1="1276"
-        y1="309"
-        x2="1348"
-        y2="432"
-        stroke={ACCENT}
-        strokeWidth="2"
-        markerEnd="url(#rl-arr-live)"
-      />
-      <text x="1180" y="200" fill={ACCENT} fontFamily={sans} fontSize="11" fontWeight="600">
-        REST + WebSocket
+      <text x={618} y={gapMid(L3_B, L4_T) + 4} fill={ARCH_MUTED} fontFamily={ARCH_MONO} fontSize={11}>
+        REST + WebSocket + RLS
       </text>
 
-      <rect x="420" y="628" width="72" height="18" fill={ACCENT} rx="2" />
-      <text x="432" y="641" fill={CARD} fontFamily={sans} fontSize="8" fontWeight="700">
-        ROADMAP
-      </text>
-      <rect
-        x="268"
-        y="652"
-        width="380"
-        height="112"
-        fill={BG}
-        stroke={ACCENT}
-        strokeWidth="2"
-        strokeDasharray="8 6"
-      />
-      <SvgBoldLinesRL
-        x={284}
-        y={682}
-        fontSize={12}
-        lines={['[ Price Scraper Engine ]']}
-      />
-      <SvgMutedLinesRL
-        x={284}
-        y={704}
-        fontSize={10}
-        lines={[
-          'Python · scrapes Loblaws, Walmart, No Frills,',
-          'FreshCo, Costco, T&T, Metro, Sobeys, Giant Tiger',
-        ]}
-      />
-
-      <rect x="708" y="628" width="72" height="18" fill={ACCENT} rx="2" />
-      <text x="720" y="641" fill={CARD} fontFamily={sans} fontSize="8" fontWeight="700">
-        ROADMAP
-      </text>
-      <rect
-        x="668"
-        y="652"
-        width="420"
-        height="112"
-        fill={BG}
-        stroke={ACCENT}
-        strokeWidth="2"
-        strokeDasharray="8 6"
-      />
-      <SvgBoldLinesRL x={684} y={682} fontSize={12} lines={['[ AI Trend Engine ]']} />
-      <SvgMutedLinesRL
-        x={684}
-        y={704}
-        fontSize={10}
-        lines={[
-          'ML model · learns consumption frequency per item ·',
-          'builds custom reset intervals',
-        ]}
-      />
-
-      <rect x="1138" y="628" width="72" height="18" fill={ACCENT} rx="2" />
-      <text x="1150" y="641" fill={CARD} fontFamily={sans} fontSize="8" fontWeight="700">
-        ROADMAP
-      </text>
-      <rect
-        x="1118"
-        y="652"
-        width="380"
-        height="112"
-        fill={BG}
-        stroke={ACCENT}
-        strokeWidth="2"
-        strokeDasharray="8 6"
-      />
-      <SvgBoldLinesRL x={1134} y={682} fontSize={12} lines={['[ RevenueCat Webhooks ]']} />
-      <SvgMutedLinesRL
-        x={1134}
-        y={704}
-        fontSize={10}
-        lines={['subscription lifecycle events → unlock premium features']}
-      />
-
       <line
-        x1="1102"
-        y1="336"
-        x2="1102"
-        y2="618"
+        x1={cx}
+        y1={L4_B}
+        x2={cx}
+        y2={L5_T}
         stroke={ACCENT}
-        strokeWidth="2"
-        strokeDasharray="8 6"
-        markerEnd="url(#rl-arr-road)"
+        strokeWidth={2}
+        strokeDasharray="6 5"
+        markerEnd="url(#rl-swim-arr)"
       />
-      <text x="1114" y="480" fill={ACCENT} fontFamily={sans} fontSize="11" fontWeight="600">
-        planned
-      </text>
-
-      <text x="48" y="872" fill={ACCENT} fontFamily={sans} fontSize="12" fontWeight="700">
-        ●
-      </text>
-      <text x="68" y="872" fill={FG_TEXT} fontFamily={sans} fontSize="12">
-        green LIVE
-      </text>
-      <text x="168" y="872" fill={ACCENT} fontFamily={sans} fontSize="12" fontWeight="700">
-        ■
-      </text>
-      <text x="188" y="872" fill={FG_TEXT} fontFamily={sans} fontSize="12">
-        dashed green ROADMAP
+      <text x={618} y={gapMid(L4_B, L5_T) + 4} fill={ARCH_MUTED} fontFamily={ARCH_MONO} fontSize={11}>
+        planned integration
       </text>
     </svg>
   );
