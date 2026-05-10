@@ -39,22 +39,24 @@ export function About() {
         aria-hidden
         style={{
           position: 'absolute',
-          top: '50%',
-          left: '25%',
-          transform: 'translate(-50%, -50%)',
-          fontFamily: "'Clash Display', sans-serif",
-          fontWeight: 800,
-          fontSize: 'clamp(200px, 35vw, 420px)',
-          color: 'rgba(255,255,255,0.022)',
-          whiteSpace: 'nowrap',
+          right: 'clamp(-4rem, -2vw, 0)',
+          bottom: 'clamp(-2rem, 5vh, 4rem)',
+          transform: 'translateX(15%)',
+          fontFamily: 'var(--font-heading)',
+          fontWeight: 900,
+          fontSize: 'clamp(12rem, 25vw, 22rem)',
+          color: 'white',
+          opacity: 0.04,
+          lineHeight: 1,
           letterSpacing: '-0.04em',
+          whiteSpace: 'nowrap',
           userSelect: 'none',
           pointerEvents: 'none',
+          filter: 'blur(2px)',
           zIndex: 0,
-          lineHeight: 1,
         }}
       >
-        {`>_`}
+        &gt;_
       </div>
       <div className="max-w-7xl mx-auto relative z-[1]">
         <div className="relative z-[1] flex flex-col gap-12 lg:flex-row lg:gap-16 lg:items-start">
@@ -62,7 +64,7 @@ export function About() {
           <div className="relative z-[1] w-full min-w-0 lg:w-[55%] lg:shrink-0">
             {/* Section Tag */}
             <p
-              className="text-xs mb-4"
+              className="relative z-[1] text-xs mb-4"
               style={{
                 fontFamily: 'var(--font-mono)',
                 color: 'var(--coral)',
@@ -74,21 +76,22 @@ export function About() {
             {/* Heading */}
             <h2
               data-about-heading
-              className="mb-8"
+              className="relative z-[1] mb-8 w-full"
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontWeight: 800,
+                fontWeight: 900,
                 color: 'var(--text-primary)',
                 letterSpacing: '-1px',
-                fontSize: 'clamp(20px, 2.5vw, 32px)',
+                fontSize: 'clamp(3rem, 8vw, 7rem)',
+                lineHeight: 1.05,
               }}
             >
-              Software Engineer. Problem Solver. Product Minded.
+              Software Engineer.
             </h2>
 
             <p
               data-about-heading
-              className="text-xl mb-8"
+              className="relative z-[1] text-xl mb-8"
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 700,

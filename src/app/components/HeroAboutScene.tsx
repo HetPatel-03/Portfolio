@@ -278,21 +278,47 @@ export function HeroAboutScene() {
                 paddingTop: isMobile ? '24px' : 'clamp(100px, 12vh, 140px)',
                 opacity: isMobile ? 1 : 0,
                 marginTop: isMobile ? '20px' : '0',
+                zIndex: 1,
               }}>
-                <p style={{ fontFamily: 'var(--font-mono)', color: 'var(--coral)', fontSize: '12px', marginBottom: '16px', letterSpacing: '0.05em' }}>
+                <div
+                  aria-hidden
+                  style={{
+                    position: 'absolute',
+                    right: 'clamp(-3rem, -1vw, 0)',
+                    bottom: 'clamp(0, 8vh, 3rem)',
+                    transform: 'translateX(12%)',
+                    fontFamily: 'var(--font-heading)',
+                    fontWeight: 900,
+                    fontSize: 'clamp(12rem, 25vw, 22rem)',
+                    color: 'white',
+                    opacity: 0.04,
+                    lineHeight: 1,
+                    letterSpacing: '-0.04em',
+                    whiteSpace: 'nowrap',
+                    userSelect: 'none',
+                    pointerEvents: 'none',
+                    filter: 'blur(2px)',
+                    zIndex: 0,
+                  }}
+                >
+                  &gt;_
+                </div>
+                <p style={{ position: 'relative', zIndex: 1, fontFamily: 'var(--font-mono)', color: 'var(--coral)', fontSize: '12px', marginBottom: '16px', letterSpacing: '0.05em' }}>
                   // 01 · about
                 </p>
                 <h2 style={{
-                  fontFamily: 'var(--font-heading)', fontWeight: 800,
+                  position: 'relative',
+                  zIndex: 1,
+                  fontFamily: 'var(--font-heading)', fontWeight: 900,
                   color: 'var(--text-primary)', letterSpacing: '-1px',
-                  fontSize: 'clamp(28px, 4vw, 52px)', lineHeight: 1.1, marginBottom: '20px',
+                  fontSize: 'clamp(3rem, 8vw, 7rem)', lineHeight: 1.05, marginBottom: '20px', width: '100%',
                 }}>
-                  Software Engineer.<br />Problem Solver.<br />Product Minded.
+                  Software Engineer.
                 </h2>
-                <p style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#D0D0E0', fontSize: '20px', marginBottom: '24px' }}>
+                <p style={{ position: 'relative', zIndex: 1, fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#D0D0E0', fontSize: '20px', marginBottom: '24px' }}>
                   Full Stack Engineer who builds products people actually use.
                 </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   {[
                     "Throughout my journey I've shown a strong commitment to innovation and creative problem-solving — building live platforms with real APIs used by real users.",
                     'I break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
