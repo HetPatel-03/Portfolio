@@ -240,7 +240,7 @@ export function HeroAboutScene() {
                 </div>
 
                 <p style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)', marginBottom: '32px', maxWidth: '480px' }}>
-                  I build end-to-end products. Engineer. Product thinker. Top performer.
+                  I build features, fix systems, and integrate AI into products.
                 </p>
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '32px' }}>

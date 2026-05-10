@@ -279,7 +279,7 @@ export function Hero() {
                 marginLeft: 0,
               }}
             >
-              I build end-to-end products. Engineer. Product thinker. Top performer.
+              I build features, fix systems, and integrate AI into products.
             </p>
 
             {/* CTA Buttons */}
