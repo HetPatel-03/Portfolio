@@ -261,24 +261,24 @@ const SUB_DETAIL: Record<
   'sub-learning-artificial-intelligence': {
     description: 'LLMs, prompt engineering, AI tool integration and applied AI development.',
   },
-  'sub-achievements-top-150-canada': {
-    context:
-      'Ranked Top 150 Wireless Sales Associate Nationally — Q4 2023 and Q1 2024 at Staples Canada.',
-  },
   'sub-achievements-top-3-gta': {
-    context:
+    description:
       'Ranked Top 3 Wireless Sales Associate in the GTA District at Staples Canada — wireless sales across Bell, Virgin Plus and Lucky Mobile.',
   },
+  'sub-achievements-top-150-canada': {
+    description:
+      'Ranked Top 150 Wireless Sales Associate Nationally — Q4 2023 and Q1 2024 at Staples Canada.',
+  },
   'sub-achievements-top-seller-rogers': {
-    context:
+    description:
       'Top performer at Rogers Communications for wireless sales across Rogers, Fido and Chatr — including top Rogers Mastercard activations.',
   },
   'sub-achievements-acting-manager': {
-    context:
+    description:
       'MOD (Manager on Duty) · Ran daily store operations, supervised team, managed scheduling and handled escalations at Rogers Communications.',
   },
   'sub-achievements-dean-s-list': {
-    context:
+    description:
       "Dean's List 2023 & 2024 · Algoma University · Awarded Dean's List Scholarship both years for academic excellence.",
   },
   'sub-languages-english': {
@@ -498,14 +498,13 @@ function UniverseDetailBody({ node, byId }: { node: Node; byId: Map<string, Node
     );
   }
 
-  if (kind === 'achievement' && subOrLeafDetail && 'context' in subOrLeafDetail) {
-    const d = subOrLeafDetail;
+  if (kind === 'achievement' && subOrLeafDetail?.description) {
     return (
       <div>
         <p style={{ ...heading, display: 'flex', alignItems: 'center', gap: 8 }}>
           <span aria-hidden>🏆</span> {node.label}
         </p>
-        <p style={muted}>{d.context}</p>
+        <p style={muted}>{subOrLeafDetail.description}</p>
       </div>
     );
   }
@@ -541,6 +540,7 @@ function subOneLineBlurb(node: Node): string {
   return (
     d?.description ??
     d?.fluency ??
+    d?.context ??
     d?.body ??
     d?.bullets?.[0] ??
     'Part of this cluster — open the graph to see how it connects.'
