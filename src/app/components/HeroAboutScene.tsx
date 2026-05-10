@@ -288,12 +288,12 @@ export function HeroAboutScene() {
                   zIndex: 1,
                   fontFamily: 'var(--font-heading)', fontWeight: 900,
                   color: 'var(--text-primary)', letterSpacing: '-1px',
-                  fontSize: 'clamp(3rem, 8vw, 7rem)', lineHeight: 1.05, marginBottom: '20px', width: '100%',
+                  fontSize: 'clamp(2.5rem, 6vw, 5rem)', lineHeight: 1.05, marginBottom: '20px', width: '100%',
                 }}>
                   Software Engineer.
                 </h2>
                 <p style={{ position: 'relative', zIndex: 1, fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#D0D0E0', fontSize: '20px', marginBottom: '24px' }}>
-                  Full Stack Engineer who builds products people actually use.
+                  Built 3+ live products used by international students across Canada — full-stack, AI-integrated, shipped.
                 </p>
                 <div style={{ position: 'relative', zIndex: 1, marginBottom: 0 }}>
                   <div
@@ -322,9 +322,9 @@ export function HeroAboutScene() {
                   </div>
                   <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     {[
-                      "Throughout my journey I've shown a strong commitment to innovation and creative problem-solving — building live platforms with real APIs used by real users.",
-                      'I break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
-                      'I build full-stack apps end-to-end — REST APIs, database schemas, cloud infrastructure. Every project I ship is live and documented.',
+                      'I break down complex engineering problems fast — REST APIs, database schemas, cloud infrastructure and everything in between.',
+                      'I thrive in fast-moving environments where shipping matters and business impact is the goal.',
+                      'Currently deep in Next.js, Supabase and AI/ML — building scalable products for real users.',
                     ].map((text, i) => (
                       <p key={i} style={{ display: 'flex', gap: '12px', color: '#A8A8B8', fontFamily: 'var(--font-body)', lineHeight: 1.75, fontSize: '15px' }}>
                         <span style={{ color: '#F2664A', flexShrink: 0, marginTop: '2px' }}>→</span>
@@ -333,6 +333,27 @@ export function HeroAboutScene() {
                     ))}
                   </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => scrollToSection('projects')}
+                  className="transition-all duration-200 hover:scale-105"
+                  style={{
+                    position: 'relative',
+                    zIndex: 1,
+                    marginTop: '8px',
+                    marginBottom: '0',
+                    background: '#F2664A',
+                    color: '#FFFFFF',
+                    fontFamily: 'var(--font-body)',
+                    fontWeight: 600,
+                    borderRadius: '99px',
+                    border: 'none',
+                    padding: '0.75rem 1.75rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  View My Projects →
+                </button>
               </div>
             </div>
 

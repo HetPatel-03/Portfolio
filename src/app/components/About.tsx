@@ -59,7 +59,7 @@ export function About() {
                 fontWeight: 900,
                 color: 'var(--text-primary)',
                 letterSpacing: '-1px',
-                fontSize: 'clamp(3rem, 8vw, 7rem)',
+                fontSize: 'clamp(2.5rem, 6vw, 5rem)',
                 lineHeight: 1.05,
               }}
             >
@@ -75,7 +75,7 @@ export function About() {
                 color: '#D0D0E0',
               }}
             >
-              Full Stack Engineer who builds products people actually use.
+              Built 3+ live products used by international students across Canada — full-stack, AI-integrated, shipped.
             </p>
 
             <div className="relative z-[1] mb-10">
@@ -105,9 +105,9 @@ export function About() {
               </div>
               <div className="relative z-[1] space-y-6">
                 {[
-                  "Throughout my software development journey, I've shown a strong commitment to innovation and creative problem-solving — from building live platforms to integrating real APIs used by real users.",
-                  'My analytical approach helps me break down complex challenges quickly. I thrive in fast-moving environments where shipping matters and business impact is the goal.',
-                  'I build full-stack applications end-to-end — designing REST APIs, structuring database schemas, and deploying to cloud infrastructure. Every project I ship is live, documented, and built with real users in mind.',
+                  'I break down complex engineering problems fast — REST APIs, database schemas, cloud infrastructure and everything in between.',
+                  'I thrive in fast-moving environments where shipping matters and business impact is the goal.',
+                  'Currently deep in Next.js, Supabase and AI/ML — building scalable products for real users.',
                 ].map((text, index) => (
                   <p
                     data-about-line
@@ -125,6 +125,24 @@ export function About() {
                 ))}
               </div>
             </div>
+
+            <button
+              type="button"
+              onClick={() => scrollToSection('projects')}
+              className="relative z-[1] mb-8 transition-all duration-200 hover:scale-105"
+              style={{
+                background: '#F2664A',
+                color: '#FFFFFF',
+                fontFamily: 'var(--font-body)',
+                fontWeight: 600,
+                borderRadius: '99px',
+                border: 'none',
+                padding: '0.75rem 1.75rem',
+                cursor: 'pointer',
+              }}
+            >
+              View My Projects →
+            </button>
 
             {/* CTAs */}
             <div
