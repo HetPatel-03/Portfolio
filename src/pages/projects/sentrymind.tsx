@@ -28,18 +28,6 @@ const cardBase: CSSProperties = {
   boxSizing: 'border-box',
 };
 
-const featureMicroCard: CSSProperties = {
-  ...cardBase,
-  padding: 22,
-  borderTop: '2px solid rgba(167, 139, 250, 0.3)',
-};
-
-const microMono: CSSProperties = {
-  fontFamily: mono,
-  fontSize: 12,
-  lineHeight: 1.65,
-};
-
 const stats = [
   { label: 'STACK', value: 'Next.js · Supabase · Claude API · Vercel' },
   { label: 'TYPE', value: 'Developer Tool · SRE · AI' },
@@ -211,6 +199,9 @@ export default function SentryMindProjectPage() {
           }
           .sentrymind-footer > * {
             justify-self: center !important;
+          }
+          .sentrymind-features-flow {
+            grid-column: 1 / -1;
           }
         }
       `}</style>
@@ -506,103 +497,34 @@ export default function SentryMindProjectPage() {
             </div>
           ))}
 
-          {/* Dashboard micrographics — fill grid row alongside [ 05 ] / [ 06 ] */}
-          <div style={featureMicroCard}>
-            <div style={{ ...microMono, color: ACCENT, marginBottom: 12, letterSpacing: '0.02em' }}>// SYSTEM STATUS</div>
-            <div style={{ ...microMono, display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {[
-                { name: 'VERCEL', pct: '99.9%' },
-                { name: 'SUPABASE', pct: '99.7%' },
-                { name: 'NEXT.JS APP', pct: '100%' },
-                { name: 'EDGE FN', pct: '98.2%' },
-              ].map((row) => (
-                <div
-                  key={row.name}
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '10px 1fr auto auto',
-                    gap: '0 10px',
-                    alignItems: 'baseline',
-                  }}
-                >
-                  <span style={{ color: '#22C55E' }}>●</span>
-                  <span style={{ color: TEXT_MUTED }}>{row.name}</span>
-                  <span style={{ color: TEXT_PRIMARY }}>ONLINE</span>
-                  <span style={{ color: TEXT_PRIMARY, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
-                    {row.pct}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div style={{ ...microMono, marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(107, 114, 128, 0.25)' }}>
-              <div style={{ marginBottom: 4 }}>
-                <span style={{ color: TEXT_MUTED }}>LAST INCIDENT: </span>
-                <span style={{ color: TEXT_PRIMARY }}>INC-783</span>
-              </div>
-              <div style={{ marginBottom: 4 }}>
-                <span style={{ color: TEXT_MUTED }}>RESOLVED IN: </span>
-                <span style={{ color: TEXT_PRIMARY }}>4m 12s</span>
-              </div>
-              <div>
-                <span style={{ color: TEXT_MUTED }}>AI CONFIDENCE: </span>
-                <span style={{ color: TEXT_PRIMARY }}>94%</span>
-              </div>
-            </div>
-          </div>
-
-          <div style={featureMicroCard}>
-            <div style={{ ...microMono, color: ACCENT, marginBottom: 12, letterSpacing: '0.02em' }}>// THIS MONTH</div>
-            <div style={{ ...microMono, display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {[
-                { label: 'INCIDENTS DETECTED', value: '12' },
-                { label: 'AUTO-RESOLVED', value: '9' },
-                { label: 'AVG RESOLUTION', value: '3m 40s' },
-                { label: 'AI ACCURACY', value: '96.4%' },
-              ].map((row) => (
-                <div
-                  key={row.label}
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr auto',
-                    gap: 16,
-                    alignItems: 'baseline',
-                  }}
-                >
-                  <span style={{ color: TEXT_MUTED }}>{row.label}</span>
-                  <span style={{ color: ACCENT, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{row.value}</span>
-                </div>
-              ))}
-            </div>
+          <div
+            className="sentrymind-features-flow"
+            style={{
+              gridColumn: 'span 2',
+              minWidth: 0,
+            }}
+          >
             <div
               style={{
-                ...microMono,
-                marginTop: 14,
-                paddingTop: 14,
-                borderTop: '1px solid rgba(107, 114, 128, 0.25)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 6,
+                fontFamily: mono,
+                fontSize: 12,
+                color: ACCENT,
+                marginBottom: 10,
+                letterSpacing: '0.02em',
               }}
             >
-              {[
-                { label: 'P1 INCIDENTS', value: '1' },
-                { label: 'P2 INCIDENTS', value: '4' },
-                { label: 'P3 INCIDENTS', value: '7' },
-              ].map((row) => (
-                <div
-                  key={row.label}
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr auto',
-                    gap: 16,
-                    alignItems: 'baseline',
-                  }}
-                >
-                  <span style={{ color: TEXT_MUTED }}>{row.label}</span>
-                  <span style={{ color: ACCENT, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{row.value}</span>
-                </div>
-              ))}
+              // INCIDENT FLOW · SYSTEM DIAGRAM
             </div>
+            <img
+              src="/sentrymind-micro.png"
+              width="100%"
+              alt="SentryMind system flow"
+              style={{
+                borderRadius: 8,
+                border: '1px solid rgba(167,139,250,0.2)',
+                display: 'block',
+              }}
+            />
           </div>
         </div>
       </section>
