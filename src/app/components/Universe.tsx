@@ -71,7 +71,7 @@ function fibonacciCirclePoints(count: number, radius: number): THREE.Vector3[] {
 
 const PRESENCE_URLS: Record<string, string> = {
   'sub-presence-linkedin': 'https://linkedin.com/in/hetppatel',
-  'sub-presence-github': 'https://github.com/hetpatel',
+  'sub-presence-github': 'https://github.com/HetPatel-03',
   'sub-presence-x': 'https://x.com/hetpatel37',
   'sub-presence-hetppatel-dev': 'https://hetppatel.dev',
 };
@@ -263,15 +263,15 @@ const SUB_DETAIL: Record<
   },
   'sub-achievements-top-150-canada': {
     context:
-      'Ranked Top 150 Wireless Sales Associate Nationally — achieved in Q4 2023 and Q1 2024 at Staples Canada.',
+      'Ranked Top 150 Wireless Sales Associate Nationally — Q4 2023 and Q1 2024 at Staples Canada.',
   },
   'sub-achievements-top-3-gta': {
     context:
-      'Ranked Top 3 Wireless Sales Associate in the GTA District at Staples Canada — for wireless sales across Bell, Virgin Plus and Lucky Mobile.',
+      'Ranked Top 3 Wireless Sales Associate in the GTA District at Staples Canada — wireless sales across Bell, Virgin Plus and Lucky Mobile.',
   },
   'sub-achievements-top-seller-rogers': {
     context:
-      'Top performer at Rogers Communications for wireless sales across Rogers, Fido and Chatr brands — including top Rogers Mastercard activations.',
+      'Top performer at Rogers Communications for wireless sales across Rogers, Fido and Chatr — including top Rogers Mastercard activations.',
   },
   'sub-achievements-acting-manager': {
     context:
@@ -279,48 +279,31 @@ const SUB_DETAIL: Record<
   },
   'sub-achievements-dean-s-list': {
     context:
-      "Dean's List recipient 2023 & 2024 at Algoma University · Awarded Dean's List Scholarship both years for academic excellence.",
+      "Dean's List 2023 & 2024 · Algoma University · Awarded Dean's List Scholarship both years for academic excellence.",
   },
   'sub-languages-english': {
     flag: '🇬🇧',
     fluency: 'Fluent · Primary language for all professional and academic work',
+    description: 'Fluent · Primary language for all professional and academic work',
   },
-  'sub-languages-hindi': { flag: '🇮🇳', fluency: 'Fluent · Native language, spoken at home and in community' },
+  'sub-languages-hindi': {
+    flag: '🇮🇳',
+    fluency: 'Fluent · Native language, spoken at home and in community',
+    description: 'Fluent · Native language, spoken at home and in community',
+  },
   'sub-languages-gujarati': {
     flag: '🇮🇳',
     fluency: 'Fluent · Native language, spoken in family and cultural settings',
+    description: 'Fluent · Native language, spoken in family and cultural settings',
   },
-  'sub-languages-french': { flag: '🇫🇷', fluency: 'Beginner · Currently learning basics' },
+  'sub-languages-french': {
+    flag: '🇫🇷',
+    fluency: 'Beginner · Currently learning basics',
+    description: 'Beginner · Currently learning basics',
+  },
 };
 
-const LEAF_DETAIL: Record<
-  string,
-  { level: 'Production Ready' | 'Learning'; usedIn: string[] }
-> = {
-  'leaf-sub-skills-backend-node-js': { level: 'Production Ready', usedIn: ['APIs', 'Services'] },
-  'leaf-sub-skills-backend-python': { level: 'Production Ready', usedIn: ['Bots', 'Automation'] },
-  'leaf-sub-skills-backend-rest-apis': { level: 'Production Ready', usedIn: ['StudenzBit', 'APIs'] },
-  'leaf-sub-skills-backend-express': { level: 'Production Ready', usedIn: ['Node services'] },
-  'leaf-sub-skills-backend-supabase': { level: 'Production Ready', usedIn: ['StudenzBit', 'RecurList'] },
-  'leaf-sub-skills-backend-edge-functions': { level: 'Production Ready', usedIn: ['Supabase'] },
-  'leaf-sub-skills-frontend-react': { level: 'Production Ready', usedIn: ['StudenzBit', 'Portfolio'] },
-  'leaf-sub-skills-frontend-next-js': { level: 'Production Ready', usedIn: ['StudenzBit', 'SentryMind'] },
-  'leaf-sub-skills-frontend-typescript': { level: 'Production Ready', usedIn: ['All active repos'] },
-  'leaf-sub-skills-frontend-tailwind-css': { level: 'Production Ready', usedIn: ['Portfolio', 'Web'] },
-  'leaf-sub-skills-frontend-react-native': { level: 'Production Ready', usedIn: ['RecurList', 'Task Manager'] },
-  'leaf-sub-skills-frontend-vite': { level: 'Production Ready', usedIn: ['Portfolio'] },
-  'leaf-sub-skills-database-postgresql': { level: 'Production Ready', usedIn: ['StudenzBit'] },
-  'leaf-sub-skills-database-supabase': { level: 'Production Ready', usedIn: ['StudenzBit', 'RecurList'] },
-  'leaf-sub-skills-database-firebase': { level: 'Production Ready', usedIn: ['Mobile / sync'] },
-  'leaf-sub-skills-database-sql': { level: 'Production Ready', usedIn: ['Reporting'] },
-  'leaf-sub-skills-database-realtime-db': { level: 'Production Ready', usedIn: ['Live data'] },
-  'leaf-sub-skills-devops-git': { level: 'Production Ready', usedIn: ['All projects'] },
-  'leaf-sub-skills-devops-github': { level: 'Production Ready', usedIn: ['Version control', 'CI'] },
-  'leaf-sub-skills-devops-vercel': { level: 'Production Ready', usedIn: ['Deploys'] },
-  'leaf-sub-skills-devops-eas': { level: 'Production Ready', usedIn: ['Expo builds'] },
-  'leaf-sub-skills-devops-n8n': { level: 'Production Ready', usedIn: ['Digifixr automation'] },
-  'leaf-sub-skills-devops-claude-api': { level: 'Production Ready', usedIn: ['AI tooling'] },
-};
+const LEAF_DETAIL: Record<string, { level: 'Production Ready' | 'Learning'; usedIn: string[] }> = {};
 
 const pillStyle: CSSProperties = {
   display: 'inline-block',
@@ -534,7 +517,7 @@ function UniverseDetailBody({ node, byId }: { node: Node; byId: Map<string, Node
         <p style={heading}>
           {d.flag} {node.label}
         </p>
-        <p style={muted}>{d.fluency}</p>
+        <p style={muted}>{d.description ?? d.fluency}</p>
       </div>
     );
   }
@@ -557,6 +540,7 @@ function subOneLineBlurb(node: Node): string {
   if (node.openUrl) return node.openUrl;
   return (
     d?.description ??
+    d?.fluency ??
     d?.body ??
     d?.bullets?.[0] ??
     'Part of this cluster — open the graph to see how it connects.'
@@ -695,25 +679,7 @@ export function Universe() {
       quoteText: '"The more I learn, the more I realize how much I don\'t know." — Einstein',
     });
 
-    const leafGroups: Record<string, string[]> = {
-      'sub-skills-backend': ['Node.js', 'Python', 'REST APIs', 'Express', 'Supabase', 'Edge Functions'],
-      'sub-skills-frontend': ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'React Native', 'Vite'],
-      'sub-skills-database': ['PostgreSQL', 'Supabase', 'Firebase', 'SQL', 'Realtime DB'],
-      'sub-skills-devops': ['Git', 'GitHub', 'Vercel', 'EAS', 'n8n', 'Claude API'],
-    };
-
-    Object.entries(leafGroups).forEach(([parent, labels]) => {
-      labels.forEach((label) => {
-        base.push({
-          id: `leaf-${parent}-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
-          label,
-          type: 'leaf',
-          parent,
-          color: '#9CA3AF',
-          size: 5,
-        });
-      });
-    });
+    /* Skill pills are standalone subs — no leaf children (Option B avoids dangling Lines). */
 
     return base;
   }, []);
