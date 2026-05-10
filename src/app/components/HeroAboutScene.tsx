@@ -333,27 +333,6 @@ export function HeroAboutScene() {
                     ))}
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => scrollToSection('projects')}
-                  className="transition-all duration-200 hover:scale-105"
-                  style={{
-                    position: 'relative',
-                    zIndex: 1,
-                    marginTop: '8px',
-                    marginBottom: '0',
-                    background: '#F2664A',
-                    color: '#FFFFFF',
-                    fontFamily: 'var(--font-body)',
-                    fontWeight: 600,
-                    borderRadius: '99px',
-                    border: 'none',
-                    padding: '0.75rem 1.75rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  View My Projects →
-                </button>
               </div>
             </div>
 
