@@ -14,6 +14,14 @@ interface Node {
   color: string;
   size: number;
   description?: string;
+  /** Opens in new tab on click (Presence). */
+  openUrl?: string;
+  /** Do not open detail panel on click. */
+  skipDetail?: boolean;
+  /** No visible mesh / not raycast — position only for label (e.g. Learning quote). */
+  labelAnchorOnly?: boolean;
+  /** Overlay label uses italic multi-line quote text instead of `label`. */
+  quoteText?: string;
 }
 
 interface SimNode extends SimulationNodeDatum {
@@ -32,10 +40,14 @@ interface SimNode extends SimulationNodeDatum {
   targetX: number;
   targetY: number;
   targetZ: number;
+  openUrl?: string;
+  skipDetail?: boolean;
+  labelAnchorOnly?: boolean;
+  quoteText?: string;
 }
 
 interface SceneNode {
-  data: Node;
+  data: SimNode;
   root: THREE.Object3D;
   mesh: THREE.Mesh;
   ringMesh?: THREE.Mesh;
@@ -56,6 +68,13 @@ function fibonacciCirclePoints(count: number, radius: number): THREE.Vector3[] {
   }
   return points;
 }
+
+const PRESENCE_URLS: Record<string, string> = {
+  'sub-presence-linkedin': 'https://linkedin.com/in/hetppatel',
+  'sub-presence-github': 'https://github.com/hetpatel',
+  'sub-presence-x': 'https://x.com/hetpatel37',
+  'sub-presence-hetppatel-dev': 'https://hetppatel.dev',
+};
 
 const CATEGORY_TOOLTIP: Record<string, string> = {
   education: 'Academic background',
@@ -104,150 +123,203 @@ const SUB_DETAIL: Record<
     usedIn?: string[];
   }
 > = {
-  'sub-experience-rogers-communications': {
-    badge: 'Sales / Retail',
-    dates: '2021 — Present',
-    title: 'Rogers Communications',
-    bullets: ['Top seller performance in regional cohorts', 'Customer solutions & device activations', 'Mentoring new hires on sales floor'],
-    tech: ['Salesforce', 'POS', 'CRM'],
-  },
-  'sub-experience-freelance': {
-    badge: 'Freelance',
-    dates: 'Ongoing',
-    title: 'Freelance',
-    bullets: ['Web builds for small businesses', 'Branding & landing pages', 'Client discovery → delivery'],
-    tech: ['React', 'Next.js', 'Figma'],
-  },
   'sub-experience-staples-canada': {
-    badge: 'Retail Ops',
-    dates: 'Previous',
+    badge: 'Wireless Sales',
+    dates: '',
     title: 'Staples Canada',
-    bullets: ['Floor operations & inventory', 'Tech services support', 'Peak-season throughput'],
-    tech: ['Ops', 'POS'],
+    bullets: [
+      'Wireless Sales Consultant · Promoted Bell, Virgin Plus and Lucky Mobile. Ranked Top 3 in GTA and Top 150 nationally for wireless sales. Star Employee 3x.',
+    ],
+    tech: [],
+  },
+  'sub-experience-rogers-communications': {
+    badge: 'Wireless Sales',
+    dates: '',
+    title: 'Rogers Communications',
+    bullets: [
+      'Wireless Sales Consultant & Acting MOD · Promoted Rogers, Fido and Chatr. Ranked Top 3 GTA, Top 150 Canada. Ran store operations as Manager on Duty.',
+    ],
+    tech: [],
   },
   'sub-experience-walmart-canada': {
-    badge: 'Retail',
-    dates: 'Previous',
+    badge: 'Wireless Sales',
+    dates: '',
     title: 'Walmart Canada',
-    bullets: ['Front-line customer service', 'Stocking & zone recovery', 'Team coordination'],
-    tech: ['Ops'],
+    bullets: [
+      'Wireless Sales Consultant · Fast-paced floor sales — helped customers navigate devices, plans and accessories. Hit 100% of Protection Plan targets.',
+    ],
+    tech: [],
+  },
+  'sub-experience-freelance': {
+    badge: 'Engineering',
+    dates: '',
+    title: 'Freelance',
+    bullets: [
+      'Software Engineer · Building full-stack web and mobile products independently. React, Next.js, Supabase, React Native, Claude API.',
+    ],
+    tech: [],
   },
   'sub-education-cs-degree': {
-    institution: 'University program',
-    year: 'In progress / completed per transcript',
-    body: 'Computer Science focus with software engineering coursework and collaborative projects.',
+    institution: 'Bachelor of Science, Computer Science · Algoma University',
+    year: 'Graduated December 2025',
+    body:
+      "Dean's List 2023 & 2024 (scholarship recipient) · Focus: software engineering, data structures, algorithms and collaborative projects.",
   },
   'sub-education-cs50x': {
     institution: 'Harvard CS50x',
-    year: 'Certificate track',
-    body: 'Intro to CS — C, Python, algorithms, and low-level thinking.',
+    year: 'Certificate',
+    body:
+      "Harvard's Introduction to Computer Science. Covered C, Python, SQL, web development and algorithms.",
   },
   'sub-education-cs50w': {
     institution: 'Harvard CS50W',
-    year: 'Certificate track',
-    body: 'Web programming with Django, JavaScript, and scalable design.',
+    year: 'Certificate',
+    body:
+      "Harvard's Web Programming with Python and JavaScript. Built full-stack apps with Django, React and SQL.",
   },
   'sub-education-microsoft-365': {
-    institution: 'Microsoft 365 Fundamentals',
+    institution: 'Microsoft 365 Certified',
     year: 'Certification',
-    body: 'Cloud productivity fundamentals and org-wide tooling.',
-  },
-  "sub-education-dean-s-list-2023": {
-    institution: "Dean's List",
-    year: '2023',
-    body: 'Academic excellence for the 2023 academic year.',
-  },
-  "sub-education-dean-s-list-2024": {
-    institution: "Dean's List",
-    year: '2024',
-    body: 'Academic excellence for the 2024 academic year.',
+    body: 'Covers productivity tools, cloud collaboration and enterprise software.',
   },
   'sub-startups-studenzbit': {
-    description: 'Student-focused platform for notes, tools, and community.',
-    tech: ['React', 'TypeScript', 'Supabase'],
+    description:
+      'Canada-first content platform helping international students navigate life in Canada. Affiliate monetized, SEO-optimized, 16+ blog pages.',
+    tech: ['Next.js', 'Supabase', 'GA4', 'Amazon Associates'],
     liveUrl: 'https://studenzbit.com',
   },
-  'sub-startups-recurlist': {
-    description: 'Recurring tasks & reminders with a lightweight workflow.',
-    tech: ['Next.js', 'PostgreSQL'],
-  },
   'sub-startups-digifixr': {
-    description: 'Digital fixes & small-business web support.',
-    tech: ['React', 'Vercel'],
+    description:
+      'GTA-focused web agency targeting local businesses. AI-powered lead generation pipeline using Claude API, n8n and cold outreach automation.',
+    tech: ['Claude API', 'n8n'],
   },
   'sub-projects-studenzbit': {
-    description: 'Full-stack product build with auth, data, and deploy pipeline.',
-    tech: ['React', 'Supabase', 'Vercel'],
+    description:
+      'Full-stack content platform for international students in Canada. Built with Next.js, Supabase, GA4 and Amazon Associates.',
+    tech: ['Next.js', 'Supabase', 'GA4'],
     liveUrl: 'https://studenzbit.com',
   },
   'sub-projects-recurlist': {
-    description: 'Productized recurrence engine with clean UX.',
-    tech: ['Next.js', 'Tailwind'],
-  },
-  'sub-projects-laundry-mgmt': {
-    description: 'Operations tooling for laundry workflow tracking.',
-    tech: ['React', 'Node'],
+    description:
+      'React Native grocery app with recurring lists, Canadian price comparison across 9 stores and a credit card rewards engine.',
+    tech: ['React Native', 'Expo', 'Supabase'],
   },
   'sub-projects-fixxo': {
-    description: 'Repair / service workflow experiment.',
-    tech: ['TypeScript'],
+    description:
+      'Human-powered AI task concierge for the GTA. One text — we handle the rest. Built with WhatsApp Business API.',
+    tech: ['WhatsApp Business API'],
+  },
+  'sub-projects-task-manager': {
+    description:
+      'Brutalist-designed mobile task app. Zero friction capture, recurring schedules, Brain Dump and 4 views. React Native + Supabase.',
+    tech: ['React Native', 'Supabase'],
+  },
+  'sub-projects-sentrymind': {
+    description:
+      'AI-powered SRE tool for Vercel/Supabase/Next.js stacks. Uses Claude API for incident detection and automated fix suggestions.',
+    tech: ['Next.js', 'Claude API', 'Supabase'],
+  },
+  'sub-projects-whatsapp-clone': {
+    description:
+      'Full-stack real-time messaging app with auth, chat rooms and live updates. Built with React, Node.js and WebSockets.',
+    tech: ['React', 'Node.js', 'WebSockets'],
+  },
+  'sub-projects-twitter-bot': {
+    description:
+      'Automated content bot that posts daily CS/Python concepts. Built with Python and Twitter API v2.',
+    tech: ['Python', 'Twitter API v2'],
+  },
+  'sub-projects-portfolio-website': {
+    description:
+      'This site. Built with React, Vite, TypeScript, Tailwind, Three.js knowledge graph and GSAP animations.',
+    tech: ['React', 'Vite', 'TypeScript', 'Three.js', 'GSAP'],
   },
   'sub-skills-frontend': {
     skillLevel: 'Production Ready',
-    usedIn: ['StudenzBit', 'Portfolio', 'Client sites'],
+    description: 'UI development — web and mobile interfaces with modern frameworks.',
   },
   'sub-skills-backend': {
     skillLevel: 'Production Ready',
-    usedIn: ['APIs', 'StudenzBit'],
+    description: 'Server-side development — APIs, databases, auth and serverless functions.',
   },
   'sub-skills-database': {
     skillLevel: 'Production Ready',
-    usedIn: ['StudenzBit', 'Side projects'],
+    description: 'Relational and realtime databases — schema design, migrations and queries.',
   },
   'sub-skills-devops': {
-    skillLevel: 'Learning',
-    usedIn: ['CI/CD', 'Docker deploys'],
+    skillLevel: 'Production Ready',
+    description: 'Deployment, automation and AI-powered workflow tooling.',
+  },
+  /* Internal copy for Currently Learning nodes — not shown in UI when skipDetail is set */
+  'sub-learning-aws': { description: 'Cloud fundamentals — EC2, S3, Lambda, IAM and deployment pipelines.' },
+  'sub-learning-system-design': {
+    description: 'Scalable architecture patterns, distributed systems and real-world design interviews.',
+  },
+  'sub-learning-machine-learning': {
+    description: 'Supervised/unsupervised learning, model training, evaluation and real-world applications.',
+  },
+  'sub-learning-artificial-intelligence': {
+    description: 'LLMs, prompt engineering, AI tool integration and applied AI development.',
   },
   'sub-achievements-top-150-canada': {
-    context: 'National sales ranking — Rogers ecosystem',
+    context:
+      'Ranked Top 150 Wireless Sales Associate Nationally — achieved in Q4 2023 and Q1 2024 at Staples Canada.',
   },
   'sub-achievements-top-3-gta': {
-    context: 'Regional performance — GTA',
+    context:
+      'Ranked Top 3 Wireless Sales Associate in the GTA District at Staples Canada — for wireless sales across Bell, Virgin Plus and Lucky Mobile.',
   },
   'sub-achievements-top-seller-rogers': {
-    context: 'Top seller recognition',
+    context:
+      'Top performer at Rogers Communications for wireless sales across Rogers, Fido and Chatr brands — including top Rogers Mastercard activations.',
   },
   'sub-achievements-acting-manager': {
-    context: 'Acting management coverage',
+    context:
+      'MOD (Manager on Duty) · Ran daily store operations, supervised team, managed scheduling and handled escalations at Rogers Communications.',
   },
-  "sub-achievements-dean-s-list": {
-    context: 'Academic recognition',
+  'sub-achievements-dean-s-list': {
+    context:
+      "Dean's List recipient 2023 & 2024 at Algoma University · Awarded Dean's List Scholarship both years for academic excellence.",
   },
-  'sub-languages-english': { flag: '🇬🇧', fluency: 'Fluent' },
-  'sub-languages-hindi': { flag: '🇮🇳', fluency: 'Fluent' },
-  'sub-languages-gujarati': { flag: '🇮🇳', fluency: 'Conversational' },
+  'sub-languages-english': {
+    flag: '🇬🇧',
+    fluency: 'Fluent · Primary language for all professional and academic work',
+  },
+  'sub-languages-hindi': { flag: '🇮🇳', fluency: 'Fluent · Native language, spoken at home and in community' },
+  'sub-languages-gujarati': {
+    flag: '🇮🇳',
+    fluency: 'Fluent · Native language, spoken in family and cultural settings',
+  },
+  'sub-languages-french': { flag: '🇫🇷', fluency: 'Beginner · Currently learning basics' },
 };
 
 const LEAF_DETAIL: Record<
   string,
   { level: 'Production Ready' | 'Learning'; usedIn: string[] }
 > = {
+  'leaf-sub-skills-backend-node-js': { level: 'Production Ready', usedIn: ['APIs', 'Services'] },
+  'leaf-sub-skills-backend-python': { level: 'Production Ready', usedIn: ['Bots', 'Automation'] },
+  'leaf-sub-skills-backend-rest-apis': { level: 'Production Ready', usedIn: ['StudenzBit', 'APIs'] },
+  'leaf-sub-skills-backend-express': { level: 'Production Ready', usedIn: ['Node services'] },
+  'leaf-sub-skills-backend-supabase': { level: 'Production Ready', usedIn: ['StudenzBit', 'RecurList'] },
+  'leaf-sub-skills-backend-edge-functions': { level: 'Production Ready', usedIn: ['Supabase'] },
   'leaf-sub-skills-frontend-react': { level: 'Production Ready', usedIn: ['StudenzBit', 'Portfolio'] },
-  'leaf-sub-skills-frontend-next-js': { level: 'Production Ready', usedIn: ['Portfolio', 'StudenzBit'] },
+  'leaf-sub-skills-frontend-next-js': { level: 'Production Ready', usedIn: ['StudenzBit', 'SentryMind'] },
   'leaf-sub-skills-frontend-typescript': { level: 'Production Ready', usedIn: ['All active repos'] },
-  'leaf-sub-skills-frontend-tailwind': { level: 'Production Ready', usedIn: ['Portfolio'] },
-  'leaf-sub-skills-frontend-d3-js': { level: 'Learning', usedIn: ['Universe viz'] },
-  'leaf-sub-skills-backend-node-js': { level: 'Production Ready', usedIn: ['APIs'] },
-  'leaf-sub-skills-backend-express': { level: 'Production Ready', usedIn: ['Services'] },
-  'leaf-sub-skills-backend-python': { level: 'Learning', usedIn: ['Scripts'] },
-  'leaf-sub-skills-backend-rest-apis': { level: 'Production Ready', usedIn: ['StudenzBit'] },
+  'leaf-sub-skills-frontend-tailwind-css': { level: 'Production Ready', usedIn: ['Portfolio', 'Web'] },
+  'leaf-sub-skills-frontend-react-native': { level: 'Production Ready', usedIn: ['RecurList', 'Task Manager'] },
+  'leaf-sub-skills-frontend-vite': { level: 'Production Ready', usedIn: ['Portfolio'] },
   'leaf-sub-skills-database-postgresql': { level: 'Production Ready', usedIn: ['StudenzBit'] },
-  'leaf-sub-skills-database-supabase': { level: 'Production Ready', usedIn: ['StudenzBit'] },
-  'leaf-sub-skills-database-mongodb': { level: 'Learning', usedIn: ['Experiments'] },
-  'leaf-sub-skills-devops-docker': { level: 'Learning', usedIn: ['Local dev'] },
-  'leaf-sub-skills-devops-vercel': { level: 'Production Ready', usedIn: ['Deploys'] },
+  'leaf-sub-skills-database-supabase': { level: 'Production Ready', usedIn: ['StudenzBit', 'RecurList'] },
+  'leaf-sub-skills-database-firebase': { level: 'Production Ready', usedIn: ['Mobile / sync'] },
+  'leaf-sub-skills-database-sql': { level: 'Production Ready', usedIn: ['Reporting'] },
+  'leaf-sub-skills-database-realtime-db': { level: 'Production Ready', usedIn: ['Live data'] },
   'leaf-sub-skills-devops-git': { level: 'Production Ready', usedIn: ['All projects'] },
-  'leaf-sub-skills-devops-github-actions': { level: 'Learning', usedIn: ['CI'] },
+  'leaf-sub-skills-devops-github': { level: 'Production Ready', usedIn: ['Version control', 'CI'] },
+  'leaf-sub-skills-devops-vercel': { level: 'Production Ready', usedIn: ['Deploys'] },
+  'leaf-sub-skills-devops-eas': { level: 'Production Ready', usedIn: ['Expo builds'] },
+  'leaf-sub-skills-devops-n8n': { level: 'Production Ready', usedIn: ['Digifixr automation'] },
+  'leaf-sub-skills-devops-claude-api': { level: 'Production Ready', usedIn: ['AI tooling'] },
 };
 
 const pillStyle: CSSProperties = {
@@ -322,17 +394,24 @@ function UniverseDetailBody({ node, byId }: { node: Node; byId: Map<string, Node
     return (
       <div>
         <p style={{ ...muted, marginBottom: 8 }}>
-          <span
-            style={{
-              ...pillStyle,
-              background: `${catColor}22`,
-              color: catColor,
-              borderColor: `${catColor}44`,
-            }}
-          >
-            {d.badge}
-          </span>{' '}
-          · {d.dates}
+          {d.badge ? (
+            <span
+              style={{
+                ...pillStyle,
+                background: `${catColor}22`,
+                color: catColor,
+                borderColor: `${catColor}44`,
+              }}
+            >
+              {d.badge}
+            </span>
+          ) : null}
+          {d.dates ? (
+            <>
+              {' '}
+              · {d.dates}
+            </>
+          ) : null}
         </p>
         <p style={heading}>{d.title ?? node.label}</p>
         <ul style={{ ...muted, paddingLeft: 18, margin: '0 0 12px' }}>
@@ -419,14 +498,19 @@ function UniverseDetailBody({ node, byId }: { node: Node; byId: Map<string, Node
             <span style={{ ...pillStyle, color: catColor, borderColor: `${catColor}44` }}>{d.skillLevel}</span>
           </div>
         </div>
-        <p style={muted}>Used in:</p>
-        <div>
-          {(d.usedIn ?? []).map((t) => (
-            <span key={t} style={pillStyle}>
-              {t}
-            </span>
-          ))}
-        </div>
+        {d.description ? <p style={{ ...muted, marginBottom: 12 }}>{d.description}</p> : null}
+        {(d.usedIn ?? []).length > 0 ? (
+          <>
+            <p style={muted}>Used in:</p>
+            <div>
+              {(d.usedIn ?? []).map((t) => (
+                <span key={t} style={pillStyle}>
+                  {t}
+                </span>
+              ))}
+            </div>
+          </>
+        ) : null}
       </div>
     );
   }
@@ -470,6 +554,7 @@ function UniverseDetailBody({ node, byId }: { node: Node; byId: Map<string, Node
 
 function subOneLineBlurb(node: Node): string {
   const d = SUB_DETAIL[node.id];
+  if (node.openUrl) return node.openUrl;
   return (
     d?.description ??
     d?.body ??
@@ -560,36 +645,61 @@ export function Universe() {
     ];
 
     const subGroups: Record<string, string[]> = {
-      education: ["CS Degree", 'CS50x', 'CS50W', 'Microsoft 365', "Dean's List 2023", "Dean's List 2024"],
-      experience: ['Rogers Communications', 'Freelance', 'Staples Canada', 'Walmart Canada'],
-      startups: ['StudenzBit', 'RecurList', 'Digifixr'],
-      projects: ['StudenzBit', 'RecurList', 'Laundry Mgmt', 'FIXXO'],
+      education: ['CS Degree', 'CS50x', 'CS50W', 'Microsoft 365'],
+      experience: ['Staples Canada', 'Rogers Communications', 'Walmart Canada', 'Freelance'],
+      startups: ['StudenzBit', 'Digifixr'],
+      projects: [
+        'StudenzBit',
+        'RecurList',
+        'FIXXO',
+        'Task Manager',
+        'SentryMind',
+        'WhatsApp Clone',
+        'Twitter Bot',
+        'Portfolio Website',
+      ],
       skills: ['Frontend', 'Backend', 'Database', 'DevOps'],
       achievements: ['Top 150 Canada', 'Top 3 GTA', 'Top Seller Rogers', 'Acting Manager', "Dean's List"],
-      languages: ['English', 'Hindi', 'Gujarati'],
-      location: ['Brampton ON', 'GTA Wide', 'Remote', 'Open to Relocation'],
+      languages: ['English', 'Hindi', 'Gujarati', 'French'],
+      location: ['Brampton ON', 'GTA, Ontario', 'Remote', 'Open to Relocation'],
       presence: ['GitHub', 'LinkedIn', 'X', 'hetppatel.dev'],
-      learning: ['AWS', 'System Design', 'NeetCode 150', 'React Native'],
+      learning: ['AWS', 'System Design', 'Machine Learning', 'Artificial Intelligence'],
     };
 
     Object.entries(subGroups).forEach(([categoryId, labels]) => {
       labels.forEach((label) => {
+        const id = `sub-${categoryId}-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+        const isCsDegree = categoryId === 'education' && label === 'CS Degree';
         base.push({
-          id: `sub-${categoryId}-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+          id,
           label,
           type: 'sub',
           parent: categoryId,
           color: '#A8A8B8',
-          size: 8,
+          size: isCsDegree ? 12 : 8,
+          ...(PRESENCE_URLS[id] ? { openUrl: PRESENCE_URLS[id] } : {}),
+          ...(categoryId === 'learning' || categoryId === 'location' ? { skipDetail: true } : {}),
         });
       });
     });
 
+    base.push({
+      id: 'sub-learning-einstein-quote',
+      label: '',
+      type: 'sub',
+      parent: 'learning',
+      color: '#A8A8B8',
+      size: 2,
+      skipDetail: true,
+      labelAnchorOnly: true,
+      quoteText: '"The more I learn, the more I realize how much I don\'t know." — Einstein',
+    });
+
     const leafGroups: Record<string, string[]> = {
-      'sub-skills-frontend': ['React', 'Next.js', 'TypeScript', 'Tailwind', 'D3.js'],
-      'sub-skills-backend': ['Node.js', 'Express', 'Python', 'REST APIs'],
-      'sub-skills-database': ['PostgreSQL', 'Supabase', 'MongoDB'],
-      'sub-skills-devops': ['Docker', 'Vercel', 'Git', 'GitHub Actions'],
+      'sub-skills-backend': ['Node.js', 'Python', 'REST APIs', 'Express', 'Supabase', 'Edge Functions'],
+      'sub-skills-frontend': ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'React Native', 'Vite'],
+      'sub-skills-database': ['PostgreSQL', 'Supabase', 'Firebase', 'SQL', 'Realtime DB'],
+      'sub-skills-devops': ['Git', 'GitHub', 'Vercel', 'EAS', 'n8n', 'Claude API'],
     };
 
     Object.entries(leafGroups).forEach(([parent, labels]) => {
@@ -878,13 +988,15 @@ export function Universe() {
         root = group;
         categoryMeshes.push(mesh);
       } else {
-        const geometry = new THREE.CircleGeometry(node.size, 64);
+        const anchorOnly = node.type === 'sub' && node.labelAnchorOnly === true;
+        const radius = anchorOnly ? 0.08 : node.size;
+        const geometry = new THREE.CircleGeometry(Math.max(radius, 0.08), 64);
         disposableGeometries.push(geometry);
         const material = new THREE.MeshBasicMaterial({
           color: node.type === 'sub' ? SUB_MESH_BASE_COLOR : node.color,
           side: THREE.DoubleSide,
           transparent: node.type === 'sub' || node.type === 'leaf',
-          opacity: 0,
+          opacity: anchorOnly ? 0 : 0,
         });
         disposableMaterials.push(material);
         mesh = new THREE.Mesh(geometry, material);
@@ -896,7 +1008,9 @@ export function Universe() {
           parentId: node.parent,
           type: node.type,
         };
-        if (node.type === 'sub') {
+        if (anchorOnly) {
+          mesh.visible = false;
+        } else if (node.type === 'sub') {
           subMeshes.push(mesh);
         } else {
           leafMeshes.push(mesh);
@@ -904,7 +1018,9 @@ export function Universe() {
       }
 
       root.position.set(node.x, node.y, node.z);
-      mesh.visible = node.type === 'center' || node.type === 'category';
+      mesh.visible = node.labelAnchorOnly
+        ? false
+        : node.type === 'center' || node.type === 'category';
       graphGroup.add(root);
       sceneNodesById.set(node.id, { data: node, root, mesh, ringMesh });
     });
@@ -1074,6 +1190,11 @@ export function Universe() {
         const id = (subHit.object.userData.nodeId ?? subHit.object.userData.id) as string;
         const hitNode = nodeById.get(id);
         if (hitNode?.type === 'sub') {
+          if (hitNode.openUrl) {
+            window.open(hitNode.openUrl, '_blank', 'noopener,noreferrer');
+            return;
+          }
+          if (hitNode.skipDetail) return;
           subHit.object.getWorldPosition(world);
           openDetailAtWorld(hitNode, world, true);
         }
@@ -1239,6 +1360,12 @@ export function Universe() {
           let targetOpacity = 0;
           let shouldBeVisible = false;
 
+          if (data.type === 'sub' && data.labelAnchorOnly) {
+            mesh.visible = false;
+            material.opacity = 0;
+            return;
+          }
+
           if (fid) {
             if (data.type === 'sub') {
               if (data.parent === fid) {
@@ -1287,6 +1414,7 @@ export function Universe() {
 
       sceneNodesById.forEach(({ data, mesh }) => {
         if (data.type !== 'sub') return;
+        if (data.labelAnchorOnly) return;
         const mat = mesh.material as THREE.MeshBasicMaterial;
         const pid = data.parent;
         const cat = pid ? nodeById.get(pid) : undefined;
@@ -1311,6 +1439,7 @@ export function Universe() {
           return;
         }
         if (data.type === 'sub') {
+          if (data.labelAnchorOnly) return;
           const hovered = hoveredSubId === data.id && mesh.visible;
           let h = hovered ? 1.15 : 1;
           h = Math.min(HOVER_MAX_SCALE, h);
@@ -1379,7 +1508,12 @@ export function Universe() {
         const yBelow = (-labelBelowScratch.y * 0.5 + 0.5) * ch + 10;
 
         const inFront = tmp.z >= -1 && tmp.z <= 1;
-        const visMesh = node.type === 'center' || node.type === 'category' ? true : sceneNode.mesh.visible;
+        let visMesh = node.type === 'center' || node.type === 'category' ? true : sceneNode.mesh.visible;
+        if (node.quoteText) {
+          visMesh =
+            focusCatRef.current === 'learning' ||
+            (!focusCatRef.current && nearestCategoryId === 'learning' && cameraDistance < 260);
+        }
         const visible = inFront && visMesh;
 
         label.style.display = visible ? 'block' : 'none';
@@ -1391,7 +1525,11 @@ export function Universe() {
         label.style.filter = 'none';
 
         if (node.type === 'sub') {
-          label.style.opacity = cameraDistance < 200 ? '0.8' : '0';
+          if (node.quoteText) {
+            label.style.opacity = visMesh ? '0.95' : '0';
+          } else {
+            label.style.opacity = cameraDistance < 200 ? '0.8' : '0';
+          }
           label.style.color = hoveredSubId === node.id && node.parent ? (nodeById.get(node.parent)?.color ?? '#A8A8B8') : '#A8A8B8';
         } else {
           label.style.opacity = '1';
@@ -1598,13 +1736,25 @@ export function Universe() {
                     }}
                     style={{
                       ...baseLabel,
-                      fontSize: '10px',
-                      color: '#A8A8B8',
-                      fontWeight: 600,
-                      transition: 'opacity 0.3s ease',
+                      ...(node.quoteText
+                        ? {
+                            fontSize: '11px',
+                            color: '#9CA3AF',
+                            fontStyle: 'italic',
+                            fontWeight: 500,
+                            whiteSpace: 'normal',
+                            maxWidth: 220,
+                            lineHeight: 1.35,
+                          }
+                        : {
+                            fontSize: '10px',
+                            color: '#A8A8B8',
+                            fontWeight: 600,
+                            transition: 'opacity 0.3s ease',
+                          }),
                     }}
                   >
-                    {node.label}
+                    {node.quoteText ?? node.label}
                   </div>
                 );
               }
