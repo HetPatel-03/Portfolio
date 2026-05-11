@@ -226,16 +226,9 @@ export function Navbar() {
           href="/resume"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-shrink-0 whitespace-nowrap"
-          style={{
-            color: '#C8F135',
-            fontFamily: 'monospace',
-            fontSize: '12px',
-            textDecoration: 'none',
-            letterSpacing: '0.08em',
-            border: '1px solid #C8F135',
-            padding: '6px 14px',
-          }}
+          className={`flex-shrink-0 whitespace-nowrap rounded-full border border-[#C8F135] bg-transparent font-mono text-[12px] tracking-[0.08em] text-[#C8F135] no-underline transition-all duration-200 hover:scale-105 ${
+            isMobile ? 'px-4 py-1.5' : 'px-5 py-2'
+          }`}
         >
           resume
         </a>

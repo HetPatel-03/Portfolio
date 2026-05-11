@@ -321,36 +321,14 @@ export function Contact() {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => window.open('/Resume.pdf', '_blank')}
-              className="w-full mt-4"
-              style={{
-                marginTop: '16px',
-                width: '100%',
-                padding: '14px',
-                borderRadius: '12px',
-                background: 'rgba(161,230,206,0.12)',
-                border: '1px solid rgba(161,230,206,0.35)',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
-                color: '#A1E6CE',
-                fontFamily: 'JetBrains Mono',
-                fontSize: '13px',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(161,230,206,0.2)';
-                e.currentTarget.style.borderColor = 'rgba(161,230,206,0.5)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(161,230,206,0.12)';
-                e.currentTarget.style.borderColor = 'rgba(161,230,206,0.35)';
-              }}
+            <a
+              href="/resume"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 flex w-full items-center justify-center rounded-full border border-[#C8F135] bg-transparent px-5 py-3 font-mono text-[13px] tracking-[0.08em] text-[#C8F135] no-underline transition-all duration-200 hover:scale-[1.02] hover:bg-[#C8F135]/10"
             >
               ↓ Download Resume
-            </button>
+            </a>
           </div>
         </div>
 
