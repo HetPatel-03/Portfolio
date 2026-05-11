@@ -703,6 +703,10 @@ export default function TaskManagerProjectPage() {
         @media (max-width: 899px) {
           .tm-science-grid > div:not(:last-child) { border-bottom: ${BORDER}; }
         }
+        .tm-section-flush-footer {
+          padding-bottom: 0;
+          border-bottom: none;
+        }
       `}</style>
 
       <header
@@ -1128,7 +1132,7 @@ export default function TaskManagerProjectPage() {
           </p>
         </section>
 
-        <section className="tm-section">
+        <section className="tm-section tm-section-flush-footer">
           <div
             className="tm-label-purple"
             style={{ ...mono, fontSize: 12, fontWeight: 600, marginBottom: '1rem' }}
@@ -1184,47 +1188,125 @@ export default function TaskManagerProjectPage() {
         </section>
       </main>
 
-      <footer
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '1rem',
-          padding: '1.5rem 2rem',
-          borderTop: BORDER,
-          background: FG,
-          color: BG,
-        }}
-      >
-        <span style={{ ...mono, fontSize: 12, color: BG }}>PROJ / 03 · TASK MANAGER · 2026</span>
+      <footer style={{ margin: 0, padding: 0, width: '100%' }}>
         <div
           style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            gap: '1.5rem',
-            marginLeft: 'auto',
+            position: 'relative',
+            width: '100%',
+            overflow: 'hidden',
           }}
         >
-          <span style={{ ...mono, fontSize: 11, color: BG, opacity: 0.9 }}>
-            built different. on purpose.
-          </span>
-          <button
-            type="button"
-            onClick={backToProjects}
+          <img
+            src="/taskmanager-footer.png"
+            alt="Task Manager workspace illustration"
             style={{
-              ...mono,
-              fontSize: 12,
-              background: 'none',
-              border: 'none',
-              padding: 0,
-              color: BG,
-              cursor: 'pointer',
+              display: 'block',
+              width: '100%',
+              height: 'auto',
+              verticalAlign: 'top',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              top: '5%',
+              left: '33%',
+              width: '55%',
+              boxSizing: 'border-box',
             }}
           >
-            ← back to projects
-          </button>
+            <div
+              aria-hidden
+              style={{
+                fontSize: 48,
+                fontWeight: 700,
+                color: CRIMSON,
+                lineHeight: 1,
+                marginBottom: '0.15em',
+                ...mono,
+              }}
+            >
+              &quot;
+            </div>
+            <div
+              style={{
+                ...mono,
+                fontWeight: 700,
+                color: FG,
+                fontSize: 'clamp(14px, 1.8vw, 22px)',
+                letterSpacing: '-0.02em',
+                lineHeight: 1.3,
+              }}
+            >
+              <span style={{ display: 'block' }}>Most tasks don&apos;t fail</span>
+              <span style={{ display: 'block' }}>at execution.</span>
+              <span style={{ display: 'block', color: CRIMSON }}>They fail at capture.</span>
+            </div>
+            <p
+              style={{
+                ...mono,
+                margin: '0.75rem 0 0',
+                fontSize: 10,
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: FG,
+                opacity: 0.4,
+              }}
+            >
+              — Task Manager, 2024
+            </p>
+          </div>
+        </div>
+
+        <div
+          style={{
+            width: '100%',
+            boxSizing: 'border-box',
+            background: FG,
+            padding: '16px 32px',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 16,
+          }}
+        >
+          <span
+            style={{
+              ...mono,
+              display: 'inline-flex',
+              alignItems: 'center',
+              fontSize: 11,
+              fontWeight: 700,
+              color: BG,
+              letterSpacing: '0.12em',
+            }}
+          >
+            <span
+              aria-hidden
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                background: PURPLE,
+                marginRight: 8,
+                flexShrink: 0,
+              }}
+            />
+            TASK MANAGER
+          </span>
+          <span
+            style={{
+              ...mono,
+              fontSize: 11,
+              fontWeight: 400,
+              color: CRIMSON,
+              letterSpacing: '0.08em',
+            }}
+          >
+            Kill the Friction.
+          </span>
         </div>
       </footer>
     </div>
