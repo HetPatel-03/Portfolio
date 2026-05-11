@@ -2417,6 +2417,38 @@ export default function StudenzBitDetail() {
             >
               — StudenzBit, 2026
             </p>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+              <a
+                href="/"
+                style={{
+                  border: '1.5px solid #0D9488',
+                  color: '#0D9488',
+                  background: 'transparent',
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  fontFamily: 'Inter, sans-serif',
+                  textDecoration: 'none',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                ← Back to Portfolio
+              </a>
+              <a
+                href="/projects/recurlist"
+                style={{
+                  background: '#0D9488',
+                  color: '#FDE8E8',
+                  border: 'none',
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  fontFamily: 'Inter, sans-serif',
+                  textDecoration: 'none',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                Next Project →
+              </a>
+            </div>
           </div>
         </div>
         <div
@@ -2466,136 +2498,6 @@ export default function StudenzBitDetail() {
         </div>
       </section>
 
-      {/* Section 10 — Next project */}
-      <section
-        className="sb-s10-pad"
-        style={{
-          background: '#FFF0F5',
-          minHeight: '50vh',
-          padding: '6rem 4rem',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          position: 'relative',
-          opacity: 1,
-        }}
-      >
-        <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '640px' }}>
-          <span
-            style={{
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 400,
-              fontSize: '0.65rem',
-              letterSpacing: '0.25em',
-              color: 'rgba(190,24,93,0.5)',
-              textTransform: 'uppercase',
-              marginBottom: '1rem',
-              display: 'block',
-            }}
-          >
-            THANKS FOR READING
-          </span>
-          <h2
-            style={{
-              margin: '0 0 0.5rem 0',
-              fontFamily: 'Unbounded, sans-serif',
-              fontWeight: 800,
-              fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-              color: '#3d0a1a',
-            }}
-          >
-            want to see more?
-          </h2>
-          <p
-            style={{
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 300,
-              fontSize: '0.9rem',
-              color: 'rgba(61,10,26,0.5)',
-              margin: '0 0 2.5rem 0',
-            }}
-          >
-            There&apos;s more where this came from.
-          </p>
-          <div
-            className="sb-s10-btns"
-            style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}
-          >
-            <a
-              href="https://portfolio-gules-kappa-5g75m34zuy.vercel.app/#"
-              style={{
-                background: 'transparent',
-                border: '1px solid rgba(61,10,26,0.2)',
-                borderRadius: '50px',
-                padding: '0.85rem 2rem',
-                fontFamily: 'DM Sans, sans-serif',
-                fontWeight: 400,
-                fontSize: '0.82rem',
-                color: '#3d0a1a',
-                textDecoration: 'none',
-                display: 'inline-block',
-                transition: 'background 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(61,10,26,0.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'transparent';
-              }}
-            >
-              ← Back to Portfolio
-            </a>
-            <a
-              href="#"
-              style={{
-                background: '#0D9488',
-                border: 'none',
-                borderRadius: '50px',
-                padding: '0.85rem 2rem',
-                fontFamily: 'DM Sans, sans-serif',
-                fontWeight: 400,
-                fontSize: '0.82rem',
-                color: 'white',
-                textDecoration: 'none',
-                display: 'inline-block',
-                boxShadow: '0 0 20px rgba(13,148,136,0.3)',
-                transition: 'background 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#0a7a70';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#0D9488';
-              }}
-            >
-              Next Project →
-            </a>
-          </div>
-          <div
-            style={{
-              marginTop: '3rem',
-              width: '60px',
-              height: '1px',
-              background: 'rgba(61,10,26,0.15)',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}
-          />
-          <p
-            style={{
-              margin: '1rem 0 0 0',
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 300,
-              fontSize: '0.7rem',
-              color: 'rgba(61,10,26,0.35)',
-            }}
-          >
-            Built by Het Patel · 2026
-          </p>
-        </div>
-      </section>
     </div>
   );
 }

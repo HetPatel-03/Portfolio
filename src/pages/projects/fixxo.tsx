@@ -1214,8 +1214,8 @@ export default function FixxoProjectPage() {
             style={{
               position: 'absolute',
               top: '50%',
-              left: '38%',
-              width: '52%',
+              left: '45%',
+              width: '45%',
               transform: 'translateY(-50%)',
               boxSizing: 'border-box',
             }}
@@ -1258,6 +1258,38 @@ export default function FixxoProjectPage() {
             >
               — FIXXO, 2026
             </p>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+              <a
+                href="/"
+                style={{
+                  border: '1.5px solid #00D4D4',
+                  color: '#00D4D4',
+                  background: 'transparent',
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  textDecoration: 'none',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                ← Back to Portfolio
+              </a>
+              <a
+                href="/projects/sentrymind"
+                style={{
+                  background: '#00D4D4',
+                  color: '#0D0F14',
+                  border: 'none',
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  textDecoration: 'none',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                Next Project →
+              </a>
+            </div>
           </div>
         </div>
         <div

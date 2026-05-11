@@ -705,6 +705,38 @@ export default function SentryMindProjectPage() {
             >
               — SentryMind, 2026
             </p>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+              <a
+                href="/"
+                style={{
+                  border: '1.5px solid #A78BFA',
+                  color: '#A78BFA',
+                  background: 'transparent',
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  fontFamily: "'Courier New', monospace",
+                  textDecoration: 'none',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                ← Back to Portfolio
+              </a>
+              <a
+                href="/projects/studenzbit"
+                style={{
+                  background: '#A78BFA',
+                  color: '#0D0D14',
+                  border: 'none',
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  fontFamily: "'Courier New', monospace",
+                  textDecoration: 'none',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                Next Project →
+              </a>
+            </div>
           </div>
         </div>
         <div

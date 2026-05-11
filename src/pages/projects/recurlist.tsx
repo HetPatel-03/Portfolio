@@ -1500,6 +1500,38 @@ export default function RecurListProjectPage() {
             >
               — RecurList, 2026
             </p>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+              <a
+                href="/"
+                style={{
+                  border: '1.5px solid #16A34A',
+                  color: '#16A34A',
+                  background: 'transparent',
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  textDecoration: 'none',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                ← Back to Portfolio
+              </a>
+              <a
+                href="/projects/taskmanager"
+                style={{
+                  background: '#16A34A',
+                  color: '#F0FBF4',
+                  border: 'none',
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  textDecoration: 'none',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                Next Project →
+              </a>
+            </div>
           </div>
         </div>
         <div

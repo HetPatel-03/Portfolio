@@ -1272,6 +1272,38 @@ export default function TaskManagerProjectPage() {
             >
               — Task Manager, 2026
             </p>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+              <a
+                href="/"
+                style={{
+                  border: '1.5px solid #C2185B',
+                  color: '#C2185B',
+                  background: 'transparent',
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  fontFamily: "'JetBrains Mono', monospace",
+                  textDecoration: 'none',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                ← Back to Portfolio
+              </a>
+              <a
+                href="/projects/fixxo"
+                style={{
+                  background: '#C2185B',
+                  color: '#F5F0E8',
+                  border: 'none',
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  fontFamily: "'JetBrains Mono', monospace",
+                  textDecoration: 'none',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                Next Project →
+              </a>
+            </div>
           </div>
         </div>
 
