@@ -14,13 +14,30 @@ export function Contact() {
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
   });
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Form submission logic would go here
-    console.log('Form submitted:', formData);
+    setStatus('loading');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
   };
 
   const contactMethods = [
@@ -214,27 +231,37 @@ export function Contact() {
               {/* Submit Button */}
               <button
                 type="submit"
+                disabled={status === 'loading'}
                 className="w-full py-3 rounded-full transition-all duration-200 hover:scale-[1.02]"
                 style={{
                   background: '#F2664A',
                   color: '#0C0C10',
                   fontFamily: 'DM Sans',
-                  fontWeight: 500
+                  fontWeight: 500,
+                  opacity: status === 'loading' ? 0.7 : 1,
+                  cursor: status === 'loading' ? 'not-allowed' : 'pointer',
                 }}
               >
-                Send message ✈
+                {status === 'loading'
+                  ? 'Sending...'
+                  : status === 'success'
+                    ? 'Message sent ✓'
+                    : 'Send message →'}
               </button>
 
-              {/* Footer Note */}
-              <p 
-                className="text-[11px] text-center mt-2"
-                style={{
-                  color: 'var(--text-muted)',
-                  fontFamily: 'var(--font-mono)'
-                }}
-              >
-                // form is not wired to a backend — portfolio demo
-              </p>
+              {status === 'error' && (
+                <p
+                  style={{
+                    color: '#F2664A',
+                    fontFamily: 'monospace',
+                    fontSize: '12px',
+                    marginTop: '8px',
+                    textAlign: 'center',
+                  }}
+                >
+                  Something went wrong. Try emailing directly at hetppatel.cs@gmail.com
+                </p>
+              )}
             </form>
           </div>
 
