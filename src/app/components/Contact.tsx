@@ -325,9 +325,39 @@ export function Contact() {
               href="/resume"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 flex w-full items-center justify-center rounded-full border border-[#C8F135] bg-transparent px-5 py-3 font-mono text-[13px] tracking-[0.08em] text-[#C8F135] no-underline transition-all duration-200 hover:scale-[1.02] hover:bg-[#C8F135]/10"
+              className="mt-4"
+              style={{
+                width: '100%',
+                color: '#C8F135',
+                fontFamily: 'monospace',
+                fontSize: '13px',
+                textDecoration: 'none',
+                letterSpacing: '0.08em',
+                border: '1px solid rgba(200, 241, 53, 0.4)',
+                padding: '14px 24px',
+                borderRadius: '12px',
+                background: 'rgba(200, 241, 53, 0.07)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                transition: 'all 0.2s ease',
+                cursor: 'pointer',
+                boxSizing: 'border-box',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(200, 241, 53, 0.14)';
+                e.currentTarget.style.border = '1px solid rgba(200, 241, 53, 0.7)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(200, 241, 53, 0.07)';
+                e.currentTarget.style.border = '1px solid rgba(200, 241, 53, 0.4)';
+              }}
             >
-              ↓ Download Resume
+              <span aria-hidden>↓</span>
+              <span>Download Resume</span>
             </a>
           </div>
         </div>

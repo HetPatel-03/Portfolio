@@ -226,9 +226,27 @@ export function Navbar() {
           href="/resume"
           target="_blank"
           rel="noopener noreferrer"
-          className={`flex-shrink-0 whitespace-nowrap rounded-full border border-[#C8F135] bg-transparent font-mono text-[12px] tracking-[0.08em] text-[#C8F135] no-underline transition-all duration-200 hover:scale-105 ${
-            isMobile ? 'px-4 py-1.5' : 'px-5 py-2'
-          }`}
+          className="flex-shrink-0 whitespace-nowrap"
+          style={{
+            color: '#C8F135',
+            fontFamily: 'inherit',
+            fontSize: '13px',
+            textDecoration: 'none',
+            letterSpacing: '0.05em',
+            border: '1px solid rgba(200, 241, 53, 0.4)',
+            padding: '6px 16px',
+            borderRadius: '20px',
+            background: 'rgba(200, 241, 53, 0.08)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            transition: 'all 0.2s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(200, 241, 53, 0.15)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(200, 241, 53, 0.08)';
+          }}
         >
           resume
         </a>
