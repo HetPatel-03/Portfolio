@@ -5,6 +5,7 @@ import App from './app/App.tsx';
 import RecurListProjectPage from './pages/projects/recurlist.tsx';
 import TaskManagerProjectPage from './pages/projects/taskmanager.tsx';
 import SentryMindProjectPage from './pages/projects/sentrymind.tsx';
+import FixxoProjectPage from './pages/projects/fixxo.tsx';
 import './styles/index.css';
 
 createRoot(document.getElementById('root')!).render(
@@ -14,6 +15,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path="/projects/recurlist" element={<RecurListProjectPage />} />
       <Route path="/projects/taskmanager" element={<TaskManagerProjectPage />} />
       <Route path="/projects/sentrymind" element={<SentryMindProjectPage />} />
+      <Route path="/projects/fixxo" element={<FixxoProjectPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   </BrowserRouter>
