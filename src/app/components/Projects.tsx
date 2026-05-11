@@ -17,6 +17,7 @@ type Project = {
 const GAP_PX = 24;
 
 const routePrefetchers: Record<string, () => Promise<unknown>> = {
+  '/projects/studenzbit': () => import('./StudenzBitDetail.jsx'),
   '/projects/recurlist': () => import('../../pages/projects/recurlist.tsx'),
   '/projects/taskmanager': () => import('../../pages/projects/taskmanager.tsx'),
   '/projects/fixxo': () => import('../../pages/projects/fixxo.tsx'),
@@ -37,7 +38,7 @@ export function Projects() {
       status: 'live',
       views: '214',
       statusTone: 'live',
-      pageHref: '#studenzbit',
+      pageHref: '/projects/studenzbit',
     },
     {
       id: 'PROJ / 02',

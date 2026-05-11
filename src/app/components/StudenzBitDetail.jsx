@@ -409,7 +409,7 @@ export default function StudenzBitDetail() {
         >
           <a
             ref={portfolioLinkRef}
-            href="https://portfolio-gules-kappa-5g75m34zuy.vercel.app/#"
+            href="/"
             style={{
               display: 'inline-block',
               marginBottom: '1.2rem',

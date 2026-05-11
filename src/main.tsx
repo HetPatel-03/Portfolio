@@ -8,6 +8,7 @@ const RecurListProjectPage = lazy(() => import('./pages/projects/recurlist.tsx')
 const TaskManagerProjectPage = lazy(() => import('./pages/projects/taskmanager.tsx'));
 const SentryMindProjectPage = lazy(() => import('./pages/projects/sentrymind.tsx'));
 const FixxoProjectPage = lazy(() => import('./pages/projects/fixxo.tsx'));
+const StudenzBitProjectPage = lazy(() => import('./app/components/StudenzBitDetail.jsx'));
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
@@ -24,6 +25,7 @@ createRoot(document.getElementById('root')!).render(
     >
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/projects/studenzbit" element={<StudenzBitProjectPage />} />
         <Route path="/projects/recurlist" element={<RecurListProjectPage />} />
         <Route path="/projects/taskmanager" element={<TaskManagerProjectPage />} />
         <Route path="/projects/sentrymind" element={<SentryMindProjectPage />} />
