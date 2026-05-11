@@ -75,7 +75,7 @@ export default async function handler(req: Request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Portfolio Contact <onboarding@resend.dev>',
+        from: 'Portfolio Contact <no-reply@hetppatel.dev>',
         to: ['hetppatel.cs@gmail.com'],
         reply_to: email,
         subject: `[Portfolio] ${subject}`,
