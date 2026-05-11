@@ -512,12 +512,12 @@ export default function TaskManagerProjectPage() {
         .tm-main {
           max-width: 1120px;
           margin: 0 auto;
-          padding: 2rem;
+          padding: 2rem 2rem 0 2rem;
           border-left: ${BORDER};
         }
         @media (max-width: 640px) {
           .tm-nav { padding: 1rem 1.25rem; }
-          .tm-main { padding: 1.25rem; }
+          .tm-main { padding: 1.25rem 1.25rem 0 1.25rem; }
         }
         .tm-section {
           padding: 1.5rem 0;
@@ -1188,12 +1188,13 @@ export default function TaskManagerProjectPage() {
         </section>
       </main>
 
-      <footer style={{ margin: 0, padding: 0, width: '100%' }}>
+      <footer style={{ margin: 0, marginTop: 0, padding: 0, paddingTop: 0, width: '100%' }}>
         <div
           style={{
             position: 'relative',
             width: '100%',
             height: 260,
+            maxHeight: 260,
             overflow: 'hidden',
           }}
         >
@@ -1204,6 +1205,7 @@ export default function TaskManagerProjectPage() {
               display: 'block',
               width: '100%',
               height: '100%',
+              maxHeight: 260,
               objectFit: 'cover',
               objectPosition: 'left center',
             }}
@@ -1212,8 +1214,8 @@ export default function TaskManagerProjectPage() {
             style={{
               position: 'absolute',
               top: '50%',
-              left: '38%',
-              width: '48%',
+              left: '40%',
+              width: '50%',
               transform: 'translateY(-50%)',
               boxSizing: 'border-box',
             }}
@@ -1222,7 +1224,7 @@ export default function TaskManagerProjectPage() {
               aria-hidden
               style={{
                 display: 'block',
-                fontSize: 28,
+                fontSize: 36,
                 fontWeight: 800,
                 color: CRIMSON,
                 lineHeight: 1,
@@ -1237,7 +1239,7 @@ export default function TaskManagerProjectPage() {
                 ...mono,
                 fontWeight: 700,
                 color: FG,
-                fontSize: 'clamp(11px, 1.1vw, 16px)',
+                fontSize: 'clamp(14px, 1.6vw, 20px)',
                 lineHeight: 1.4,
               }}
             >
