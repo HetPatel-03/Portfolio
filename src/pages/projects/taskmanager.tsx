@@ -1188,7 +1188,16 @@ export default function TaskManagerProjectPage() {
         </section>
       </main>
 
-      <footer style={{ margin: 0, marginTop: 0, padding: 0, paddingTop: 0, width: '100%' }}>
+      <footer
+        style={{
+          margin: 0,
+          marginTop: 0,
+          padding: 0,
+          paddingTop: 0,
+          width: '100%',
+          borderTop: '2px solid #0A0A0A',
+        }}
+      >
         <div
           style={{
             position: 'relative',
