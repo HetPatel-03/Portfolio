@@ -222,6 +222,24 @@ export function Navbar() {
           })}
         </div>
 
+        <a
+          href="/resume"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-shrink-0 whitespace-nowrap"
+          style={{
+            color: '#C8F135',
+            fontFamily: 'monospace',
+            fontSize: '12px',
+            textDecoration: 'none',
+            letterSpacing: '0.08em',
+            border: '1px solid #C8F135',
+            padding: '6px 14px',
+          }}
+        >
+          resume
+        </a>
+
         <button
           type="button"
           onClick={() => scrollToSection('connect')}
