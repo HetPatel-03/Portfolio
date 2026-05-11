@@ -304,14 +304,15 @@ export default function FixxoProjectPage() {
 
   const back = () => navigate('/#projects');
 
-  const pageDotGrid: CSSProperties = {
-    backgroundColor: BG,
-    backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)',
-    backgroundSize: '24px 24px',
+  const heroLineGrid: CSSProperties = {
+    backgroundColor: '#0D0F14',
+    backgroundImage:
+      'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
+    backgroundSize: '32px 32px',
   };
 
   return (
-    <div style={{ ...pageDotGrid, color: TEXT, fontFamily: sans, minHeight: '100vh' }}>
+    <div style={{ backgroundColor: BG, color: TEXT, fontFamily: sans, minHeight: '100vh' }}>
       <style>{`
         @media (max-width: 900px) {
           .fixxo-how-grid { grid-template-columns: 1fr !important; }
@@ -337,7 +338,7 @@ export default function FixxoProjectPage() {
           alignItems: 'center',
           gap: 12,
           padding: '14px clamp(16px, 4vw, 32px)',
-          background: 'transparent',
+          background: BG,
           borderBottom: '1px solid rgba(0,212,212,0.15)',
         }}
       >
@@ -378,6 +379,7 @@ export default function FixxoProjectPage() {
           position: 'relative',
           minHeight: '100vh',
           overflow: 'hidden',
+          ...heroLineGrid,
           padding: `${padX} ${padX} 64px`,
         }}
       >
@@ -1190,8 +1192,6 @@ export default function FixxoProjectPage() {
           position: 'relative',
           padding: '28px clamp(16px, 4vw, 48px)',
           backgroundColor: CARD,
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
           borderTop: '1px solid rgba(0,212,212,0.15)',
           display: 'grid',
           gridTemplateColumns: '1fr auto 1fr',
