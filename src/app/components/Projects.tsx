@@ -16,6 +16,15 @@ type Project = {
 
 const GAP_PX = 24;
 
+const routePrefetchers: Record<string, () => Promise<unknown>> = {
+  '/projects/recurlist': () => import('../../pages/projects/recurlist.tsx'),
+  '/projects/taskmanager': () => import('../../pages/projects/taskmanager.tsx'),
+  '/projects/fixxo': () => import('../../pages/projects/fixxo.tsx'),
+  '/projects/sentrymind': () => import('../../pages/projects/sentrymind.tsx'),
+};
+
+const prefetchedRoutes = new Set<string>();
+
 export function Projects() {
   const projects: Project[] = [
     {
@@ -150,6 +159,13 @@ export function Projects() {
       ? { dot: '#F59E0B', text: '#F59E0B' }
       : { dot: 'var(--sage-green)', text: 'var(--sage-green)' };
 
+  const prefetchProjectRoute = (href: string) => {
+    const prefetch = routePrefetchers[href];
+    if (!prefetch || prefetchedRoutes.has(href)) return;
+    prefetchedRoutes.add(href);
+    void prefetch();
+  };
+
   return (
     <section id="projects" className="section-bg-projects relative py-20 md:py-32 px-4 md:px-8">
       <style>{`
@@ -241,6 +257,9 @@ export function Projects() {
                       textDecoration: 'none',
                     }}
                     aria-label={`View ${project.name} project`}
+                    onMouseEnter={() => prefetchProjectRoute(project.pageHref)}
+                    onFocus={() => prefetchProjectRoute(project.pageHref)}
+                    onTouchStart={() => prefetchProjectRoute(project.pageHref)}
                   >
                     <div
                       className="project-card__media h-[180px] relative overflow-hidden"
