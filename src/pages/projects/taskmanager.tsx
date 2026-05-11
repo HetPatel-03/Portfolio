@@ -1261,7 +1261,7 @@ export default function TaskManagerProjectPage() {
                 opacity: 0.35,
               }}
             >
-              — Task Manager, 2024
+              — Task Manager, 2026
             </p>
           </div>
         </div>
