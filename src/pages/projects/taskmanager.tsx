@@ -1193,6 +1193,7 @@ export default function TaskManagerProjectPage() {
           style={{
             position: 'relative',
             width: '100%',
+            height: 280,
             overflow: 'hidden',
           }}
         >
@@ -1202,27 +1203,29 @@ export default function TaskManagerProjectPage() {
             style={{
               display: 'block',
               width: '100%',
-              height: 'auto',
-              verticalAlign: 'top',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center bottom',
             }}
           />
           <div
             style={{
               position: 'absolute',
-              top: '5%',
+              top: '8%',
               left: '33%',
-              width: '55%',
+              width: '52%',
               boxSizing: 'border-box',
             }}
           >
             <div
               aria-hidden
               style={{
-                fontSize: 48,
-                fontWeight: 700,
+                display: 'block',
+                fontSize: 32,
+                fontWeight: 800,
                 color: CRIMSON,
                 lineHeight: 1,
-                marginBottom: '0.15em',
+                marginBottom: '0.12em',
                 ...mono,
               }}
             >
@@ -1233,25 +1236,24 @@ export default function TaskManagerProjectPage() {
                 ...mono,
                 fontWeight: 700,
                 color: FG,
-                fontSize: 'clamp(14px, 1.8vw, 22px)',
-                letterSpacing: '-0.02em',
-                lineHeight: 1.3,
+                fontSize: 'clamp(11px, 1.4vw, 17px)',
+                lineHeight: 1.35,
               }}
             >
-              <span style={{ display: 'block' }}>Most tasks don&apos;t fail</span>
-              <span style={{ display: 'block' }}>at execution.</span>
-              <span style={{ display: 'block', color: CRIMSON }}>They fail at capture.</span>
+              <span style={{ display: 'block', color: FG }}>Most tasks don&apos;t fail</span>
+              <span style={{ display: 'block', color: FG }}>at execution.</span>
+              <span style={{ display: 'block', color: CRIMSON }}>They fail at capture.&quot;</span>
             </div>
             <p
               style={{
                 ...mono,
-                margin: '0.75rem 0 0',
-                fontSize: 10,
+                margin: '0.6rem 0 0',
+                fontSize: 9,
                 fontWeight: 700,
                 textTransform: 'uppercase',
                 letterSpacing: '0.1em',
                 color: FG,
-                opacity: 0.4,
+                opacity: 0.35,
               }}
             >
               — Task Manager, 2024
@@ -1264,7 +1266,7 @@ export default function TaskManagerProjectPage() {
             width: '100%',
             boxSizing: 'border-box',
             background: FG,
-            padding: '16px 32px',
+            padding: '14px 32px',
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -1280,7 +1282,7 @@ export default function TaskManagerProjectPage() {
               fontSize: 11,
               fontWeight: 700,
               color: BG,
-              letterSpacing: '0.12em',
+              letterSpacing: '0.1em',
             }}
           >
             <span
