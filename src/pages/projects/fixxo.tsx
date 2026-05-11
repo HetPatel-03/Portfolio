@@ -1186,62 +1186,126 @@ export default function FixxoProjectPage() {
       </section>
 
       {/* FOOTER */}
-      <footer
-        className="fixxo-footer"
-        style={{
-          position: 'relative',
-          padding: '28px clamp(16px, 4vw, 48px)',
-          backgroundColor: CARD,
-          borderTop: '1px solid rgba(0,212,212,0.15)',
-          display: 'grid',
-          gridTemplateColumns: '1fr auto 1fr',
-          alignItems: 'center',
-          gap: 16,
-        }}
-      >
+      <footer style={{ margin: 0, width: '100%' }}>
         <div
-          className="fixxo-footer-left"
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifySelf: 'start',
-            gap: 0,
-            minWidth: 0,
+            position: 'relative',
+            width: '100%',
+            height: 260,
+            overflow: 'hidden',
+            borderTop: '1px solid #00D4D4',
           }}
         >
           <img
-            src="/fixxo-sticker-human-ai.png"
+            src="/fixxo-footer.png"
             alt=""
-            width={45}
             style={{
-              marginRight: '1rem',
-              opacity: 0.6,
-              flexShrink: 0,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'left top',
               display: 'block',
             }}
           />
-          <span style={{ fontFamily: mono, fontSize: 12, color: MUTED }}>PROJ / 04 · FIXXO · 2026</span>
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '38%',
+              width: '52%',
+              transform: 'translateY(-50%)',
+              boxSizing: 'border-box',
+            }}
+          >
+            <span
+              aria-hidden
+              style={{
+                display: 'block',
+                fontFamily: sans,
+                fontSize: 36,
+                fontWeight: 800,
+                color: '#00D4D4',
+                lineHeight: 1,
+                marginBottom: '0.12em',
+              }}
+            >
+              &quot;
+            </span>
+            <div
+              style={{
+                fontFamily: sans,
+                fontWeight: 700,
+                fontSize: 'clamp(13px, 1.5vw, 19px)',
+                lineHeight: 1.4,
+              }}
+            >
+              <span style={{ display: 'block', color: '#E0FAFA' }}>Your time is too</span>
+              <span style={{ display: 'block', color: '#00D4D4' }}>valuable for errands.&quot;</span>
+            </div>
+            <p
+              style={{
+                margin: '8px 0 0',
+                fontFamily: sans,
+                fontSize: 9,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: '#E0FAFA',
+                opacity: 0.35,
+              }}
+            >
+              — FIXXO, 2026
+            </p>
+          </div>
         </div>
-        <span style={{ fontFamily: sans, fontSize: 13, color: CYAN, fontStyle: 'italic', textAlign: 'center' }}>
-          Every task you can imagine. Consider it done.
-        </span>
-        <button
-          type="button"
-          onClick={back}
+        <div
           style={{
-            justifySelf: 'end',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            color: CYAN,
-            fontFamily: sans,
-            fontSize: 14,
-            padding: 0,
-            fontWeight: 500,
+            background: '#0D0F14',
+            borderTop: '1px solid #00D4D4',
+            padding: '14px 32px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 16,
           }}
         >
-          ← back to projects
-        </button>
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              fontFamily: sans,
+              fontSize: 11,
+              fontWeight: 700,
+              color: '#E0FAFA',
+              letterSpacing: '0.12em',
+            }}
+          >
+            <span
+              aria-hidden
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                background: '#00D4D4',
+                marginRight: 8,
+                flexShrink: 0,
+              }}
+            />
+            FIXXO
+          </span>
+          <span
+            style={{
+              fontFamily: sans,
+              fontSize: 11,
+              fontWeight: 400,
+              color: '#00D4D4',
+            }}
+          >
+            Your city. Automated.
+          </span>
+        </div>
       </footer>
     </div>
   );

@@ -633,53 +633,126 @@ export default function SentryMindProjectPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer
-        className="sentrymind-footer"
-        style={{
-          marginTop: 24,
-          padding: '20px clamp(16px, 4vw, 48px)',
-          background: CARD,
-          borderTop: CARD_BORDER,
-          display: 'grid',
-          gridTemplateColumns: '1fr auto 1fr',
-          alignItems: 'center',
-          gap: 12,
-        }}
-      >
-        <span style={{ fontFamily: mono, fontSize: 12, color: TEXT_MUTED, justifySelf: 'start' }}>
-          PROJ / 05 · SENTRYMIND · 2026
-        </span>
+      <footer style={{ margin: 0, width: '100%' }}>
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            fontFamily: mono,
-            fontSize: 12,
-            color: ACCENT,
-            justifySelf: 'center',
+            position: 'relative',
+            width: '100%',
+            height: 260,
+            overflow: 'hidden',
+            borderTop: '1px solid #A78BFA',
           }}
         >
-          <span className="sentrymind-blink-dot">●</span>
-          MONITORING ACTIVE
+          <img
+            src="/sentrymind-footer.png"
+            alt=""
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'left top',
+              display: 'block',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '38%',
+              width: '52%',
+              transform: 'translateY(-50%)',
+              boxSizing: 'border-box',
+            }}
+          >
+            <span
+              aria-hidden
+              style={{
+                display: 'block',
+                fontFamily: "'Courier New', monospace",
+                fontSize: 36,
+                fontWeight: 800,
+                color: '#A78BFA',
+                lineHeight: 1,
+                marginBottom: '0.12em',
+              }}
+            >
+              &quot;
+            </span>
+            <div
+              style={{
+                fontFamily: "'Courier New', monospace",
+                fontWeight: 700,
+                fontSize: 'clamp(13px, 1.5vw, 19px)',
+                lineHeight: 1.4,
+              }}
+            >
+              <span style={{ display: 'block', color: '#E2E2F0' }}>The best alert is</span>
+              <span style={{ display: 'block', color: '#A78BFA' }}>the one you never see.&quot;</span>
+            </div>
+            <p
+              style={{
+                margin: '8px 0 0',
+                fontFamily: "'Courier New', monospace",
+                fontSize: 9,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: '#E2E2F0',
+                opacity: 0.35,
+              }}
+            >
+              — SentryMind, 2026
+            </p>
+          </div>
         </div>
-        <button
-          type="button"
-          onClick={backToProjects}
+        <div
           style={{
-            justifySelf: 'end',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            color: ACCENT,
-            fontFamily: mono,
-            fontSize: 13,
-            padding: 0,
+            background: '#0D0D14',
+            borderTop: '1px solid #A78BFA',
+            padding: '14px 32px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 16,
           }}
         >
-          ← back to projects
-        </button>
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              fontFamily: "'Courier New', monospace",
+              fontSize: 11,
+              fontWeight: 700,
+              color: '#E2E2F0',
+              letterSpacing: '0.12em',
+            }}
+          >
+            <span
+              aria-hidden
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                background: '#A78BFA',
+                marginRight: 8,
+                flexShrink: 0,
+              }}
+            />
+            SENTRYMIND
+          </span>
+          <span
+            style={{
+              fontFamily: "'Courier New', monospace",
+              fontSize: 11,
+              fontWeight: 400,
+              color: '#A78BFA',
+            }}
+          >
+            AI-powered incident response
+          </span>
+        </div>
       </footer>
     </div>
   );

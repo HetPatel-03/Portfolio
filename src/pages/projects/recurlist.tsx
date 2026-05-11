@@ -1428,27 +1428,125 @@ export default function RecurListProjectPage() {
         </section>
       </main>
 
-      <footer className="rl-footer-strip">
-        <span>PROJ / 02 · RECURLIST · 2026</span>
-        <span className="rl-footer-center">🍁 Smart grocery lists built for Canadians</span>
-        <span className="rl-footer-right">
-          <button
-            type="button"
-            onClick={backToProjects}
+      <footer style={{ margin: 0, width: '100%' }}>
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: 260,
+            overflow: 'hidden',
+            borderTop: '1px solid #16A34A',
+          }}
+        >
+          <img
+            src="/recurlist-footer.png"
+            alt=""
             style={{
-              background: 'none',
-              border: 'none',
-              padding: 0,
-              fontFamily: sans,
-              fontSize: 13,
-              fontWeight: 600,
-              color: DARK,
-              cursor: 'pointer',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'left top',
+              display: 'block',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '40%',
+              width: '50%',
+              transform: 'translateY(-50%)',
+              boxSizing: 'border-box',
             }}
           >
-            ← back to projects
-          </button>
-        </span>
+            <span
+              aria-hidden
+              style={{
+                display: 'block',
+                fontFamily: sans,
+                fontSize: 36,
+                fontWeight: 800,
+                color: '#16A34A',
+                lineHeight: 1,
+                marginBottom: '0.12em',
+              }}
+            >
+              &quot;
+            </span>
+            <div
+              style={{
+                fontFamily: sans,
+                fontWeight: 700,
+                fontSize: 'clamp(13px, 1.5vw, 19px)',
+                lineHeight: 1.4,
+              }}
+            >
+              <span style={{ display: 'block', color: '#0D3321' }}>Small habits.</span>
+              <span style={{ display: 'block', color: '#16A34A' }}>Big outcomes.&quot;</span>
+            </div>
+            <p
+              style={{
+                margin: '8px 0 0',
+                fontFamily: sans,
+                fontSize: 9,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                opacity: 0.35,
+                color: '#0D3321',
+              }}
+            >
+              — RecurList, 2026
+            </p>
+          </div>
+        </div>
+        <div
+          style={{
+            background: '#0D3321',
+            padding: '14px 32px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 16,
+          }}
+        >
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              fontFamily: sans,
+              fontSize: 11,
+              fontWeight: 700,
+              color: '#F0FBF4',
+              letterSpacing: '0.12em',
+            }}
+          >
+            <span
+              aria-hidden
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                background: '#16A34A',
+                marginRight: 8,
+                flexShrink: 0,
+              }}
+            />
+            RECURLIST
+          </span>
+          <span
+            style={{
+              fontFamily: sans,
+              fontSize: 11,
+              fontWeight: 400,
+              color: '#16A34A',
+            }}
+          >
+            🍁 Smart grocery lists for Canadians
+          </span>
+        </div>
       </footer>
     </div>
   );

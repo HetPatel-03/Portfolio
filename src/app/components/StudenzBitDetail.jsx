@@ -2344,6 +2344,128 @@ export default function StudenzBitDetail() {
         </div>
       </section>
 
+      {/* StudenzBit Footer Banner */}
+      <section style={{ margin: 0, padding: 0, width: '100%' }}>
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: 260,
+            overflow: 'hidden',
+            borderTop: '1px solid #0D9488',
+          }}
+        >
+          <img
+            src="/studenzbit-footer.png"
+            alt=""
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'left top',
+              display: 'block',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '38%',
+              width: '52%',
+              transform: 'translateY(-50%)',
+              boxSizing: 'border-box',
+            }}
+          >
+            <span
+              aria-hidden
+              style={{
+                display: 'block',
+                fontFamily: 'Inter, sans-serif',
+                fontSize: 36,
+                fontWeight: 800,
+                color: '#0D9488',
+                lineHeight: 1,
+                marginBottom: '0.12em',
+              }}
+            >
+              &quot;
+            </span>
+            <div
+              style={{
+                fontFamily: 'Inter, sans-serif',
+                fontWeight: 700,
+                fontSize: 'clamp(13px, 1.5vw, 19px)',
+                lineHeight: 1.4,
+              }}
+            >
+              <span style={{ display: 'block', color: '#5C1A1A' }}>Every student deserves</span>
+              <span style={{ display: 'block', color: '#0D9488' }}>a head start.&quot;</span>
+            </div>
+            <p
+              style={{
+                margin: '8px 0 0',
+                fontFamily: 'Inter, sans-serif',
+                fontSize: 9,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: '#5C1A1A',
+                opacity: 0.35,
+              }}
+            >
+              — StudenzBit, 2026
+            </p>
+          </div>
+        </div>
+        <div
+          style={{
+            background: '#5C1A1A',
+            padding: '14px 32px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 16,
+          }}
+        >
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: 11,
+              fontWeight: 700,
+              color: '#FDE8E8',
+              letterSpacing: '0.12em',
+            }}
+          >
+            <span
+              aria-hidden
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                background: '#0D9488',
+                marginRight: 8,
+                flexShrink: 0,
+              }}
+            />
+            STUDENZBIT
+          </span>
+          <span
+            style={{
+              fontFamily: 'Inter, sans-serif',
+              fontSize: 11,
+              fontWeight: 400,
+              color: '#0D9488',
+            }}
+          >
+            Built for international students in Canada
+          </span>
+        </div>
+      </section>
+
       {/* Section 10 — Next project */}
       <section
         className="sb-s10-pad"
