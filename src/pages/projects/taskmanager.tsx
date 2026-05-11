@@ -1193,7 +1193,7 @@ export default function TaskManagerProjectPage() {
           style={{
             position: 'relative',
             width: '100%',
-            height: 280,
+            height: 260,
             overflow: 'hidden',
           }}
         >
@@ -1205,15 +1205,16 @@ export default function TaskManagerProjectPage() {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              objectPosition: 'center bottom',
+              objectPosition: 'left center',
             }}
           />
           <div
             style={{
               position: 'absolute',
-              top: '8%',
-              left: '33%',
-              width: '52%',
+              top: '50%',
+              left: '38%',
+              width: '48%',
+              transform: 'translateY(-50%)',
               boxSizing: 'border-box',
             }}
           >
@@ -1221,7 +1222,7 @@ export default function TaskManagerProjectPage() {
               aria-hidden
               style={{
                 display: 'block',
-                fontSize: 32,
+                fontSize: 28,
                 fontWeight: 800,
                 color: CRIMSON,
                 lineHeight: 1,
@@ -1236,8 +1237,8 @@ export default function TaskManagerProjectPage() {
                 ...mono,
                 fontWeight: 700,
                 color: FG,
-                fontSize: 'clamp(11px, 1.4vw, 17px)',
-                lineHeight: 1.35,
+                fontSize: 'clamp(11px, 1.1vw, 16px)',
+                lineHeight: 1.4,
               }}
             >
               <span style={{ display: 'block', color: FG }}>Most tasks don&apos;t fail</span>
@@ -1247,7 +1248,7 @@ export default function TaskManagerProjectPage() {
             <p
               style={{
                 ...mono,
-                margin: '0.6rem 0 0',
+                margin: '8px 0 0',
                 fontSize: 9,
                 fontWeight: 700,
                 textTransform: 'uppercase',
