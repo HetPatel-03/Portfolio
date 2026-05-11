@@ -304,14 +304,14 @@ export default function FixxoProjectPage() {
 
   const back = () => navigate('/#projects');
 
-  const dotGrid: CSSProperties = {
+  const pageDotGrid: CSSProperties = {
     backgroundColor: BG,
-    backgroundImage: 'radial-gradient(circle, rgba(0,212,212,0.06) 1px, transparent 1px)',
-    backgroundSize: '28px 28px',
+    backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)',
+    backgroundSize: '24px 24px',
   };
 
   return (
-    <div style={{ background: BG, color: TEXT, fontFamily: sans, minHeight: '100vh' }}>
+    <div style={{ ...pageDotGrid, color: TEXT, fontFamily: sans, minHeight: '100vh' }}>
       <style>{`
         @media (max-width: 900px) {
           .fixxo-how-grid { grid-template-columns: 1fr !important; }
@@ -323,6 +323,7 @@ export default function FixxoProjectPage() {
           .fixxo-roadmap-grid { grid-template-columns: 1fr !important; }
           .fixxo-brand-grid { grid-template-columns: 1fr !important; }
           .fixxo-footer { grid-template-columns: 1fr !important; text-align: center; gap: 16px; }
+          .fixxo-footer-left { justify-self: center !important; justify-content: center !important; }
         }
       `}</style>
 
@@ -336,7 +337,7 @@ export default function FixxoProjectPage() {
           alignItems: 'center',
           gap: 12,
           padding: '14px clamp(16px, 4vw, 32px)',
-          background: BG,
+          background: 'transparent',
           borderBottom: '1px solid rgba(0,212,212,0.15)',
         }}
       >
@@ -377,7 +378,6 @@ export default function FixxoProjectPage() {
           position: 'relative',
           minHeight: '100vh',
           overflow: 'hidden',
-          ...dotGrid,
           padding: `${padX} ${padX} 64px`,
         }}
       >
@@ -1189,7 +1189,9 @@ export default function FixxoProjectPage() {
         style={{
           position: 'relative',
           padding: '28px clamp(16px, 4vw, 48px)',
-          background: CARD,
+          backgroundColor: CARD,
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
           borderTop: '1px solid rgba(0,212,212,0.15)',
           display: 'grid',
           gridTemplateColumns: '1fr auto 1fr',
@@ -1197,13 +1199,29 @@ export default function FixxoProjectPage() {
           gap: 16,
         }}
       >
-        <img
-          src="/fixxo-sticker-human-ai.png"
-          alt=""
-          width={60}
-          style={{ position: 'absolute', right: 24, bottom: 20, opacity: 0.6, pointerEvents: 'none' }}
-        />
-        <span style={{ fontFamily: mono, fontSize: 12, color: MUTED, justifySelf: 'start' }}>PROJ / 04 · FIXXO · 2026</span>
+        <div
+          className="fixxo-footer-left"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifySelf: 'start',
+            gap: 0,
+            minWidth: 0,
+          }}
+        >
+          <img
+            src="/fixxo-sticker-human-ai.png"
+            alt=""
+            width={45}
+            style={{
+              marginRight: '1rem',
+              opacity: 0.6,
+              flexShrink: 0,
+              display: 'block',
+            }}
+          />
+          <span style={{ fontFamily: mono, fontSize: 12, color: MUTED }}>PROJ / 04 · FIXXO · 2026</span>
+        </div>
         <span style={{ fontFamily: sans, fontSize: 13, color: CYAN, fontStyle: 'italic', textAlign: 'center' }}>
           Every task you can imagine. Consider it done.
         </span>
