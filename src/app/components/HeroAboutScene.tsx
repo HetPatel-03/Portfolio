@@ -20,7 +20,6 @@ export function HeroAboutScene() {
   const cycleWords = ['Software Engineer.', 'Problem Solver.', 'Product Minded.', 'Full Stack Dev.'];
 
   const sceneRef = useRef<HTMLDivElement>(null);
-  const leftColumnRef = useRef<HTMLDivElement>(null);
   const heroLeftRef = useRef<HTMLDivElement>(null);
   const aboutTextRef = useRef<HTMLDivElement>(null);
   const imgWrapperRef = useRef<HTMLDivElement>(null);
@@ -53,7 +52,6 @@ export function HeroAboutScene() {
     const refreshDelay = window.setTimeout(() => {
       const ctx = gsap.context(() => {
         const scene = sceneRef.current;
-        const leftColumn = leftColumnRef.current;
         const heroLeft = heroLeftRef.current;
         const aboutText = aboutTextRef.current;
         const imgWrapper = imgWrapperRef.current;
@@ -62,7 +60,7 @@ export function HeroAboutScene() {
         const terminalCol = terminalColRef.current;
         const statsGrid = statsGridRef.current;
 
-        if (!scene || !leftColumn || !heroLeft || !aboutText || !imgWrapper || !imgFront || !imgBack || !terminalCol || !statsGrid) return;
+        if (!scene || !heroLeft || !aboutText || !imgWrapper || !imgFront || !imgBack || !terminalCol || !statsGrid) return;
 
         gsap.set(aboutText, { autoAlpha: 0, y: 50 });
         gsap.set(terminalCol, { autoAlpha: 0, x: 60 });
@@ -99,10 +97,10 @@ export function HeroAboutScene() {
         tl.to(heroLeft, { autoAlpha: 0, y: -60, filter: 'blur(8px)', duration: 1.5 }, 0)
           .to(aboutText, { autoAlpha: 1, y: 0, duration: 1.5, ease: 'power2.out' }, 0.5)
           .to(aboutText, { autoAlpha: 0, y: -30, filter: 'blur(6px)', duration: 0.8 }, 2)
-          .to(leftColumn, { filter: 'blur(8px)', opacity: 0.5, duration: 0.5 }, 2.25)
+          .to([heroLeft, aboutText], { filter: 'blur(8px)', opacity: 0.5, duration: 0.5 }, 2.25)
           .to(imgWrapper, { x: toLeft, duration: 2.1, ease: 'power2.inOut' }, 2.2)
           .to(imgWrapper, { rotationY: 180, duration: 1.5, ease: 'power2.inOut' }, 2.45)
-          .to(leftColumn, { filter: 'blur(0px)', opacity: 1, duration: 0.45 }, 3.65)
+          .to([heroLeft, aboutText], { filter: 'blur(0px)', opacity: 1, duration: 0.45 }, 3.65)
           .to(terminalCol, { autoAlpha: 0.35, duration: 0.4 }, 3.15)
           .to(terminalCol, { autoAlpha: 1, x: 0, duration: 0.8, ease: 'power2.out' }, 4.0)
           .to(Array.from(statsGrid.children), {
@@ -125,18 +123,18 @@ export function HeroAboutScene() {
     };
   }, [isMobile]);
 
+  useLayoutEffect(() => {
+    if (!isMobile) return;
+    const targets = [heroLeftRef, aboutTextRef, imgWrapperRef, terminalColRef];
+    targets.forEach((ref) => {
+      if (ref.current) gsap.set(ref.current, { clearProps: 'all' });
+    });
+    if (imgFrontRef.current) gsap.set(imgFrontRef.current, { clearProps: 'all' });
+    if (imgBackRef.current) gsap.set(imgBackRef.current, { clearProps: 'all' });
+  }, [isMobile]);
+
   const renderHeroBlock = () => (
-    <div
-      ref={heroLeftRef}
-      className="w-full max-w-full box-border"
-      style={{
-        position: isMobile ? 'relative' : 'absolute',
-        top: isMobile ? 'auto' : 0,
-        left: 0,
-        width: '100%',
-        paddingTop: isMobile ? 'clamp(88px, 10vh, 120px)' : 'clamp(100px, 12vh, 140px)',
-      }}
-    >
+    <div ref={heroLeftRef} className="hero-about-block hero-about-block--hero">
       <div
         className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
         style={{
@@ -158,10 +156,10 @@ export function HeroAboutScene() {
         color: 'rgba(240,237,232,0.02)', lineHeight: 1, zIndex: -1, filter: 'blur(2px)',
       }}>{'</>'}</div>
 
-      <p style={{ fontSize: '22px', color: 'rgba(240,237,232,0.4)', fontFamily: 'var(--font-body)', fontWeight: 400, marginBottom: '8px' }}>
+      <p className="hero-about-lead" style={{ fontSize: '22px', color: 'rgba(240,237,232,0.4)', fontFamily: 'var(--font-body)', fontWeight: 400, marginBottom: '8px' }}>
         Hi, I&apos;m
       </p>
-      <h1 style={{
+      <h1 className="hero-about-name" style={{
         fontSize: 'clamp(64px, 8vw, 108px)',
         fontFamily: 'var(--font-heading)', fontWeight: 800,
         color: 'var(--text-primary)', letterSpacing: '-3px',
@@ -186,7 +184,7 @@ export function HeroAboutScene() {
         ))}
       </div>
 
-      <p style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)', marginBottom: '32px', maxWidth: isMobile ? '100%' : '480px' }}>
+      <p className="hero-about-desc" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)', marginBottom: '32px' }}>
         I build features, fix systems, and integrate AI into products.
       </p>
 
@@ -218,20 +216,7 @@ export function HeroAboutScene() {
   );
 
   const renderAboutBlock = () => (
-    <div
-      ref={aboutTextRef}
-      id="about"
-      className="w-full max-w-full box-border"
-      style={{
-        position: isMobile ? 'relative' : 'absolute',
-        top: isMobile ? 'auto' : 0,
-        left: 0,
-        width: '100%',
-        paddingTop: isMobile ? '0' : 'clamp(100px, 12vh, 140px)',
-        opacity: isMobile ? 1 : 0,
-        zIndex: 1,
-      }}
-    >
+    <div ref={aboutTextRef} id="about" className="hero-about-block hero-about-block--about">
       <p style={{ position: 'relative', zIndex: 1, fontFamily: 'var(--font-mono)', color: 'var(--coral)', fontSize: '12px', marginBottom: '16px', letterSpacing: '0.05em' }}>
         // 01 · about
       </p>
@@ -290,93 +275,25 @@ export function HeroAboutScene() {
   );
 
   const renderImageBlock = () => (
-    <div
-      ref={imgWrapperRef}
-      className="w-full max-w-full box-border"
-      style={{
-        position: isMobile ? 'relative' : 'absolute',
-        inset: isMobile ? 'auto' : 0,
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        width: '100%',
-        maxWidth: '100%',
-        height: isMobile ? 'auto' : '100%',
-        minHeight: isMobile ? '280px' : undefined,
-        overflow: isMobile ? 'hidden' : 'visible',
-        zIndex: 20,
-        perspective: isMobile ? undefined : '1000px',
-        transformStyle: isMobile ? undefined : 'preserve-3d',
-      }}
-    >
+    <div ref={imgWrapperRef} className="hero-about-block hero-about-block--image">
       <img
         ref={imgBackRef}
         src="/Image2.png"
         alt=""
         aria-hidden
-        className={isMobile ? 'hero-scene-image' : undefined}
-        style={{
-          position: isMobile ? 'relative' : 'absolute',
-          bottom: isMobile ? 'auto' : 0,
-          right: isMobile ? 'auto' : 0,
-          height: isMobile ? 'auto' : '86vh',
-          width: 'auto',
-          maxWidth: isMobile ? '100%' : undefined,
-          maxHeight: isMobile ? 'min(420px, 56vh)' : '740px',
-          objectFit: 'contain',
-          objectPosition: isMobile ? 'bottom center' : 'bottom',
-          filter: 'drop-shadow(0 0 60px rgba(242,102,74,0.25))',
-          willChange: isMobile ? undefined : 'transform, opacity',
-          display: isMobile ? 'none' : 'block',
-          margin: isMobile ? '0 auto' : undefined,
-          transform: isMobile ? 'none' : 'rotateY(180deg) scale(1.3)',
-          backfaceVisibility: 'hidden',
-          transformStyle: 'preserve-3d',
-        }}
+        className="hero-scene-image hero-scene-image--back"
       />
       <img
         ref={imgFrontRef}
         src="/Me_Hero.png"
         alt="Het Patel"
-        className={isMobile ? 'hero-scene-image' : undefined}
-        style={{
-          position: isMobile ? 'relative' : 'absolute',
-          bottom: isMobile ? 'auto' : 0,
-          right: isMobile ? 'auto' : 0,
-          height: isMobile ? 'auto' : '86vh',
-          width: 'auto',
-          maxWidth: isMobile ? '100%' : undefined,
-          maxHeight: isMobile ? 'min(420px, 56vh)' : '740px',
-          objectFit: 'contain',
-          objectPosition: isMobile ? 'bottom center' : 'bottom',
-          filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.18))',
-          animation: isMobile ? 'none' : 'heroFloat 3s ease-in-out infinite',
-          willChange: isMobile ? undefined : 'transform, opacity',
-          display: 'block',
-          margin: isMobile ? '0 auto' : undefined,
-          transform: isMobile ? 'none' : undefined,
-          backfaceVisibility: 'hidden',
-          transformStyle: 'preserve-3d',
-        }}
+        className="hero-scene-image hero-scene-image--front"
       />
     </div>
   );
 
   const renderTerminalBlock = () => (
-    <div
-      ref={terminalColRef}
-      className="w-full max-w-full box-border"
-      style={{
-        position: isMobile ? 'relative' : 'absolute',
-        top: isMobile ? 'auto' : '50%',
-        right: isMobile ? 'auto' : '36px',
-        width: '100%',
-        transform: isMobile ? 'none' : 'translateY(-50%)',
-        paddingRight: isMobile ? '0' : '16px',
-        zIndex: 5,
-        opacity: isMobile ? 1 : 0,
-      }}
-    >
+    <div ref={terminalColRef} className="hero-about-block hero-about-block--terminal">
       <div style={{
         background: 'rgba(14,14,20,0.95)',
         backdropFilter: 'blur(24px)',
@@ -415,7 +332,7 @@ export function HeroAboutScene() {
         </div>
       </div>
 
-      <div ref={statsGridRef} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '12px', width: '100%' }}>
+      <div ref={statsGridRef} className="hero-about-stats" style={{ display: 'grid', gap: '12px', width: '100%' }}>
         {stats.map((s, i) => (
           <div key={i} className={`about-stat-card about-stat-card--${s.variant}`}>
             <div className="about-stat-number">{s.number}</div>
@@ -427,33 +344,8 @@ export function HeroAboutScene() {
   );
 
   return (
-    <div
-      ref={sceneRef}
-      id="hero-about-scene"
-      style={{
-        position: 'relative',
-        minHeight: '100vh',
-        overflow: isMobile ? 'hidden' : 'visible',
-        background: 'var(--bg-primary)',
-      }}
-    >
-      <section
-        id="hero"
-        className="section-bg-hero"
-        style={{
-          minHeight: isMobile ? 'auto' : '100vh',
-          display: 'flex',
-          alignItems: 'flex-start',
-          paddingTop: '0',
-          marginTop: '0',
-          paddingLeft: isMobile ? '16px' : 'clamp(16px, 5vw, 80px)',
-          paddingRight: isMobile ? '16px' : 'clamp(16px, 5vw, 80px)',
-          overflow: isMobile ? 'hidden' : 'visible',
-          position: 'relative',
-          boxSizing: 'border-box',
-          width: '100%',
-        }}
-      >
+    <div ref={sceneRef} id="hero-about-scene" className="hero-about-scene">
+      <section id="hero" className="section-bg-hero hero-about-section">
         <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
           <svg width="100%" height="100%">
             <filter id="noise">
@@ -463,49 +355,11 @@ export function HeroAboutScene() {
           </svg>
         </div>
 
-        <div className="w-full max-w-full box-border" style={{ position: 'relative' }}>
-          {isMobile ? (
-            <div className="flex w-full max-w-full flex-col gap-6 box-border">
-              {renderHeroBlock()}
-              {renderImageBlock()}
-              {renderAboutBlock()}
-              {renderTerminalBlock()}
-            </div>
-          ) : (
-            <div
-              className="flex flex-row"
-              style={{ width: '100%', maxWidth: '100%', alignItems: 'stretch', justifyContent: 'space-between', gap: 0 }}
-            >
-              <div
-                ref={leftColumnRef}
-                style={{
-                  flex: '1',
-                  position: 'relative',
-                  minHeight: '100vh',
-                  paddingRight: 'clamp(24px, 4vw, 60px)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  overflow: 'visible',
-                  minWidth: 0,
-                }}
-              >
-                {renderHeroBlock()}
-                {renderAboutBlock()}
-              </div>
-
-              <div style={{
-                flex: '0 0 44%',
-                position: 'relative',
-                height: '100vh',
-                overflow: 'visible',
-                minWidth: 0,
-              }}>
-                {renderImageBlock()}
-                {renderTerminalBlock()}
-              </div>
-            </div>
-          )}
+        <div className="hero-about-grid">
+          {renderHeroBlock()}
+          {renderImageBlock()}
+          {renderAboutBlock()}
+          {renderTerminalBlock()}
         </div>
       </section>
     </div>
