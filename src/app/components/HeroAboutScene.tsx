@@ -179,11 +179,10 @@ export function HeroAboutScene() {
               position: 'relative',
               minHeight: isMobile ? 'auto' : '100vh',
               paddingRight: isMobile ? '0' : 'clamp(24px, 4vw, 60px)',
-              display: 'flex',
+              display: isMobile ? 'contents' : 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               overflow: isMobile ? 'hidden' : 'visible',
-              order: isMobile ? 2 : undefined,
               minWidth: 0,
             }} ref={leftColumnRef}>
               {/* LAYER A: Hero content — fades OUT beat 1 */}
@@ -192,6 +191,7 @@ export function HeroAboutScene() {
                 top: isMobile ? 'auto' : 0,
                 left: 0,
                 width: '100%',
+                order: isMobile ? 1 : undefined,
                 paddingTop: isMobile ? 'clamp(88px, 10vh, 120px)' : 'clamp(100px, 12vh, 140px)',
               }}>
                 <div
@@ -279,9 +279,10 @@ export function HeroAboutScene() {
                 top: isMobile ? 'auto' : 0,
                 left: 0,
                 width: '100%',
-                paddingTop: isMobile ? '24px' : 'clamp(100px, 12vh, 140px)',
+                order: isMobile ? 3 : undefined,
+                paddingTop: isMobile ? '0' : 'clamp(100px, 12vh, 140px)',
                 opacity: isMobile ? 1 : 0,
-                marginTop: isMobile ? '20px' : '0',
+                marginTop: isMobile ? '0' : '0',
                 zIndex: 1,
               }}>
                 <p style={{ position: 'relative', zIndex: 1, fontFamily: 'var(--font-mono)', color: 'var(--coral)', fontSize: '12px', marginBottom: '16px', letterSpacing: '0.05em' }}>
@@ -347,7 +348,7 @@ export function HeroAboutScene() {
               position: 'relative',
               height: isMobile ? 'auto' : '100vh',
               overflow: isMobile ? 'hidden' : 'visible',
-              order: isMobile ? 1 : undefined,
+              display: isMobile ? 'contents' : 'block',
               minWidth: 0,
               width: isMobile ? '100%' : undefined,
             }}>
@@ -366,6 +367,7 @@ export function HeroAboutScene() {
                   minHeight: isMobile ? '280px' : undefined,
                   margin: isMobile ? '0 auto' : undefined,
                   overflow: isMobile ? 'hidden' : 'visible',
+                  order: isMobile ? 2 : undefined,
                   zIndex: 20,
                   perspective: isMobile ? undefined : '1000px',
                   transformStyle: isMobile ? undefined : 'preserve-3d',
@@ -433,9 +435,10 @@ export function HeroAboutScene() {
                   width: '100%',
                   transform: isMobile ? 'none' : 'translateY(-50%)',
                   paddingRight: isMobile ? '0' : '16px',
+                  order: isMobile ? 4 : undefined,
                   zIndex: 5,
                   opacity: isMobile ? 1 : 0,
-                  marginTop: isMobile ? '8px' : '0',
+                  marginTop: isMobile ? '0' : '0',
                 }}
               >
                 <div style={{
