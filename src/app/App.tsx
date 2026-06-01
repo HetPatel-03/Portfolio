@@ -21,7 +21,7 @@ export default function App() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
+    <div className="min-h-screen overflow-x-hidden max-w-full" style={{ background: 'var(--bg-primary)' }}>
       <Navbar />
       <HeroAboutScene />
       <Universe />

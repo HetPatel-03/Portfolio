@@ -12,9 +12,11 @@ const stats = [
   { number: 'Harvard', label: 'CERTIFIED · CS50X & CS50W', variant: 'violet' as const },
 ];
 
+const MOBILE_BREAKPOINT = 768;
+
 export function HeroAboutScene() {
   const [cycleIndex, setCycleIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 900);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= MOBILE_BREAKPOINT);
   const cycleWords = ['Software Engineer.', 'Problem Solver.', 'Product Minded.', 'Full Stack Dev.'];
 
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -35,7 +37,7 @@ export function HeroAboutScene() {
   }, []);
 
   useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth < 900);
+    const onResize = () => setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
@@ -137,7 +139,7 @@ export function HeroAboutScene() {
       style={{
         position: 'relative',
         minHeight: '100vh',
-        overflow: 'visible',
+        overflow: isMobile ? 'hidden' : 'visible',
         background: 'var(--bg-primary)',
       }}
     >
@@ -151,8 +153,8 @@ export function HeroAboutScene() {
           paddingTop: '0',
           marginTop: '0',
           paddingLeft: 'clamp(16px, 5vw, 80px)',
-          paddingRight: isMobile ? 'clamp(16px, 5vw, 24px)' : '0',
-          overflow: 'visible',
+          paddingRight: 'clamp(16px, 5vw, 80px)',
+          overflow: isMobile ? 'hidden' : 'visible',
           position: 'relative',
         }}
       >
@@ -169,7 +171,7 @@ export function HeroAboutScene() {
         <div className="w-full" style={{ position: 'relative' }}>
           <div
             className="flex flex-col md:flex-row"
-            style={{ width: '100%', alignItems: 'stretch', justifyContent: 'space-between', gap: 0 }}
+            style={{ width: '100%', maxWidth: '100%', alignItems: 'stretch', justifyContent: 'space-between', gap: isMobile ? '24px' : 0 }}
           >
             {/* LEFT COLUMN */}
             <div style={{
@@ -180,7 +182,9 @@ export function HeroAboutScene() {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
-              overflow: 'visible',
+              overflow: isMobile ? 'hidden' : 'visible',
+              order: isMobile ? 2 : undefined,
+              minWidth: 0,
             }} ref={leftColumnRef}>
               {/* LAYER A: Hero content — fades OUT beat 1 */}
               <div ref={heroLeftRef} style={{
@@ -205,7 +209,7 @@ export function HeroAboutScene() {
                   </span>
                 </div>
 
-                <div className="absolute pointer-events-none select-none" style={{
+                <div className="absolute pointer-events-none select-none hidden md:block" style={{
                   left: '-32px', top: '100px',
                   fontSize: '280px', fontFamily: 'var(--font-heading)', fontWeight: 800,
                   color: 'rgba(240,237,232,0.02)', lineHeight: 1, zIndex: -1, filter: 'blur(2px)',
@@ -270,7 +274,7 @@ export function HeroAboutScene() {
               </div>
 
               {/* LAYER B: About text — fades IN beat 1, OUT beat 2 */}
-              <div ref={aboutTextRef} style={{
+              <div ref={aboutTextRef} id="about" style={{
                 position: isMobile ? 'relative' : 'absolute',
                 top: isMobile ? 'auto' : 0,
                 left: 0,
@@ -298,6 +302,7 @@ export function HeroAboutScene() {
                 <div style={{ position: 'relative', zIndex: 1, marginBottom: 0 }}>
                   <div
                     aria-hidden
+                    className="hidden md:block"
                     style={{
                       position: 'absolute',
                       top: 'auto',
@@ -337,7 +342,15 @@ export function HeroAboutScene() {
             </div>
 
             {/* RIGHT COLUMN */}
-            <div style={{ flex: isMobile ? '1 1 100%' : '0 0 44%', position: 'relative', height: isMobile ? 'auto' : '100vh', overflow: 'visible' }}>
+            <div style={{
+              flex: isMobile ? '1 1 100%' : '0 0 44%',
+              position: 'relative',
+              height: isMobile ? 'auto' : '100vh',
+              overflow: isMobile ? 'hidden' : 'visible',
+              order: isMobile ? 1 : undefined,
+              minWidth: 0,
+              width: isMobile ? '100%' : undefined,
+            }}>
               {/* Travelling image wrapper */}
               <div
                 ref={imgWrapperRef}
@@ -346,32 +359,39 @@ export function HeroAboutScene() {
                   inset: isMobile ? 'auto' : 0,
                   display: 'flex',
                   alignItems: 'flex-end',
-                  justifyContent: isMobile ? 'center' : 'flex-end',
-                  height: isMobile ? 'clamp(320px, 56vh, 520px)' : '100%',
-                  overflow: 'visible',
+                  justifyContent: 'center',
+                  width: isMobile ? '100%' : undefined,
+                  maxWidth: '100%',
+                  height: isMobile ? 'auto' : '100%',
+                  minHeight: isMobile ? '280px' : undefined,
+                  margin: isMobile ? '0 auto' : undefined,
+                  overflow: isMobile ? 'hidden' : 'visible',
                   zIndex: 20,
-                  perspective: '1000px',
-                  transformStyle: 'preserve-3d',
+                  perspective: isMobile ? undefined : '1000px',
+                  transformStyle: isMobile ? undefined : 'preserve-3d',
                 }}
               >
                 <img
                   ref={imgBackRef}
                   src="/Image2.png"
-                  alt="Het Patel"
+                  alt=""
+                  aria-hidden
+                  className={isMobile ? 'hero-scene-image' : undefined}
                   style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    right: isMobile ? '50%' : 0,
-                    height: isMobile ? '100%' : '86vh',
-                    width: 'auto',
-                    maxHeight: isMobile ? '520px' : '740px',
+                    position: isMobile ? 'relative' : 'absolute',
+                    bottom: isMobile ? 'auto' : 0,
+                    right: isMobile ? 'auto' : 0,
+                    height: isMobile ? 'auto' : '86vh',
+                    width: isMobile ? 'auto' : 'auto',
+                    maxWidth: isMobile ? '100%' : undefined,
+                    maxHeight: isMobile ? 'min(420px, 56vh)' : '740px',
                     objectFit: 'contain',
-                    objectPosition: 'bottom',
+                    objectPosition: isMobile ? 'bottom center' : 'bottom',
                     filter: 'drop-shadow(0 0 60px rgba(242,102,74,0.25))',
-                    willChange: 'transform, opacity',
-                    display: 'block',
-                    opacity: isMobile ? 0 : 1,
-                    transform: isMobile ? 'translateX(50%) rotateY(180deg) scale(1.3)' : 'rotateY(180deg) scale(1.3)',
+                    willChange: isMobile ? undefined : 'transform, opacity',
+                    display: isMobile ? 'none' : 'block',
+                    margin: isMobile ? '0 auto' : undefined,
+                    transform: isMobile ? 'none' : 'rotateY(180deg) scale(1.3)',
                     backfaceVisibility: 'hidden',
                     transformStyle: 'preserve-3d',
                   }}
@@ -380,21 +400,23 @@ export function HeroAboutScene() {
                   ref={imgFrontRef}
                   src="/Me_Hero.png"
                   alt="Het Patel"
+                  className={isMobile ? 'hero-scene-image' : undefined}
                   style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    right: isMobile ? '50%' : 0,
-                    height: isMobile ? '100%' : '86vh',
-                    width: 'auto',
-                    maxHeight: isMobile ? '520px' : '740px',
+                    position: isMobile ? 'relative' : 'absolute',
+                    bottom: isMobile ? 'auto' : 0,
+                    right: isMobile ? 'auto' : 0,
+                    height: isMobile ? 'auto' : '86vh',
+                    width: isMobile ? 'auto' : 'auto',
+                    maxWidth: isMobile ? '100%' : undefined,
+                    maxHeight: isMobile ? 'min(420px, 56vh)' : '740px',
                     objectFit: 'contain',
-                    objectPosition: 'bottom',
+                    objectPosition: isMobile ? 'bottom center' : 'bottom',
                     filter: 'drop-shadow(0 0 40px rgba(242,102,74,0.18))',
-                    animation: 'heroFloat 3s ease-in-out infinite',
-                    willChange: 'transform, opacity',
+                    animation: isMobile ? 'none' : 'heroFloat 3s ease-in-out infinite',
+                    willChange: isMobile ? undefined : 'transform, opacity',
                     display: 'block',
-                    opacity: 1,
-                    transform: isMobile ? 'translateX(50%)' : undefined,
+                    margin: isMobile ? '0 auto' : undefined,
+                    transform: isMobile ? 'none' : undefined,
                     backfaceVisibility: 'hidden',
                     transformStyle: 'preserve-3d',
                   }}

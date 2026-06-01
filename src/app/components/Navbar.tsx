@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 
+const MOBILE_BREAKPOINT = 768;
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('hero');
   const [bubbleStyle, setBubbleStyle] = useState({
     left: 0,
@@ -22,11 +25,22 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth < 900);
+    const onResize = () => {
+      const mobile = window.innerWidth <= MOBILE_BREAKPOINT;
+      setIsMobile(mobile);
+      if (!mobile) setMenuOpen(false);
+    };
     onResize();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     const sections = [
@@ -46,10 +60,6 @@ export function Navbar() {
       if (!el) return;
       const observer = new IntersectionObserver(
         ([entry]) => {
-          console.log('[Navbar IO]', id, {
-            isIntersecting: entry.isIntersecting,
-            ratio: entry.intersectionRatio,
-          });
           if (entry.isIntersecting) setActiveSection(id);
         },
         { threshold: 0.15, rootMargin: '-10% 0px -10% 0px' }
@@ -62,9 +72,9 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
+    if (isMobile) return;
     const bubbleTargetId = activeSection === 'hero' ? 'about' : activeSection;
     const activeLink = navRefs.current[bubbleTargetId];
-    console.log('[Navbar refs]', navRefs.current);
     if (!activeLink) {
       setBubbleStyle((s) => ({ ...s, opacity: 0 }));
       return;
@@ -79,9 +89,10 @@ export function Navbar() {
       height: rect.height + 12,
       opacity: 1,
     });
-  }, [activeSection]);
+  }, [activeSection, isMobile]);
 
   useEffect(() => {
+    if (isMobile) return;
     const onResize = () => {
       const bubbleTargetId = activeSection === 'hero' ? 'about' : activeSection;
       const activeLink = navRefs.current[bubbleTargetId];
@@ -99,9 +110,10 @@ export function Navbar() {
     };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
-  }, [activeSection]);
+  }, [activeSection, isMobile]);
 
   const scrollToSection = (sectionId: string) => {
+    setMenuOpen(false);
     const element = document.getElementById(sectionId);
     if (element) {
       const offset = 80;
@@ -124,55 +136,159 @@ export function Navbar() {
     { label: 'Stack', id: 'stack' },
     { label: 'Connect', id: 'connect' },
   ];
-  const visibleLinks = isMobile ? navLinks.filter((l) => ['about', 'projects', 'connect'].includes(l.id)) : navLinks;
+
+  const glassStyle = {
+    borderRadius: isMobile ? '20px' : '50px',
+    overflow: 'hidden' as const,
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(20px) saturate(180%)',
+    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+    boxShadow: scrolled
+      ? '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+      : '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+  };
+
+  const logoButton = (
+    <button
+      type="button"
+      onClick={() => scrollToSection('hero')}
+      className="flex items-center gap-2 min-w-0"
+    >
+      <span
+        className={`${isMobile ? 'text-base' : 'text-lg'} tracking-tight truncate`}
+        style={{
+          fontFamily: 'var(--font-heading)',
+          fontWeight: 800,
+          color: 'var(--coral)',
+        }}
+      >
+        hetppatel.dev
+      </span>
+      <span
+        className="text-xs px-2 py-0.5 rounded-full shrink-0"
+        style={{
+          background: 'rgba(44, 43, 48, 0.7)',
+          border: '1px solid rgba(240, 237, 232, 0.08)',
+          color: 'var(--text-muted)',
+          fontFamily: 'var(--font-mono)',
+        }}
+      >
+        v26
+      </span>
+    </button>
+  );
+
+  const navLinkButton = (item: (typeof navLinks)[0], stacked = false) => {
+    const isActive =
+      activeSection === item.id || (activeSection === 'hero' && item.id === 'about');
+    return (
+      <button
+        key={item.id}
+        type="button"
+        ref={(el) => {
+          if (!stacked) navRefs.current[item.id] = el;
+        }}
+        onClick={() => scrollToSection(item.id)}
+        className={stacked ? 'w-full text-left py-3 text-base' : 'relative text-sm'}
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          color: isActive ? '#F0EDE8' : '#A8A8B8',
+          transition: 'color 0.3s ease',
+          fontFamily: 'var(--font-body)',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: stacked ? undefined : 0,
+          borderBottom: stacked ? '1px solid rgba(255,255,255,0.06)' : undefined,
+        }}
+      >
+        {item.label}
+      </button>
+    );
+  };
+
+  if (isMobile) {
+    return (
+      <nav className="fixed top-5 left-4 right-4 z-[100] max-w-full">
+        <div className="w-full" style={glassStyle}>
+          <div className="flex items-center justify-between gap-3 px-4 py-2.5">
+            {logoButton}
+            <button
+              type="button"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((open) => !open)}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                color: '#F0EDE8',
+                fontSize: '20px',
+                lineHeight: 1,
+                cursor: 'pointer',
+              }}
+            >
+              {menuOpen ? '✕' : '☰'}
+            </button>
+          </div>
+
+          {menuOpen ? (
+            <div
+              className="w-full px-4 pb-4"
+              style={{
+                borderTop: '1px solid rgba(255,255,255,0.08)',
+              }}
+            >
+              {navLinks.map((item) => navLinkButton(item, true))}
+              <a
+                href="/resume"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="block w-full py-3 text-base"
+                style={{
+                  color: '#C8F135',
+                  fontFamily: 'var(--font-body)',
+                  textDecoration: 'none',
+                  borderBottom: '1px solid rgba(255,255,255,0.06)',
+                }}
+              >
+                resume
+              </a>
+              <button
+                type="button"
+                onClick={() => scrollToSection('connect')}
+                className="mt-4 w-full rounded-full px-5 py-2.5 text-sm"
+                style={{
+                  background: 'var(--coral)',
+                  color: 'var(--bg-primary)',
+                  fontFamily: 'var(--font-body)',
+                  fontWeight: 500,
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                Contact →
+              </button>
+            </div>
+          ) : null}
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="fixed top-5 left-1/2 z-[100] max-w-[calc(100vw-2rem)] w-max -translate-x-1/2 transition-all duration-300">
       <div
-        className={`flex items-center ${isMobile ? 'gap-4 px-4 py-2.5' : 'gap-8 px-6 py-3'} ${
-          scrolled ? 'shadow-[0_8px_32px_rgba(0,0,0,0.4)]' : ''
-        }`}
-        style={{
-          borderRadius: '50px',
-          overflow: 'hidden',
-          background: 'rgba(255, 255, 255, 0.05)',
-          backdropFilter: 'blur(20px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderTop: '1px solid rgba(255, 255, 255, 0.15)',
-          boxShadow:
-            '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-        }}
+        className={`flex items-center gap-8 px-6 py-3 ${scrolled ? 'shadow-[0_8px_32px_rgba(0,0,0,0.4)]' : ''}`}
+        style={glassStyle}
       >
-        <button
-          type="button"
-          onClick={() => scrollToSection('hero')}
-          className="flex items-center gap-2"
-        >
-          <span
-            className={`${isMobile ? 'text-base' : 'text-lg'} tracking-tight`}
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 800,
-              color: 'var(--coral)',
-            }}
-          >
-            hetppatel.dev
-          </span>
-          <span
-            className="text-xs px-2 py-0.5 rounded-full"
-            style={{
-              background: 'rgba(44, 43, 48, 0.7)',
-              border: '1px solid rgba(240, 237, 232, 0.08)',
-              color: 'var(--text-muted)',
-              fontFamily: 'var(--font-mono)',
-            }}
-          >
-            v26
-          </span>
-        </button>
+        {logoButton}
 
-        <div className={`nav-links-container relative flex items-center ${isMobile ? 'gap-4' : 'gap-6'}`}>
+        <div className="nav-links-container relative flex items-center gap-6">
           <div
             style={{
               position: 'absolute',
@@ -192,34 +308,7 @@ export function Navbar() {
             }}
             aria-hidden
           />
-          {visibleLinks.map((item) => {
-            const isActive =
-              activeSection === item.id || (activeSection === 'hero' && item.id === 'about');
-            return (
-              <button
-                key={item.id}
-                type="button"
-                ref={(el) => {
-                  navRefs.current[item.id] = el;
-                }}
-                onClick={() => scrollToSection(item.id)}
-                className="relative text-sm"
-                style={{
-                  position: 'relative',
-                  zIndex: 1,
-                  color: isActive ? '#F0EDE8' : '#A8A8B8',
-                  transition: 'color 0.3s ease',
-                  fontFamily: 'var(--font-body)',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 0,
-                }}
-              >
-                {item.label}
-              </button>
-            );
-          })}
+          {navLinks.map((item) => navLinkButton(item))}
         </div>
 
         <a
@@ -254,7 +343,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => scrollToSection('connect')}
-          className={`${isMobile ? 'px-4 py-1.5 text-sm' : 'px-5 py-2'} rounded-full transition-all duration-200 hover:scale-105`}
+          className="px-5 py-2 rounded-full transition-all duration-200 hover:scale-105"
           style={{
             background: 'var(--coral)',
             color: 'var(--bg-primary)',
