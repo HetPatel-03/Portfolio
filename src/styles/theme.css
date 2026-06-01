@@ -98,6 +98,16 @@ h1, h2 {
     animation: none !important;
     transform: none !important;
   }
+
+  #hero-about-scene #hero {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #hero-about-scene #hero > .w-full {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 @keyframes connectPinPulse {

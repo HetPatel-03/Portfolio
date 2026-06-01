@@ -34,62 +34,52 @@ export function Footer() {
   };
 
   useLayoutEffect(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
     const ctx = gsap.context(() => {
-      gsap.fromTo(portraitRef.current,
-        { y: 80, opacity: 0 },
-        {
-          y: 0, opacity: 1,
-          duration: 1.2,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
+      const scrollConfig = {
+        trigger: footerRef.current,
+        toggleActions: 'play none none none',
+      };
 
-      gsap.fromTo(rightColRef.current,
-        { x: 40, opacity: 0 },
-        {
-          x: 0, opacity: 1,
-          duration: 1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
+      gsap.from(portraitRef.current, {
+        y: 80,
+        opacity: 0,
+        duration: 1.2,
+        ease: 'power2.out',
+        immediateRender: false,
+        scrollTrigger: { ...scrollConfig, start: 'top 85%' },
+      });
 
-      gsap.fromTo(skylineRef.current,
-        { y: 30, opacity: 0 },
-        {
-          y: 0, opacity: 0.13,
-          duration: 1.4,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: 'top 70%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
+      gsap.from(rightColRef.current, {
+        x: 40,
+        opacity: 0,
+        duration: 1,
+        ease: 'power2.out',
+        immediateRender: false,
+        scrollTrigger: { ...scrollConfig, start: 'top 80%' },
+      });
 
-      gsap.fromTo(bottomBarRef.current,
-        { opacity: 0, y: 16 },
-        {
-          opacity: 1, y: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: 'top 60%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
+      gsap.from(skylineRef.current, {
+        y: 30,
+        opacity: 0,
+        duration: 1.4,
+        ease: 'power2.out',
+        immediateRender: false,
+        scrollTrigger: { ...scrollConfig, start: 'top 70%' },
+      });
+
+      gsap.from(bottomBarRef.current, {
+        opacity: 0,
+        y: 16,
+        duration: 0.8,
+        ease: 'power2.out',
+        immediateRender: false,
+        scrollTrigger: { ...scrollConfig, start: 'top 60%' },
+      });
+
+      ScrollTrigger.refresh();
     }, footerRef);
 
     return () => ctx.revert();
@@ -126,15 +116,17 @@ export function Footer() {
             ref={portraitRef}
             src="/sketch-potrait.PNG"
             alt="Het Patel sketch portrait"
+            loading="lazy"
+            decoding="async"
             style={{
               height: 'clamp(280px, 35vh, 420px)',
               width: 'auto',
+              maxWidth: '100%',
               objectFit: 'contain',
               objectPosition: isMobile ? 'bottom center' : 'bottom left',
               display: 'block',
               mixBlendMode: 'luminosity',
               filter: 'drop-shadow(0 20px 40px rgba(242,102,74,0.15))',
-              opacity: 0,
             }}
           />
         </div>
@@ -144,7 +136,6 @@ export function Footer() {
           style={{
             flex: isMobile ? '1 1 100%' : '0 0 60%',
             paddingLeft: isMobile ? '0px' : 'clamp(32px, 5vw, 80px)',
-            opacity: 0,
             textAlign: isMobile ? 'center' : 'left',
             marginTop: isMobile ? '20px' : '0',
           }}
@@ -235,8 +226,11 @@ export function Footer() {
 
       <img
         ref={skylineRef}
-        src="/toronto-skyline.png"
-        alt="Toronto skyline"
+        src="/toronto-skyline3.png"
+        alt=""
+        aria-hidden
+        loading="lazy"
+        decoding="async"
         style={{
           width: '100%',
           height: 'auto',
@@ -258,7 +252,6 @@ export function Footer() {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '16px',
-          opacity: 0,
           textAlign: isMobile ? 'center' : 'left',
         }}
       >
