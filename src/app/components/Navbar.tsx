@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const MOBILE_BREAKPOINT = 768;
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= MOBILE_BREAKPOINT);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('hero');
   const [bubbleStyle, setBubbleStyle] = useState({
@@ -36,11 +38,11 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    document.body.style.overflow = isMobile && menuOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
-  }, [menuOpen]);
+  }, [menuOpen, isMobile]);
 
   useEffect(() => {
     const sections = [
@@ -115,16 +117,12 @@ export function Navbar() {
   const scrollToSection = (sectionId: string) => {
     setMenuOpen(false);
     const element = document.getElementById(sectionId);
-    if (element) {
-      const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
-    }
+    if (!element) return;
+    ScrollTrigger.refresh();
+    window.scrollTo({
+      top: element.offsetTop - 80,
+      behavior: 'smooth',
+    });
   };
 
   const navLinks = [
