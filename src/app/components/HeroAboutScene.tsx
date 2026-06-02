@@ -14,9 +14,11 @@ const stats = [
 
 export function HeroAboutScene() {
   const [cycleIndex, setCycleIndex] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(() => window.matchMedia('(min-width: 768px)').matches);
   const cycleWords = ['Software Engineer.', 'Problem Solver.', 'Product Minded.', 'Full Stack Dev.'];
 
   const sceneRef = useRef<HTMLDivElement>(null);
+  const leftColumnRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const heroLeftRef = useRef<HTMLDivElement>(null);
   const aboutTextRef = useRef<HTMLDivElement>(null);
@@ -33,6 +35,13 @@ export function HeroAboutScene() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const onChange = () => setIsDesktop(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -44,24 +53,25 @@ export function HeroAboutScene() {
     const mm = gsap.matchMedia();
 
     mm.add('(max-width: 767px)', () => {
-      ScrollTrigger.getAll().forEach((st) => {
-        if (st.trigger === sceneRef.current || st.trigger === sectionRef.current) st.kill();
-      });
-      [heroLeftRef, aboutTextRef, imgWrapperRef, terminalColRef].forEach((ref) => {
+      [heroLeftRef, aboutTextRef, imgWrapperRef, terminalColRef, leftColumnRef].forEach((ref) => {
         if (ref.current) gsap.set(ref.current, { clearProps: 'all' });
       });
       if (imgFrontRef.current) gsap.set(imgFrontRef.current, { clearProps: 'all' });
       if (imgBackRef.current) gsap.set(imgBackRef.current, { clearProps: 'all' });
+      return () => {};
     });
 
     mm.add('(min-width: 768px)', () => {
       let ctx: gsap.Context | undefined;
+      let killed = false;
 
       const setup = () => {
+        if (killed) return;
         ctx?.revert();
+
         ctx = gsap.context(() => {
-          const scene = sceneRef.current;
           const section = sectionRef.current;
+          const leftColumn = leftColumnRef.current;
           const heroLeft = heroLeftRef.current;
           const aboutText = aboutTextRef.current;
           const imgWrapper = imgWrapperRef.current;
@@ -70,7 +80,9 @@ export function HeroAboutScene() {
           const terminalCol = terminalColRef.current;
           const statsGrid = statsGridRef.current;
 
-          if (!scene || !section || !heroLeft || !aboutText || !imgWrapper || !imgFront || !imgBack || !terminalCol || !statsGrid) return;
+          if (!section || !leftColumn || !heroLeft || !aboutText || !imgWrapper || !imgFront || !imgBack || !terminalCol || !statsGrid) {
+            return;
+          }
 
           gsap.set(aboutText, { autoAlpha: 0, y: 50 });
           gsap.set(terminalCol, { autoAlpha: 0, x: 60 });
@@ -108,10 +120,10 @@ export function HeroAboutScene() {
           tl.to(heroLeft, { autoAlpha: 0, y: -60, filter: 'blur(8px)', duration: 1.5 }, 0)
             .to(aboutText, { autoAlpha: 1, y: 0, duration: 1.5, ease: 'power2.out' }, 0.5)
             .to(aboutText, { autoAlpha: 0, y: -30, filter: 'blur(6px)', duration: 0.8 }, 2)
-            .to([heroLeft, aboutText], { filter: 'blur(8px)', opacity: 0.5, duration: 0.5 }, 2.25)
+            .to(leftColumn, { filter: 'blur(8px)', opacity: 0.5, duration: 0.5 }, 2.25)
             .to(imgWrapper, { x: toLeft, duration: 2.1, ease: 'power2.inOut' }, 2.2)
             .to(imgWrapper, { rotationY: 180, duration: 1.5, ease: 'power2.inOut' }, 2.45)
-            .to([heroLeft, aboutText], { filter: 'blur(0px)', opacity: 1, duration: 0.45 }, 3.65)
+            .to(leftColumn, { filter: 'blur(0px)', opacity: 1, duration: 0.45 }, 3.65)
             .to(terminalCol, { autoAlpha: 0.35, duration: 0.4 }, 3.15)
             .to(terminalCol, { autoAlpha: 1, x: 0, duration: 0.8, ease: 'power2.out' }, 4.0)
             .to(Array.from(statsGrid.children), {
@@ -122,15 +134,16 @@ export function HeroAboutScene() {
               ease: 'back.out(1.2)',
             }, 4.2)
             .to({}, { duration: 1.5 }, 6);
-        }, sceneRef);
+        }, sectionRef);
 
         ScrollTrigger.refresh();
       };
 
-      const timer = window.setTimeout(setup, 200);
-      window.addEventListener('load', setup);
+      const timer = window.setTimeout(setup, 150);
+      window.addEventListener('load', setup, { once: true });
 
       return () => {
+        killed = true;
         window.clearTimeout(timer);
         window.removeEventListener('load', setup);
         ctx?.revert();
@@ -138,7 +151,7 @@ export function HeroAboutScene() {
     });
 
     return () => mm.revert();
-  }, []);
+  }, [isDesktop]);
 
   const renderHeroBlock = () => (
     <div ref={heroLeftRef} className="hero-about-block hero-about-block--hero">
@@ -363,10 +376,25 @@ export function HeroAboutScene() {
         </div>
 
         <div className="hero-about-grid">
-          {renderHeroBlock()}
-          {renderImageBlock()}
-          {renderAboutBlock()}
-          {renderTerminalBlock()}
+          {isDesktop ? (
+            <div className="hero-about-desktop">
+              <div ref={leftColumnRef} className="hero-about-desktop-left">
+                {renderHeroBlock()}
+                {renderAboutBlock()}
+              </div>
+              <div className="hero-about-desktop-right">
+                {renderImageBlock()}
+                {renderTerminalBlock()}
+              </div>
+            </div>
+          ) : (
+            <div className="hero-about-mobile">
+              {renderHeroBlock()}
+              {renderImageBlock()}
+              {renderAboutBlock()}
+              {renderTerminalBlock()}
+            </div>
+          )}
         </div>
       </section>
     </div>

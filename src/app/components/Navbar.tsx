@@ -119,8 +119,9 @@ export function Navbar() {
     const element = document.getElementById(sectionId);
     if (!element) return;
     ScrollTrigger.refresh();
+    const y = element.getBoundingClientRect().top + window.scrollY - 80;
     window.scrollTo({
-      top: element.offsetTop - 80,
+      top: Math.max(0, y),
       behavior: 'smooth',
     });
   };
