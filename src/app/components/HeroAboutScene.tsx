@@ -156,7 +156,7 @@ export function HeroAboutScene() {
   const renderHeroBlock = () => (
     <div ref={heroLeftRef} className="hero-about-block hero-about-block--hero">
       <div
-        className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
+        className="hero-about-badge inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
         style={{
           background: 'rgba(44,43,48,0.7)',
           border: '1px solid rgba(240,237,232,0.08)',
@@ -208,7 +208,7 @@ export function HeroAboutScene() {
         I build features, fix systems, and integrate AI into products.
       </p>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '32px' }}>
+      <div className="hero-about-cta-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '32px' }}>
         <button onClick={() => scrollToSection('connect')}
           style={{ padding: '12px 24px', background: 'var(--coral)', color: 'var(--bg-primary)', fontFamily: 'var(--font-body)', fontWeight: 500, borderRadius: '50px', border: 'none', cursor: 'pointer', height: '48px' }}>
           Contact Me →
@@ -249,7 +249,7 @@ export function HeroAboutScene() {
       }}>
         Software Engineer.
       </h2>
-      <p style={{ position: 'relative', zIndex: 1, fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#D0D0E0', fontSize: '20px', marginBottom: '24px' }}>
+      <p className="hero-about-subhead" style={{ position: 'relative', zIndex: 1, fontFamily: 'var(--font-heading)', fontWeight: 700, color: '#D0D0E0', fontSize: '20px', marginBottom: '24px' }}>
         Built 3+ live products used by international students across Canada — full-stack, AI-integrated, shipped.
       </p>
       <div style={{ position: 'relative', zIndex: 1, marginBottom: 0 }}>
